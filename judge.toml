@@ -1,6 +1,7 @@
-[jobs.test-submit]
-image = { source = "dockerfile", path = "."}
+[jobs.lexer]
+
+image = { source = "dockerfile", path = ".", tag = "pascal-lex-example" }
 
 run = [
-  "java -cp dst/ Main < $input",
+  "./test $input",
 ]
