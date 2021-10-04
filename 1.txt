@@ -1,1 +1,12 @@
-===
+_a_ = 3;
+If = 0
+while (_a < 4396) {
+    if (a_ == 010) {
+        ybb = 233;
+        a = a + ybb;
+        continue;
+    } else {
+        a = a + 7;
+    }
+    If = If + a * 2;
+}
