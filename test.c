@@ -141,7 +141,7 @@ int getsym(){
 		printf("Gt\n");
 	}
 	else{
-		printf("Err\n");
+		printf("%c Err\n",c);
 		return 0;
 	}
 	return 1;
