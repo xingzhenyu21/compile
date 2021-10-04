@@ -17,8 +17,8 @@ int main(int argc,char *argv[]  )
 {
 	char path[1000];
 	
-	//in=fopen(argv[1],"r");
-	in = fopen("1.txt","r");
+	in=fopen(argv[1],"r");
+	//in = fopen("1.txt","r");
 	int state=1;
 	
 	while((c=fgetc(in))!=EOF&&state==1){
