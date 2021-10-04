@@ -13,11 +13,11 @@ void clearToken();
 int isSpace();
 int isNewline();
 int isTab();
-int main()
+int main(int argc,char *argv[]  )
 {
 	char path[1000];
-	scanf("%s",path);
-	in=fopen(path,"r");
+	
+	in=fopen(argv[1],"r");
 	int state=1;
 	
 	while((c=fgetc(in))!=EOF&&state==1){
