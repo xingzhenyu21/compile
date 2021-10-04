@@ -73,6 +73,8 @@ int getsym(){
 	clearToken();
 	while(isSpace()||isNewline()||isTab())
 		c=fgetc(in);
+	if(c==EOF)
+	return 0; 
 	if(isLetter()||c=='_')
 	{
 		while(isLetter()||isDigit()||c=='_'){
@@ -141,7 +143,7 @@ int getsym(){
 		printf("Gt\n");
 	}
 	else{
-		printf("%c Err\n",c);
+		printf("Err\n");
 		return 0;
 	}
 	return 1;
