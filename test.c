@@ -72,7 +72,7 @@ int getsym(){
 	clearToken();
 	while(isSpace()||isNewline()||isTab())
 		c=fgetc(in);
-	if(isLetter())
+	if(isLetter()||c=='_')
 	{
 		while(isLetter()||isDigit()){
 			token[p++]=c;
