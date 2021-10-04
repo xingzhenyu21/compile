@@ -13,7 +13,7 @@ void clearToken();
 int isSpace();
 int isNewline();
 int isTab();
-int main(int argc,char *argv[]  )
+int main(int argc,char *argv[] )
 {
 	char path[1000];
 	
