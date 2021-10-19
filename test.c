@@ -1,150 +1,213 @@
 #include<stdio.h>
 #include<string.h>
-char token[1000],c;
-char reserve[6][30]={"if","else","while","break","continue","return"};
-FILE *in;
+#include<stdlib.h>
+char token[1000],ch;
+FILE *in,*out;
 int p=0;
-int getsym();
-int reserver();
-int transNum(char s[]);
+void FuncDef();
+void Ident();
+void Block();
+void Stmt();
+void Number();
 int isDigit();
-int isLetter();
-void clearToken();
-int isSpace();
-int isNewline();
-int isTab();
+int hexadecimal();
+int octal();
+int t1();
+int t2();
+void process_notes();
 int main(int argc,char *argv[] )
 {
-	char path[1000];
+    in=fopen(argv[1],"r");
+	out=fopen(argv[2],"w");
+	//in=fopen("a.txt","r");
+	//out=fopen("b.txt","w");
+	ch=fgetc(in);
+	while(ch==' '||ch=='\n'||ch=='\t')
+		ch=fgetc(in);
 	
-	in=fopen(argv[1],"r");
-	//in = fopen("1.txt","r");
-	int state=1;
+	FuncDef();
+	return 0;
 	
-	while((c=fgetc(in))!=EOF&&state==1){
-		state=getsym();
-	}
+}
+int octal(){
+	if(ch>='0'&&ch<='7')
+	return 1;
 	return 0;
 }
-void clearToken(){
-	p=0;
-}
-int reserver(){
-	int i;
-	for(i=0;i<6;i++){
-		if(strcmp(reserve[i],token)==0)
-		return 1;
-	}
+int hexadecimal(){
+	if((ch>='0'&&ch<='9')||(ch>='A'&&ch<='F'))
+	return 1;
 	return 0;
 }
 int isDigit(){
-	if(c>='0'&&c<='9')
+	if(ch>='0'&&ch<='9')
 	return 1;
 	return 0;
 }
-int isLetter(){
-	if((c>='A'&&c<='Z')||(c>='a'&&c<='z'))
-	return 1;
-	return 0;
+int t1()
+{
+	int i,sum=0,t;
+	for(i=0;token[i]!='\0';i++){
+		if(token[i]<='9')
+			t=token[i]-'0';
+		else
+		t=token[i]-'A'+10;
+		sum=sum*16+t;
 }
-int transNum(char s[]){
-	int i = 0,num=0;
-	for(i=0;s[i]!='\0';i++){
-		num=10*num+s[i]-'0';
+	return sum;
+}
+int t2()
+{
+	int i,sum=0,t;
+	for(i=0;token[i]!='\0';i++){
+		t=token[i]-'0';
+		sum=sum*8+t;
+}
+	return sum;
+}
+void FuncDef(){
+	p=0;
+	process_notes();
+	while(ch==' '||ch=='\n'||ch=='\t')
+		ch=fgetc(in);
+	while(ch!=' '){
+	token[p++]=ch;
+	ch=fgetc(in);	
 	}
-	return num;
+	token[p]='\0';
+	if(strcmp(token,"int")!=0)
+	exit(1);
+	char s[]="define dso_local i32";
+	fputs(s,out);
+	ch=fgetc(in);
+	while(ch==' '||ch=='\n'||ch=='\t')
+		ch=fgetc(in);
+	Ident();
 }
-int isSpace(){
-	if(c==' ')
-	return 1;
-	return 0;
-}
-int isNewline(){
-	if(c=='\n')
-	return 1;
-	return 0;
-}
-int isTab(){
-	if(c=='	')
-	return 1;
-	return 0;
-}
-int getsym(){
-	clearToken();
-	while(isSpace()||isNewline()||isTab())
-		c=fgetc(in);
-	if(c==EOF)
-	return 0; 
-	if(isLetter()||c=='_')
-	{
-		while(isLetter()||isDigit()||c=='_'){
-			token[p++]=c;
-			c=fgetc(in);	
+void process_notes(){
+	if(ch=='/'){
+		ch=fgetc(in);
+		if(ch=='/'){
+			while(ch!='\r'&&ch!='\n')
+			ch=fgetc(in); 
+			ch=fgetc(in);
 		}
-		token[p]='\0';
-		ungetc(c,in);
-		int resultValue = reserver();
-		if(resultValue==0) 
-		printf("Ident(%s)\n",token);
-		else{
-		token[0]=token[0]-'a'+'A';
-		printf("%s\n",token);
-		}
-	}
-	else if(isDigit()){
-		while(isDigit())
-		{
-			token[p++]=c;
-			c=fgetc(in);
-		}
-		token[p]='\0';
-		ungetc(c,in);
-		printf("Number(%s)\n",token);
-	}
-	else if(c=='='){
-		c=fgetc(in);
-		if(c!='='){
-			printf("Assign\n");
-			ungetc(c,in);
+		else if(ch == '*'){
+			ch=fgetc(in);
+			while(ch!='*'){
+				ch=fgetc(in);
+				if(ch==EOF){
+					exit(1);
+				}
+			}
+			
+			ch=fgetc(in);
+			if(ch!='/')
+			exit(0);
+			ch=fgetc(in); 
 		}
 		else
-		{
-			printf("Eq\n");
+		exit(1);
+	}
+}
+void Ident(){
+	p=0;
+	process_notes();
+	while(ch!=' '){
+	token[p++]=ch;
+	ch=fgetc(in);	
+	}
+	token[p]='\0';	
+	if(strcmp(token,"main()")!=0)
+	exit(1);
+	char s[]="@main()";
+	fputs(s,out);
+	ch=fgetc(in);
+	while(ch==' '||ch=='\n'||ch=='\t')
+		ch=fgetc(in);	
+	Block();
+}
+void Block()
+{
+	process_notes();
+	if(ch!='{')
+	exit(1);
+	fputc(ch,out);
+	fputc('\n',out);
+	ch=fgetc(in);
+	while(ch==' '||ch=='\n'||ch=='\t'||ch=='\r')
+		ch=fgetc(in);
+	process_notes();
+	
+	Stmt();
+	ch=fgetc(in);
+	
+	while(ch==' '||ch=='\n'||ch=='\t'||ch=='\n'||ch=='\r')
+		ch=fgetc(in);	
+	if(ch!='}')
+	exit(1);
+	fputc(ch,out);
+}
+void Stmt(){
+	p=0;
+	while(ch==' '||ch=='\n'||ch=='\t'||ch=='\n'||ch=='\r')
+	ch=fgetc(in);
+	process_notes();
+	while(ch!=' '){
+	token[p++]=ch;
+	ch=fgetc(in);	
+	}
+	
+	token[p]='\0';	
+	if(strcmp(token,"return")!=0)
+	exit(1);
+	char s[]="ret i32 ";
+	fputs(s,out);
+	ch=fgetc(in);
+	while(ch==' '||ch=='\n'||ch=='\t')
+		ch=fgetc(in);
+	Number();
+	while(ch==' '||ch=='\n'||ch=='\t')
+		ch=fgetc(in);
+	if(ch!=';')
+	exit(1);
+	
+}
+void Number(){
+	p=0;
+	process_notes();
+	while(ch==' '||ch=='\n'||ch=='\t')
+		ch=fgetc(in);
+	if(ch=='0'){
+		ch=fgetc(in);
+		if(ch=='x'||ch=='X'){
+			ch=fgetc(in);
+			while(hexadecimal()){
+				token[p++]=ch;
+				ch=fgetc(in);
+			}
+			token[p]='\0';
+			fprintf(out,"%d",t1());
+		}
+		else{
+			token[p++]='0';
+			while(octal()){
+				token[p++]=ch;
+				ch=fgetc(in);
+			}
+			token[p]='\0';
+			fprintf(out,"%d",t2());
 		}
 	}
-	else if(c==';'){
-		printf("Semicolon\n");
+	else if(ch!='0'&&isDigit()){
+		while(isDigit())
+		{
+			token[p++]=ch;
+			ch=fgetc(in);
+		}
+		token[p]='\0';
+		fputs(token,out);
 	}
-	else if(c=='('){
-		printf("LPar\n");
-	}
-	else if(c==')'){
-		printf("RPar\n");
-	}
-	else if(c=='{'){
-		printf("LBrace\n");
-	}
-	else if(c=='}'){
-		printf("RBrace\n");
-	}
-	else if(c=='+'){
-		printf("Plus\n");
-	}
-	else if(c=='*'){
-		printf("Mult\n");
-	}
-	else if(c=='/'){
-		printf("Div\n");
-	}
-	else if(c=='<'){
-		printf("Lt\n");
-	}
-	else if(c=='>'){
-		printf("Gt\n");
-	}
-	else{
-		printf("Err\n");
-		return 0;
-	}
-	return 1;
+	else
+	exit(1);
 }
