@@ -1,0 +1,8 @@
+int/**/main() //ASDF
+/*
+ {*/
+{
+	/*return8888*/ 
+		return	0x1;
+
+}
