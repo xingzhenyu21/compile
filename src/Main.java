@@ -21,6 +21,9 @@ public class Main {
             tokens.add(test);
             ch= reader.read();
         }
+        //System.out.println(tokens.size());
+        if(tokens.size()!=9)
+            System.exit(1);
         Grammer grammer = new Grammer(args[1]);
         grammer.CompUnit();
         grammer.writer.close();

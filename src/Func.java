@@ -18,6 +18,8 @@ public class Func {
             if((char)ch == '/'){
                 while ((char)ch!='\n'){
                     ch = reader.read();
+                    if(ch==-1)
+                        return null;
                 }
                 while((char)ch==' '||(char)ch=='\n'||(char)ch=='\t'||(char)ch=='\r'){
                     ch=reader.read();
