@@ -43,8 +43,6 @@ public class Func {
                 System.exit(1);
         }
         String s="";
-        if((char)ch==' ')
-            System.out.println("ds");
         s+=(char)ch;
         while ((ch= reader.read())!=-1){
             if(sch(ch))
@@ -52,7 +50,7 @@ public class Func {
             s = s + (char)ch;
 
         }
-        if(s=="")
+        if(s.equals(""))
             return null;
         if(ch==-1) return new Token(s);
         reader.unread(ch);
