@@ -1,4 +1,9 @@
+#FROM openjdk:15
+#COPY ./ /app/
+#WORKDIR /app/
+#RUN javac -d ./output ./project/src/*.java
+#WORKDIR /app/output
 FROM openjdk:15
-COPY . /myapp/
-WORKDIR /myapp/
-RUN javac -cp src/ src/Main.java -d dst/
+WORKDIR /app/
+COPY ./project/src/* ./
+RUN javac *.java
