@@ -27,12 +27,12 @@ public class Grammer {
     public void Block() throws IOException {
         if(!Main.tokens.get(p).name.equals("{"))
             System.exit(1);
-        writer.write("{\n");
+        writer.write("{");
         p++;
         Stmt();
         if(!Main.tokens.get(++p).name.equals("}"))
             System.exit(1);
-        writer.write("\n}");
+        writer.write("}");
     }
     public void Stmt() throws IOException {
         if(!Main.tokens.get(p).name.equals("return"))

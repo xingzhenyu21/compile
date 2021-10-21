@@ -44,8 +44,10 @@ public class Func {
             else
                 System.exit(1);
         }
+        if(ch==-1)
+            return null;
         String s="";
-        s+=(char)ch;
+        s = s + (char)ch;
         while ((ch= reader.read())!=-1){
             if(sch(ch))
                 break;
