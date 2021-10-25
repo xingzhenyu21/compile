@@ -9,4 +9,5 @@ public class Token {
         this.type = type;
         this.name = name;
     }
+
 }

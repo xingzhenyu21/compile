@@ -52,7 +52,7 @@ public class Func {
             return null;
         String s="";
         s = s + (char)ch;
-        if((char)ch=='{'||(char)ch=='('||(char)ch=='-'||(char)ch=='+'||(char)ch=='*'||(char)ch=='/'||(char)ch==')'||(char)ch=='}')
+        if((char)ch=='{'||(char)ch=='('||(char)ch=='-'||(char)ch=='+'||(char)ch=='*'||(char)ch=='/'||(char)ch==')'||(char)ch=='}'||(char)ch=='%')
             return new Token(s,1);
         while ((ch= reader.read())!=-1){
             if(sch(ch))

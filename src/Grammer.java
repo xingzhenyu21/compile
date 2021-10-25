@@ -22,6 +22,8 @@ public class Grammer {
             return 4;
         else if(t.name.equals("/"))
             return 4;
+        else if(t.name.equals("%"))
+            return 4;
         else if(t.name.equals("("))
             return 0;
         else if(t.name.equals(")"))
@@ -45,6 +47,8 @@ public class Grammer {
         else if(t.name.equals("*"))
             return 3;
         else if(t.name.equals("/"))
+            return 3;
+        else if(t.name.equals("%"))
             return 3;
         else if(t.name.equals("("))
             return 6;
@@ -155,6 +159,12 @@ public class Grammer {
         }
 //        for(Token c:all)
 //            System.out.println(c.name);
+        if(all.get(all.size()-2).type==1)
+            System.exit(7);
+        for(int i = 0;i<all.size()-1;i++){
+            if(all.get(i).name.equals("*")&&all.get(i+1).name.equals("*"))
+                System.exit(8);
+        }
         while (k<all.size()){
             t = all.get(k++);
             if(t.type==1){
@@ -169,7 +179,8 @@ public class Grammer {
                     }
                     else{
                         Token q = optr.remove(optr.size()-1);
-                        int b = compute(opnd.remove(opnd.size()-1));
+                        Token d = opnd.remove(opnd.size()-1);
+                        int b = compute(d);
                         if(opnd.isEmpty()&&(q.name.equals("+")||q.name.equals("-"))){
                             k--;
 
@@ -180,7 +191,8 @@ public class Grammer {
                                 opnd.add(new Token(String.valueOf(-1*b)));
                             continue;
                         }
-                        int a = compute(opnd.remove(opnd.size()-1));
+                        d = opnd.remove(opnd.size()-1);
+                        int a = compute(d);
 
                         k--;
                         if(q.name.equals("+"))
@@ -191,8 +203,11 @@ public class Grammer {
                             opnd.add(new Token(String.valueOf(a*b)));
                         else if(q.name.equals("/"))
                             opnd.add(new Token(String.valueOf(a/b)));
+                        else if(q.name.equals("%"))
+                            opnd.add(new Token(String.valueOf(a%b)));
                         else {
-                            System.exit(1);
+
+                            System.exit(2);
                         }
                     }
             }
@@ -202,7 +217,6 @@ public class Grammer {
         }
         if(optr.size()!=1)
             System.exit(3);
-
         writer.write(String.valueOf(compute(opnd.get(opnd.size()-1))));
     }
     public boolean  isHexadecimal(String s){
@@ -237,7 +251,7 @@ public class Grammer {
                 return  -1*Integer.parseInt(s.substring(1),8);
             }
 
-            System.exit(1);
+            System.exit(5);
             return 0;
         }
         else{
@@ -250,8 +264,8 @@ public class Grammer {
             else if(isOctal(s)){
                 return  Integer.parseInt(s,8);
             }
-
-            System.exit(1);
+            //System.out.println(s);
+            System.exit(4);
             return 0;
         }
 
