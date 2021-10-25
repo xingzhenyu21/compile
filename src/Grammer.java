@@ -159,7 +159,7 @@ public class Grammer {
         }
 //        for(Token c:all)
 //            System.out.println(c.name);
-        if(all.get(all.size()-2).type==1)
+        if(all.get(all.size()-2).type==1&&!all.get(all.size()-2).name.equals(")"))
             System.exit(7);
         for(int i = 0;i<all.size()-1;i++){
             if(all.get(i).name.equals("*")&&all.get(i+1).name.equals("*"))
