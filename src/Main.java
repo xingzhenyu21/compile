@@ -19,15 +19,18 @@ public class Main {
                 break;
 
             tokens.add(test);
+
             ch= reader.read();
         }
-//        System.out.println(tokens.size());
+//       System.out.println(tokens.size());
 //        for(Token t:tokens){
 //            System.out.println(t.name);
 //        }
-        if(tokens.size()!=9)
-            System.exit(1);
+//////        if(tokens.size()!=9)
+//////            System.exit(1);
+
         Grammer grammer = new Grammer(args[1]);
+
         grammer.CompUnit();
         grammer.writer.close();
     }

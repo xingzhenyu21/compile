@@ -3,10 +3,11 @@ import java.io.PushbackReader;
 
 public class Func {
     public static boolean sch(int ch){
-        if((char)ch=='\r'||(char)ch==' '||(char)ch=='\n'||(char)ch=='\t'||(char)ch=='('|| (char)ch==')'||(char)ch=='{'||(char)ch=='}'||(char)ch=='/'||(char)ch==';')
+        if((char)ch=='*'||(char)ch=='/'||(char)ch=='+'||(char)ch=='-'||(char)ch=='\r'||(char)ch==' '||(char)ch=='\n'||(char)ch=='\t'||(char)ch=='('|| (char)ch==')'||(char)ch=='{'||(char)ch=='}'||(char)ch=='/'||(char)ch==';')
             return true;
         return false;
     }
+
     public static Token getToken(int c,PushbackReader reader) throws IOException {
         int ch=c;
 
@@ -41,23 +42,25 @@ public class Func {
                     ch=reader.read();
                 }
             }
-            else
-                System.exit(1);
+            else{
+                reader.unread(ch);
+                ch='/';
+                break;
+            }
         }
         if(ch==-1)
             return null;
         String s="";
         s = s + (char)ch;
-        if((char)ch=='{'||(char)ch=='(')
-            return new Token(s);
+        if((char)ch=='{'||(char)ch=='('||(char)ch=='-'||(char)ch=='+'||(char)ch=='*'||(char)ch=='/'||(char)ch==')'||(char)ch=='}')
+            return new Token(s,1);
         while ((ch= reader.read())!=-1){
             if(sch(ch))
                 break;
             s = s + (char)ch;
 
         }
-        if(s.equals(""))
-            return null;
+
         if(ch==-1) return new Token(s);
         reader.unread(ch);
         return new Token(s);
