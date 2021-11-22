@@ -1,12 +1,16 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class Grammer {
     int p;
     FileWriter writer;
+    Stack<Symbol> symbols=new Stack<Symbol>();
+    int r;
     public Grammer(String destinction) throws IOException {
         p=0;
+        r=0;
         writer = new FileWriter(destinction);
     }
 
@@ -80,18 +84,50 @@ public class Grammer {
     public void Block() throws IOException {
         if(!Main.tokens.get(p).name.equals("{"))
             System.exit(1);
-        writer.write("{");
+        writer.write("{\n");
         p++;
-        Stmt();
+        BlockItem();
         if(!Main.tokens.get(++p).name.equals("}"))
             System.exit(1);
         writer.write("}");
     }
+    public void BlockItem() throws IOException {
+        if(Main.tokens.get(p).name.equals("const")){
+            ConstDecl();
+        }
+        else if(Main.tokens.get(p).name.equals("int")){
+            VarDecl();
+        }
+        else {
+            Stmt();
+        }
+    }
+    public void VarDecl(){}
+    public void ConstDecl(){}
+    public void Exp(){}
     public void Stmt() throws IOException {
-        if(!Main.tokens.get(p).name.equals("return"))
-            System.exit(1);
-        writer.write("  ret i32 ");
-        p++;
+        if(isIdent(Main.tokens.get(p).name)){
+            Symbol x;
+            for(Symbol s:symbols)
+            {
+                if(s.token.name.equals(Main.tokens.get(p).name)){
+                    x=s;
+                    if(s.type.equals("const int"))
+                        System.exit(1);
+                }
+            }
+            p++;
+            if(!Main.tokens.get(p).name.equals("="))
+                System.exit(1);
+            p++;
+            Exp();
+        }
+        else if(Main.tokens.get(p).name.equals("return")){
+            writer.write("  ret i32 ");
+            p++;
+            Exp();
+        }
+
         Number();
         p++;
         if(!Main.tokens.get(p).name.equals(";"))
@@ -165,6 +201,8 @@ public class Grammer {
             if(all.get(i).name.equals("*")&&all.get(i+1).name.equals("*"))
                 System.exit(8);
         }
+        for(Token g:all)
+            System.out.println(g.name);
         while (k<all.size()){
             t = all.get(k++);
             if(t.type==1){
@@ -228,6 +266,12 @@ public class Grammer {
     }
     public boolean isOctal(String s){
         String rex = "^0[0-7]*";
+        if(s.matches(rex))
+            return true;
+        return false;
+    }
+    public boolean isIdent(String s){
+        String rex="^[A-Za-z_][A-Za-z0-9_]*$";
         if(s.matches(rex))
             return true;
         return false;
