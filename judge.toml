@@ -1,7 +1,8 @@
-[jobs.lab2]
+# 一个示例
+[jobs.lab3]
 
-image = {source = "dockerfile", path = "."}
+image = { source = "dockerfile", path = "." }
 
 run = [
-	"java Main $input $ir",
+    "./compiler $input $ir",
 ]
