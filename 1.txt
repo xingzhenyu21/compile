@@ -1,3 +1,5 @@
 int main() {
-    return 15 + ( + + - 2);
+    int a = getint();
+    putint();
+    return 0;
 }

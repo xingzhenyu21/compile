@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public class Main {
     public  static  ArrayList<Token> tokens = new ArrayList<Token>();
+    public  static String[] function={"AAA","BBB","CCC"};
     public static void main(String[] args) throws IOException {
         PushbackReader reader = new PushbackReader(new FileReader(args[0]),1024);
         int ch;
@@ -22,7 +23,7 @@ public class Main {
 
             ch= reader.read();
         }
-//       System.out.println(tokens.size());
+////       System.out.println(tokens.size());
 //        for(Token t:tokens){
 //            System.out.println(t.name);
 //        }
