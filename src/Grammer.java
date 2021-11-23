@@ -11,7 +11,7 @@ public class Grammer {
     int r;
     public Grammer(String destinction) throws IOException {
         p=0;
-        r=0;
+        r=1;
         writer = new FileWriter(destinction);
     }
 
