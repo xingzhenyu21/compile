@@ -725,7 +725,9 @@ public class Grammer {
                             }
                             if(er==null)
                                 System.exit(3);
-                            writer.write("%"+r+"= icmp ne i32 "+er.register+", 0"+'\n');
+                            writer.write("%"+r+"= load i32, i32* "+er.register+'\n');
+                            r++;
+                            writer.write("%"+r+"= icmp ne i32 "+(r-1)+", 0"+'\n');
                             r++;
                             writer.write("%"+r+" = xor i1  %"+(r-1)+", true"+'\n');
                             r++;
