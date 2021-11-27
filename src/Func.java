@@ -3,7 +3,9 @@ import java.io.PushbackReader;
 
 public class Func {
     public static boolean sch(int ch){
-        if((char)ch=='*'||(char)ch=='/'||(char)ch==','||(char)ch=='+'||(char)ch=='-'||(char)ch=='\r'||(char)ch==' '||(char)ch=='\n'||(char)ch=='\t'||(char)ch=='('|| (char)ch==')'||(char)ch=='{'||(char)ch=='}'||(char)ch=='/'||(char)ch==';')
+        if((char)ch=='*'||(char)ch=='/'||(char)ch==','||(char)ch=='+'||(char)ch=='-'||(char)ch=='\r'||(char)ch==' '||(char)ch=='!'||(char)ch=='\n'||(char)ch=='\t'||(char)ch=='('|| (char)ch==')'||(char)ch=='{'||(char)ch=='}'||(char)ch=='/'||(char)ch==';')
+            return true;
+        if((char)ch=='<'||(char)ch=='>'||(char)ch=='=')
             return true;
         return false;
     }
@@ -54,6 +56,16 @@ public class Func {
         s = s + (char)ch;
         if((char)ch=='{'||(char)ch=='('||(char)ch=='-'||(char)ch=='+'||(char)ch=='*'||(char)ch=='/'||(char)ch==')'||(char)ch=='}'||(char)ch=='%'||(char)ch==',')
             return new Token(s,1);
+        if(((char)ch=='<'||(char)ch=='>'||(char)ch=='='||(char)ch=='!')){
+            int temp=reader.read();
+            if((char)temp=='='){
+                s=s+(char)temp;
+            }
+            else{
+                reader.unread(temp);
+            }
+            return new Token(s,1);
+        }
         if((char)ch<='9'&&(char)ch>='0')
         {
 
