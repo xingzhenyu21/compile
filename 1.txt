@@ -1,14 +1,13 @@
 int main() {
-    int a;
-    a = 5;
-    int b;
-    b = 10;
-    if (a == 5) {
-        if (b == 10)
-            a = 25;
-        else
-            a = a + 15;
+    int flag = getint();
+    int a, b;
+    if (flag == 0) {
+        a = getint();
+        b = getint();
+    } else if (flag == 1) {
+        b = getint();
+        a = getint();
     }
-    putint(a);
+    putint(a * 10 + b);
     return 0;
 }
