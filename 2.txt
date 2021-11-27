@@ -22,10 +22,13 @@ store i32 %x6, i32* %x1
 x13:
  %x15 = sub i32 0, 1
 store i32 %x15, i32* %x1
+br label %x15
 x14:
 %x16 = load i32, i32* %x2
  %x17 = add i32 0, %x16
 store i32 %x17, i32* %x1
+br label %x15
+x15
 %x18 = load i32, i32* %x1
 call void @putint(i32 %x18)
   ret i32 0

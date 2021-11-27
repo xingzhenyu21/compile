@@ -450,22 +450,27 @@ public class Grammer {
                 //p--;
                 writer.write("x"+(r-2)+":\n");
 
-                int temp=r-1;
+                int temp=r-1,temp2=r;
                 Block(1);
-
+                writer.write("br label %x"+temp2+'\n');
                 writer.write("x"+temp+":\n");
                 p++;
+
                 if(Main.tokens.get(p).name.equals("else")){
                     p++;
                 }
-              if(Main.tokens.get(p).name.equals("{")){
+                if(Main.tokens.get(p).name.equals("{")){
 
                     Block(1);
+                    writer.write("br label %x"+temp2+'\n');
+                    writer.write("x"+temp2+'\n');
                     p++;
                     Stmt(0);
                 }
-                else
+                else{
+
                     Stmt(0);
+                }
             }
             else{
                 writer.write("x"+(r-2)+":\n");

@@ -75,7 +75,7 @@ public class Func {
                 s = s + (char)ch;
 
             }
-            
+
             if(s.startsWith("0x"))
                 s=String.valueOf(Integer.parseInt(s.replaceAll("^0[x|X]", ""), 16));
         }
