@@ -24,7 +24,8 @@ store i32 25, i32* %x1
 %x15 = load i32, i32* %x1
  %x16 = add i32 %x15, 15
 store i32 %x16, i32* %x1
-call void @putint(i32 a)
-  ret i32 0
 %x8:
+%x17 = load i32, i32* %x1
+call void @putint(i32 %x17)
+  ret i32 0
 }

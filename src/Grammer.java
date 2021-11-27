@@ -420,7 +420,7 @@ public class Grammer {
 
             if(xy==1)
                 return;
-
+            System.out.println(Main.tokens.get(p).name+" e fs");
             Stmt(0);
         }
 
@@ -454,10 +454,10 @@ public class Grammer {
 
                 writer.write("%x"+temp+":\n");
                 p++;
-                if(Main.tokens.get(p).name.equals("else")){
-                    System.out.println("sdfsgb");
-                }
-                    p++;
+//                if(Main.tokens.get(p).name.equals("else")){
+//                    System.out.println("sdfsgb");
+//                }
+//                    p++;
                 if(Main.tokens.get(p).name.equals("{")){
 
                     Block(1);
@@ -473,7 +473,7 @@ public class Grammer {
                 Stmt(1);
                 writer.write("%x"+temp+":\n");
                 //BlockItem();
-                p++;
+
                 Stmt(0);
 //                if(p>=Main.tokens.size())
 //                    return;
@@ -555,11 +555,10 @@ public class Grammer {
             if(Main.tokens.get(p).name.equals("}")) {
                 p--;
 
-
                 return;
             }
             writer.close();
-            System.out.println("dsfgh  "+Main.tokens.get(p).name);
+            System.out.println("dsfgh  "+Main.tokens.get(p-2).name);
             System.exit(12132);
         }
 
