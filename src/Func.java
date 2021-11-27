@@ -70,11 +70,13 @@ public class Func {
         {
 
             while ((ch= reader.read())!=-1){
-                if(sch(ch)||!((char)ch<='9'&&(char)ch>='0'))
+                if(!((char)ch<='9'&&(char)ch>='0')&&(char)ch!='x')
                     break;
                 s = s + (char)ch;
 
             }
+            if(s.startsWith("0x"))
+                s=String.valueOf(Integer.parseInt(s.replaceAll("^0[x|X]", ""), 16));
         }
         else{
 

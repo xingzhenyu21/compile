@@ -89,13 +89,14 @@ public class Grammer {
             System.exit(1);
         writer.write(")");
         p++;
-        Block();
+        Block(0);
     }
-    public void Block() throws IOException {
+    public void Block(int z) throws IOException {
 
         if(!Main.tokens.get(p).name.equals("{")){
             writer.close();
             System.exit(132);}
+        if(z==0)
         writer.write("{\n");
         p++;
         BlockItem();
@@ -104,6 +105,7 @@ public class Grammer {
             writer.close();
             System.exit(1123);
         }
+        if(z==0)
         writer.write("}");
     }
     public void BlockItem() throws IOException {
@@ -448,7 +450,7 @@ public class Grammer {
                 writer.write(r-2+":\n");
 
                 int temp=r-1;
-                Block();
+                Block(1);
 
                 writer.write(temp+":\n");
                 p++;
@@ -458,7 +460,7 @@ public class Grammer {
                     p++;
                 if(Main.tokens.get(p).name.equals("{")){
 
-                    Block();
+                    Block(1);
                     p++;
                     Stmt(0);
                 }
@@ -494,7 +496,7 @@ public class Grammer {
             {
                 p--;
 
-                Block();
+                Block(1);
                 p++;
 
                 Stmt(0);
@@ -541,7 +543,8 @@ public class Grammer {
             else{
                 String cv=Exp();
                 writer.write("store i32 "+cv+", i32* "+x.register+'\n');
-                p++;}
+                p++;
+            }
             if(!Main.tokens.get(p).name.equals(";"))
                 System.exit(56);
             p++;
@@ -623,7 +626,7 @@ public class Grammer {
                         else{
 
                             all.add(y-1,new Token("0"));
-                            //all.set(y-1,new Token(String.valueOf(compute(all.get(y-1))*(-1))));
+
                         }
                     }
                 }
