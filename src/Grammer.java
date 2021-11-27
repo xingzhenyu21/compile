@@ -138,9 +138,9 @@ public class Grammer {
             symbol.type="const int";
             else if(type==1)
                 symbol.type="int";
-            writer.write("%"+r+" = alloca i32\n");
+            writer.write("%x"+r+" = alloca i32\n");
             r++;
-            symbol.register="%"+(r-1);
+            symbol.register="%x"+(r-1);
             symbols.add(symbol);
             p++;
             if(Main.tokens.get(p).name.equals("=")){
@@ -154,9 +154,9 @@ public class Grammer {
                     p++;
                     if(!Main.tokens.get(p).name.equals(")"))
                         System.exit(34);
-                    writer.write("%"+r+" = call i32 @"+s+"()"+'\n');
+                    writer.write("%x"+r+" = call i32 @"+s+"()"+'\n');
                     r++;
-                    writer.write("store i32 %"+(r-1)+", i32* "+symbol.register+'\n');
+                    writer.write("store i32 %x"+(r-1)+", i32* "+symbol.register+'\n');
                     p++;
                     VarDecl(type);
                 }
@@ -201,9 +201,9 @@ public class Grammer {
         while(true){
             t=LAndExp();
             if(qw!=null){
-            writer.write("%"+r+" = or i32 "+qw+", "+t+'\n');
+            writer.write("%x"+r+" = or i32 "+qw+", "+t+'\n');
             r++;
-            qw="%"+(r-1);
+            qw="%x"+(r-1);
             }
             else
                 qw=t;
@@ -223,9 +223,9 @@ public class Grammer {
         while(true){
             t=EqExp();
             if(qw!=null){
-                writer.write("%"+r+" = and i32 %"+qw+", %"+t);
+                writer.write("%x"+r+" = and i32 "+qw+", "+t+'\n');
                 r++;
-                qw="%"+(r-1);
+                qw="%x"+(r-1);
             }
             else
                 qw=t;
@@ -246,18 +246,18 @@ public class Grammer {
             t=RelExp();
             if(qw!=null){
                 if(x==1){
-                    writer.write("%"+r+"= icmp eq i32 "+qw+", "+t+'\n');
+                    writer.write("%x"+r+"= icmp eq i32 "+qw+", "+t+'\n');
                     r++;
-                    writer.write("%"+r+"= zext i1 %"+(r-1)+" to i32\n");
+                    writer.write("%x"+r+"= zext i1 %x"+(r-1)+" to i32\n");
                     r++;
                 }
                 else {
-                    writer.write("%"+r+"= icmp ne i32 "+qw+", "+t+'\n');
+                    writer.write("%x"+r+"= icmp ne i32 "+qw+", "+t+'\n');
                     r++;
-                    writer.write("%"+r+"= zext i1 %"+(r-1)+" to i32\n");
+                    writer.write("%x"+r+"= zext i1 %x"+(r-1)+" to i32\n");
                     r++;
                 }
-                qw="%"+(r-1);
+                qw="%x"+(r-1);
             }
             else
                 qw=t;
@@ -284,30 +284,30 @@ public class Grammer {
             t=AddExp();
             if(qw!=null){
                 if(x==1){
-                    writer.write("%"+r+"= icmp slt i32 "+qw+", "+t+'\n');
+                    writer.write("%x"+r+"= icmp slt i32 "+qw+", "+t+'\n');
                     r++;
-                    writer.write("%"+r+"= zext i1 %"+(r-1)+" to i32\n");
+                    writer.write("%x"+r+"= zext i1 %x"+(r-1)+" to i32\n");
                     r++;
                 }
                 else if(x==2) {
-                    writer.write("%"+r+"= icmp sgt i32 "+qw+", "+t+'\n');
+                    writer.write("%x"+r+"= icmp sgt i32 "+qw+", "+t+'\n');
                     r++;
-                    writer.write("%"+r+"= zext i1 %"+(r-1)+" to i32");
+                    writer.write("%x"+r+"= zext i1 %x"+(r-1)+" to i32");
                     r++;
                 }
                 else if(x==3) {
-                    writer.write("%"+r+"= icmp sle i32 "+qw+", "+t+'\n');
+                    writer.write("%x"+r+"= icmp sle i32 "+qw+", "+t+'\n');
                     r++;
-                    writer.write("%"+r+"= zext i1 %"+(r-1)+" to i32\n");
+                    writer.write("%x"+r+"= zext i1 %x"+(r-1)+" to i32\n");
                     r++;
                 }
                 else if(x==4) {
-                    writer.write("%"+r+"= icmp sge i32 "+qw+", "+t+'\n');
+                    writer.write("%x"+r+"= icmp sge i32 "+qw+", "+t+'\n');
                     r++;
-                    writer.write("%"+r+"= zext i1 %"+(r-1)+" to i32\n");
+                    writer.write("%x"+r+"= zext i1 %x"+(r-1)+" to i32\n");
                     r++;
                 }
-                qw="%"+(r-1);
+                qw="%x"+(r-1);
             }
             else
                 qw=t;
@@ -355,9 +355,9 @@ public class Grammer {
                 Symbol symbol = new Symbol();
                 symbol.token=x;
                 symbol.type="const int";
-                writer.write("%"+r+" = alloca i32\n");
+                writer.write("%x"+r+" = alloca i32\n");
                 r++;
-                symbol.register="%"+(r-1);
+                symbol.register="%x"+(r-1);
                 symbols.add(symbol);
                 p++;
                 if(Main.tokens.get(p).name.equals("=")){
@@ -420,7 +420,7 @@ public class Grammer {
 
             if(xy==1)
                 return;
-            System.out.println("sads"+Main.tokens.get(p).name);
+
             Stmt(0);
         }
 
@@ -432,9 +432,9 @@ public class Grammer {
             }
             p++;
             String cond = cond();
-            writer.write("   %"+r+" = icmp ne i32 "+cond+", 0"+'\n');
+            writer.write("   %x"+r+" = icmp ne i32 "+cond+", 0"+'\n');
             r++;
-            writer.write("   br i1 %"+(r-1)+",label %"+r+", label %"+(r+1)+'\n');
+            writer.write("   br i1 %x"+(r-1)+",label %x"+r+", label %x"+(r+1)+'\n');
             r=r+2;
             p++;
 
@@ -447,12 +447,12 @@ public class Grammer {
             if(Main.tokens.get(p).name.equals("{"))
             {
                 //p--;
-                writer.write(r-2+":\n");
+                writer.write("%x"+(r-2)+":\n");
 
                 int temp=r-1;
                 Block(1);
 
-                writer.write(temp+":\n");
+                writer.write("%x"+temp+":\n");
                 p++;
                 if(Main.tokens.get(p).name.equals("else")){
                     System.out.println("sdfsgb");
@@ -468,13 +468,12 @@ public class Grammer {
                     Stmt(0);
             }
             else{
-                writer.write(r-2+":\n");
+                writer.write("%x"+(r-2)+":\n");
                 int temp=r-1;
                 Stmt(1);
-
-                writer.write(temp+":\n");
-
+                writer.write("%x"+temp+":\n");
                 //BlockItem();
+                p++;
                 Stmt(0);
 //                if(p>=Main.tokens.size())
 //                    return;
@@ -534,9 +533,9 @@ public class Grammer {
                 p++;
                 if(!Main.tokens.get(p).name.equals(")"))
                     System.exit(34);
-                writer.write("%"+r+" = call i32 @"+s+"()"+'\n');
+                writer.write("%x"+r+" = call i32 @"+s+"()"+'\n');
                 r++;
-                writer.write("store i32 %"+(r-1)+", i32* "+x.register+'\n');
+                writer.write("store i32 %x"+(r-1)+", i32* "+x.register+'\n');
                 p++;
 
             }
@@ -559,7 +558,8 @@ public class Grammer {
 
                 return;
             }
-
+            writer.close();
+            System.out.println("dsfgh  "+Main.tokens.get(p).name);
             System.exit(12132);
         }
 
@@ -672,16 +672,16 @@ public class Grammer {
                                     }
                                     if(er==null)
                                         System.exit(3);
-                                    writer.write("%"+r+" = load i32, i32* "+er.register+'\n');
+                                    writer.write("%x"+r+" = load i32, i32* "+er.register+'\n');
                                     r++;
-                                    writer.write(" %"+r+" = add i32 0, %"+(r-1)+'\n');
+                                    writer.write(" %x"+r+" = add i32 0, %x"+(r-1)+'\n');
                                     r=r+1;
-                                    opnd.add(new Token("%"+(r-1),true));
+                                    opnd.add(new Token("%x"+(r-1),true));
                                 }
                                 else{
-                                    writer.write(" %"+r+" = add i32 0, "+d.name+'\n');
+                                    writer.write(" %x"+r+" = add i32 0, "+d.name+'\n');
                                     r++;
-                                    opnd.add(new Token("%"+(r-1),true));
+                                    opnd.add(new Token("%x"+(r-1),true));
                                 }
                         }
                         else if(q.name.equals("-")){
@@ -694,16 +694,16 @@ public class Grammer {
                                 }
                                 if(er==null)
                                     System.exit(3);
-                                writer.write("%"+r+" = load i32, i32* "+er.register+'\n');
+                                writer.write("%x"+r+" = load i32, i32* "+er.register+'\n');
                                 r++;
-                                writer.write(" %"+r+" = sub i32 0, %"+(r-1)+'\n');
+                                writer.write(" %x"+r+" = sub i32 0, %x"+(r-1)+'\n');
                                 r=r+1;
-                                opnd.add(new Token("%"+(r-1),true));
+                                opnd.add(new Token("%x"+(r-1),true));
                             }
                             else{
-                                writer.write(" %"+r+" = sub i32 0, "+d.name+'\n');
+                                writer.write(" %x"+r+" = sub i32 0, "+d.name+'\n');
                                 r++;
-                                opnd.add(new Token("%"+(r-1),true));
+                                opnd.add(new Token("%x"+(r-1),true));
                             }
 
 
@@ -725,24 +725,24 @@ public class Grammer {
                             }
                             if(er==null)
                                 System.exit(3);
-                            writer.write("%"+r+"= load i32, i32* "+er.register+'\n');
+                            writer.write("%x"+r+"= load i32, i32* "+er.register+'\n');
                             r++;
-                            writer.write("%"+r+"= icmp ne i32 "+(r-1)+", 0"+'\n');
+                            writer.write("%x"+r+"= icmp ne i32 "+(r-1)+", 0"+'\n');
                             r++;
-                            writer.write("%"+r+" = xor i1  %"+(r-1)+", true"+'\n');
+                            writer.write("%x"+r+" = xor i1  %x"+(r-1)+", true"+'\n');
                             r++;
-                            writer.write("%"+r+"= zext i1 %"+(r-1)+" to i32\n");
+                            writer.write("%x"+r+"= zext i1 %x"+(r-1)+" to i32\n");
                             r++;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else{
-                            writer.write("%"+r+"= icmp ne i32 "+d.name+", 0"+'\n');
+                            writer.write("%x"+r+"= icmp ne i32 "+d.name+", 0"+'\n');
                             r++;
-                            writer.write("%"+r+" = xor i1  %"+(r-1)+", true"+'\n');
+                            writer.write("%x"+r+" = xor i1  %x"+(r-1)+", true"+'\n');
                             r++;
-                            writer.write("%"+r+"= zext i1 %"+(r-1)+" to i32\n");
+                            writer.write("%x"+r+"= zext i1 %x"+(r-1)+" to i32\n");
                             r++;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
 
                         continue;
@@ -765,13 +765,13 @@ public class Grammer {
                             }
                             if(w1==null||w2==null)
                                 System.exit(3);
-                            writer.write("%"+r+" = load i32, i32* "+w1.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w1.register+'\n');
                             r++;
-                            writer.write("%"+r+" = load i32, i32* "+w2.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w2.register+'\n');
                             r++;
-                            writer.write(" %"+r+" = add i32 %"+(r-2)+", %"+(r-1)+'\n');
+                            writer.write(" %x"+r+" = add i32 %x"+(r-2)+", %x"+(r-1)+'\n');
                             r=r+1;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else if(isIdent(d.name)&&!isIdent(f.name)){
                             for(Symbol s:symbols){
@@ -783,11 +783,11 @@ public class Grammer {
                             }
                             if(w2==null)
                                 System.exit(3);
-                            writer.write("%"+r+" = load i32, i32* "+w2.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w2.register+'\n');
                             r++;
-                            writer.write(" %"+r+" = add i32 "+ f.name+", %"+(r-1)+'\n');
+                            writer.write(" %x"+r+" = add i32 "+ f.name+", %x"+(r-1)+'\n');
                             r=r+1;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else if(!isIdent(d.name)&&isIdent(f.name)){
                             for(Symbol s:symbols){
@@ -799,16 +799,16 @@ public class Grammer {
                             }
                             if(w1==null)
                                 System.exit(3);
-                            writer.write("%"+r+" = load i32, i32* "+w1.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w1.register+'\n');
                             r++;
-                            writer.write(" %"+r+" = add i32 %"+(r-1)+", "+ d.name +'\n');
+                            writer.write(" %x"+r+" = add i32 %x"+(r-1)+", "+ d.name +'\n');
                             r=r+1;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else{
-                            writer.write(" %"+r+" = add i32 "+f.name+", "+d.name+'\n');
+                            writer.write(" %x"+r+" = add i32 "+f.name+", "+d.name+'\n');
                             r++;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
 
                     }
@@ -826,13 +826,13 @@ public class Grammer {
                             }
                             if(w1==null||w2==null)
                                 System.exit(3);
-                            writer.write("%"+r+" = load i32, i32* "+w1.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w1.register+'\n');
                             r++;
-                            writer.write("%"+r+" = load i32, i32* "+w2.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w2.register+'\n');
                             r++;
-                            writer.write(" %"+r+" = sub i32 %"+(r-2)+", %"+(r-1)+'\n');
+                            writer.write(" %x"+r+" = sub i32 %x"+(r-2)+", %x"+(r-1)+'\n');
                             r=r+1;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else if(isIdent(d.name)&&!isIdent(f.name)){
                             for(Symbol s:symbols){
@@ -844,11 +844,11 @@ public class Grammer {
                             }
                             if(w2==null)
                                 System.exit(3);
-                            writer.write("%"+r+" = load i32, i32* "+w2.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w2.register+'\n');
                             r++;
-                            writer.write(" %"+r+" = sub i32 "+f.name+", %"+(r-1)+'\n');
+                            writer.write(" %x"+r+" = sub i32 "+f.name+", %x"+(r-1)+'\n');
                             r=r+1;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else if(!isIdent(d.name)&&isIdent(f.name)){
                             for(Symbol s:symbols){
@@ -860,17 +860,17 @@ public class Grammer {
                             }
                             if(w1==null)
                                 System.exit(3);
-                            writer.write("%"+r+" = load i32, i32* "+w1.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w1.register+'\n');
                             r++;
-                            writer.write(" %"+r+" = sub i32 %"+(r-1)+", "+d.name+'\n');
+                            writer.write(" %x"+r+" = sub i32 %x"+(r-1)+", "+d.name+'\n');
                             r=r+1;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else{
-                            writer.write(" %"+r+" = sub i32 "+f.name+", "+d.name+'\n');
+                            writer.write(" %x"+r+" = sub i32 "+f.name+", "+d.name+'\n');
 
                             r++;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                     }
                     else if(q.name.equals("*")){
@@ -887,13 +887,13 @@ public class Grammer {
                             }
                             if(w1==null||w2==null)
                                 System.exit(3);
-                            writer.write("%"+r+" = load i32, i32* "+w1.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w1.register+'\n');
                             r++;
-                            writer.write("%"+r+" = load i32, i32* "+w2.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w2.register+'\n');
                             r++;
-                            writer.write(" %"+r+" = mul i32 %"+(r-2)+", %"+(r-1)+'\n');
+                            writer.write(" %x"+r+" = mul i32 %x"+(r-2)+", %x"+(r-1)+'\n');
                             r=r+1;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else if(isIdent(d.name)&&!isIdent(f.name)){
                             for(Symbol s:symbols){
@@ -905,11 +905,11 @@ public class Grammer {
                             }
                             if(w2==null)
                                 System.exit(3);
-                            writer.write("%"+r+" = load i32, i32* "+w2.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w2.register+'\n');
                             r++;
-                            writer.write(" %"+r+" = mul i32 "+f.name+", %"+(r-1)+'\n');
+                            writer.write(" %x"+r+" = mul i32 "+f.name+", %x"+(r-1)+'\n');
                             r=r+1;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else if(!isIdent(d.name)&&isIdent(f.name)){
                             for(Symbol s:symbols){
@@ -921,16 +921,16 @@ public class Grammer {
                             }
                             if(w1==null)
                                 System.exit(3);
-                            writer.write("%"+r+" = load i32, i32* "+w1.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w1.register+'\n');
                             r++;
-                            writer.write(" %"+r+" = mul i32 %"+(r-1)+", "+d.name+'\n');
+                            writer.write(" %x"+r+" = mul i32 %x"+(r-1)+", "+d.name+'\n');
                             r=r+1;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else{
-                            writer.write(" %"+r+" = mul i32 "+f.name+", "+d.name+'\n');
+                            writer.write(" %x"+r+" = mul i32 "+f.name+", "+d.name+'\n');
                             r++;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                     }
                     else if(q.name.equals("/")){
@@ -947,13 +947,13 @@ public class Grammer {
                             }
                             if(w1==null||w2==null)
                                 System.exit(3);
-                            writer.write("%"+r+" = load i32, i32* "+w1.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w1.register+'\n');
                             r++;
-                            writer.write("%"+r+" = load i32, i32* "+w2.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w2.register+'\n');
                             r++;
-                            writer.write(" %"+r+" = sdiv i32 %"+(r-2)+", %"+(r-1)+'\n');
+                            writer.write(" %x"+r+" = sdiv i32 %x"+(r-2)+", %x"+(r-1)+'\n');
                             r=r+1;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else if(isIdent(d.name)&&!isIdent(f.name)){
                             for(Symbol s:symbols){
@@ -965,11 +965,11 @@ public class Grammer {
                             }
                             if(w2==null)
                                 System.exit(3);
-                            writer.write("%"+r+" = load i32, i32* "+w2.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w2.register+'\n');
                             r++;
-                            writer.write(" %"+r+" = sdiv i32 "+f.name+", %"+(r-1)+'\n');
+                            writer.write(" %x"+r+" = sdiv i32 "+f.name+", %x"+(r-1)+'\n');
                             r=r+1;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else if(!isIdent(d.name)&&isIdent(f.name)){
                             for(Symbol s:symbols){
@@ -981,16 +981,16 @@ public class Grammer {
                             }
                             if(w1==null)
                                 System.exit(3);
-                            writer.write("%"+r+" = load i32, i32* "+w1.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w1.register+'\n');
                             r++;
-                            writer.write(" %"+r+" = sdiv i32 %"+(r-1)+", "+d.name+'\n');
+                            writer.write(" %x"+r+" = sdiv i32 %x"+(r-1)+", "+d.name+'\n');
                             r=r+1;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else{
-                            writer.write(" %"+r+" = sdiv i32 "+f.name+", "+d.name+'\n');
+                            writer.write(" %x"+r+" = sdiv i32 "+f.name+", "+d.name+'\n');
                             r++;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                     }
                     else if(q.name.equals("%")){
@@ -1007,13 +1007,13 @@ public class Grammer {
                             }
                             if(w1==null||w2==null)
                                 System.exit(3);
-                            writer.write("%"+r+" = load i32, i32* "+w1.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w1.register+'\n');
                             r++;
-                            writer.write("%"+r+" = load i32, i32* "+w2.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w2.register+'\n');
                             r++;
-                            writer.write(" %"+r+" = srem i32 %"+(r-2)+", %"+(r-1)+'\n');
+                            writer.write(" %x"+r+" = srem i32 %x"+(r-2)+", %x"+(r-1)+'\n');
                             r=r+1;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else if(isIdent(d.name)&&!isIdent(f.name)){
                             for(Symbol s:symbols){
@@ -1025,11 +1025,11 @@ public class Grammer {
                             }
                             if(w2==null)
                                 System.exit(3);
-                            writer.write("%"+r+" = load i32, i32* "+w2.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w2.register+'\n');
                             r++;
-                            writer.write(" %"+r+" = srem i32 "+f.name+", %"+(r-1)+'\n');
+                            writer.write(" %x"+r+" = srem i32 "+f.name+", %x"+(r-1)+'\n');
                             r=r+1;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else if(!isIdent(d.name)&&isIdent(f.name)){
                             for(Symbol s:symbols){
@@ -1041,16 +1041,16 @@ public class Grammer {
                             }
                             if(w1==null)
                                 System.exit(3);
-                            writer.write("%"+r+" = load i32, i32* "+w1.register+'\n');
+                            writer.write("%x"+r+" = load i32, i32* "+w1.register+'\n');
                             r++;
-                            writer.write(" %"+r+" = srem i32 %"+(r-1)+", "+d.name+'\n');
+                            writer.write(" %x"+r+" = srem i32 %x"+(r-1)+", "+d.name+'\n');
                             r=r+1;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                         else{
-                            writer.write(" %"+r+" = srem i32 "+f.name+", "+d.name+'\n');
+                            writer.write(" %x"+r+" = srem i32 "+f.name+", "+d.name+'\n');
                             r++;
-                            opnd.add(new Token("%"+(r-1),true));
+                            opnd.add(new Token("%x"+(r-1),true));
                         }
                     }
                     else {
@@ -1069,9 +1069,9 @@ public class Grammer {
         if(all.size()==2){
             for(Symbol temp:symbols){
                 if(temp.token.name.equals(all.get(0).name)){
-                    writer.write("%"+r+" = load i32, i32* "+temp.register+'\n');
+                    writer.write("%x"+r+" = load i32, i32* "+temp.register+'\n');
                     r++;
-                    return "%"+(r-1);
+                    return "%x"+(r-1);
                 }
             }
             if(isDigit(all.get(0).name))
