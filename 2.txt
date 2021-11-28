@@ -4,31 +4,32 @@ declare i32 @getch()
 declare void @putch(i32)
 define dso_local i32 @main(){
 %x1 = alloca i32
-store i32 5, i32* %x1
 %x2 = alloca i32
-store i32 10, i32* %x2
+store i32 70, i32* %x1
+store i32 4, i32* %x2
 %x3 = load i32, i32* %x1
-%x4= icmp eq i32 %x3, 5
-%x5= zext i1 %x4 to i32
-   %x6 = icmp ne i32 %x5, 0
-   br i1 %x6,label %x7, label %x8
-x7:
-%x10 = load i32, i32* %x2
-%x11= icmp eq i32 %x10, 10
-%x12= zext i1 %x11 to i32
-   %x13 = icmp ne i32 %x12, 0
-   br i1 %x13,label %x14, label %x15
-x14:
-store i32 25, i32* %x1
+ %x4 = add i32 %x3, 4
+%x5 = load i32, i32* %x2
+ %x6 = add i32 %x4, %x5
+store i32 %x6, i32* %x1
+%x7= load i32, i32* %x1
+%x8= icmp ne i32 7, 0
+%x9 = xor i1  %x8, true
+%x10= zext i1 %x9 to i32
+ %x11 = sub i32 0, %x10
+   %x12 = icmp ne i32 %x11, 0
+   br i1 %x12,label %x13, label %x14
+x13:
+ %x15 = sub i32 0, 1
+store i32 %x15, i32* %x1
 br label %x16
-x15
-%x17 = load i32, i32* %x1
- %x18 = add i32 %x17, 15
+x14:
+%x17 = load i32, i32* %x2
+ %x18 = add i32 0, %x17
 store i32 %x18, i32* %x1
 br label %x16
 x16:
-br label %x8
-x8:
-call void @putint(i32 a)
+%x19 = load i32, i32* %x1
+call void @putint(i32 %x19)
   ret i32 0
 }
