@@ -608,7 +608,7 @@ public class Grammer {
             }
         }
         p--;
-
+        System.out.print('\n');
         all.add(new Token("#",1));
         int k=0;
 
@@ -1072,7 +1072,14 @@ public class Grammer {
                 return String.valueOf(Integer.parseInt(all.get(0).name));
             System.exit(10);
         }
+        if(isIdent(opnd.get(opnd.size()-1).name)){
+            for(Symbol temp:symbols){
+                if(temp.token.name.equals(opnd.get(opnd.size()-1).name)){
+                    return temp.register;
+                }
+            }
 
+        }
         return opnd.get(opnd.size()-1).name;
     }
     public void Number() throws IOException {

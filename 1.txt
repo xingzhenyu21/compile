@@ -1,14 +1,14 @@
 int main() {
-    int a, b;
-    a = 070;
-    b = 0x4;
-    a = a - - 4 + + b;
-    if (+-!!!a) {
-        a = - - -1;
-    }
-    else {
-        a = 0 + + b;
-    }
-    putint(a);
+    int a;
+    a = 5;
+    int b;
+    b = 10;
+    if (a == 5)
+        if (b == 10)
+            a = 25;
+        else
+            a = a + 15;
+
+    putint((a));
     return 0;
 }
