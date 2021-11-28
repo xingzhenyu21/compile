@@ -449,6 +449,7 @@ public class Grammer {
 
                 Block(1);
                 p++;
+
                 int label3=r++;
                 if(Main.tokens.get(p).name.equals("else")){
                     p++;
@@ -467,6 +468,7 @@ public class Grammer {
                     }
                 }
                 else{
+                    p--;
                     writer.write("br label %x"+label2+'\n');
                     writer.write("x"+label2+":\n");
                 }
@@ -476,6 +478,7 @@ public class Grammer {
                 int label3=r++;
                 BlockItem();
                 p++;
+
                 if(Main.tokens.get(p).name.equals("else")){
                     p++;
                     writer.write("br label %x"+label3+'\n');
@@ -489,7 +492,9 @@ public class Grammer {
 
                     }
                     else{
+
                         BlockItem();
+
                         writer.write("br label %x"+label3+'\n');
                         writer.write("x"+label3+":\n");
 
