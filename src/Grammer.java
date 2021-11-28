@@ -95,18 +95,21 @@ public class Grammer {
 
         if(!Main.tokens.get(p).name.equals("{")){
             writer.close();
-            System.out.println(Main.tokens.get(p).name);
+
             System.exit(132);}
         if(z==0)
         writer.write("{\n");
         p++;
+
         BlockItem();
         p++;
-        if(!Main.tokens.get(p).name.equals("}")){
-            writer.close();
-            System.out.println(Main.tokens.get(p-1).name+" "+Main.tokens.get(p).name);
-            System.exit(1123);
+
+        while (p<Main.tokens.size()&&!Main.tokens.get(p).name.equals("}")) {
+            BlockItem();
+            p++;
+            System.out.println(Main.tokens.get(p-1).name+Main.tokens.get(p).name);
         }
+
         if(z==0)
         writer.write("}");
     }
@@ -162,11 +165,12 @@ public class Grammer {
                     p++;
                     VarDecl(type);
                 }
-                else{String cv=Exp();
-                writer.write("store i32 "+cv+", i32* "+symbol.register+'\n');
-                p++;
-
-                VarDecl(type);}
+                else{
+                    String cv=Exp();
+                    writer.write("store i32 "+cv+", i32* "+symbol.register+'\n');
+                    p++;
+                    VarDecl(type);
+                }
             }
             else if(Main.tokens.get(p).name.equals(","))
             {
@@ -175,8 +179,7 @@ public class Grammer {
             }
             else if(Main.tokens.get(p).name.equals(";"))
             {
-                p++;
-                BlockItem();
+                return;
             }
             else
             {
@@ -191,8 +194,7 @@ public class Grammer {
         }
         else if(Main.tokens.get(p).name.equals(";"))
         {
-            p++;
-            BlockItem();
+            return;
         }
         else
             System.exit(19);
@@ -303,7 +305,7 @@ public class Grammer {
                     writer.write("%x"+r+"= zext i1 %x"+(r-1)+" to i32\n");
                     r++;
                 }
-                else if(x==4) {
+                else {
                     writer.write("%x"+r+"= icmp sge i32 "+qw+", "+t+'\n');
                     r++;
                     writer.write("%x"+r+"= zext i1 %x"+(r-1)+" to i32\n");
@@ -398,11 +400,8 @@ public class Grammer {
             p++;
             if(!Main.tokens.get(p).name.equals(";"))
                 System.exit(56);
-            p++;
 
-            if(xy==1)
-            return;
-            Stmt(xy);
+
         }
         else if(Main.tokens.get(p).name.equals("putint")||Main.tokens.get(p).name.equals("putch")){
             p++;
@@ -412,6 +411,7 @@ public class Grammer {
                 System.exit(17);
             p++;
             String csv=Exp();
+
             writer.write("call void @"+name+"(i32 "+csv+")\n");
             p++;
             if(!Main.tokens.get(p).name.equals(")"))
@@ -419,12 +419,7 @@ public class Grammer {
             p++;
             if(!Main.tokens.get(p).name.equals(";"))
                 System.exit(57);
-            p++;
 
-            if(xy==1)
-                return;
-            System.out.println(Main.tokens.get(p).name+" e fs");
-            Stmt(0);
         }
 
         else if(Main.tokens.get(p).name.equals("if")){
@@ -450,9 +445,7 @@ public class Grammer {
             p++;
 
             if(Main.tokens.get(p).name.equals("{")) {
-                //p--;
                 writer.write("x"+label1+":\n");
-
 
                 Block(1);
                 p++;
@@ -462,23 +455,18 @@ public class Grammer {
                     writer.write("br label %x"+label3+'\n');
                     writer.write("x"+label2+'\n');
                     if(Main.tokens.get(p).name.equals("{")){
-
                         Block(1);
                         writer.write("br label %x"+label3+'\n');
                         writer.write("x"+label3+":\n");
-                        p++;
-                        //Stmt(0);
+
                     }
                     else{
-                        Stmt(1);
+                        BlockItem();
                         writer.write("br label %x"+label3+'\n');
                         writer.write("x"+label3+":\n");
-
                     }
-                    Stmt(0);
                 }
                 else{
-
                     writer.write("br label %x"+label2+'\n');
                     writer.write("x"+label2+":\n");
                 }
@@ -486,7 +474,7 @@ public class Grammer {
             else{
                 writer.write("x"+label1+":\n");
                 int label3=r++;
-                Stmt(1);
+                BlockItem();
                 p++;
                 if(Main.tokens.get(p).name.equals("else")){
                     p++;
@@ -497,45 +485,26 @@ public class Grammer {
                         Block(1);
                         writer.write("br label %x"+label3+'\n');
                         writer.write("x"+label3+":\n");
-                        p++;
-                        //Stmt(0);
+                        //p++;
+
                     }
                     else{
-
-                        Stmt(1);
-
+                        BlockItem();
                         writer.write("br label %x"+label3+'\n');
                         writer.write("x"+label3+":\n");
-                        //System.out.println(Main.tokens.get(p-1).name+"123");
+
                     }
-                    Stmt(0);
+
                 }
                 else{
+                    p--;
                     writer.write("br label %x"+label2+'\n');
                     writer.write("x"+label2+":\n");
-
-                    //Stmt(0);
                 }
             }
 
         }
-        else if(Main.tokens.get(p).name.equals("else")){
-            p++;
 
-            if(Main.tokens.get(p).name.equals("{"))
-            {
-                p--;
-
-                Block(1);
-                p++;
-
-                Stmt(0);
-
-            }
-            else{
-                Stmt(0);
-            }
-        }
         else if(isIdent(Main.tokens.get(p).name)){
             Symbol x=null;
             for(Symbol s:symbols)
@@ -549,8 +518,9 @@ public class Grammer {
                     break;
                 }
             }
-            if(x==null)
-                System.exit(9);
+            if(x==null){
+
+                System.exit(9);}
             p++;
             if(!Main.tokens.get(p).name.equals("="))
                 System.exit(134);
@@ -577,19 +547,10 @@ public class Grammer {
             }
             if(!Main.tokens.get(p).name.equals(";"))
                 System.exit(56);
-            p++;
-            if(xy==1)
-                return;
-            BlockItem();
         }
         else{
-            if(Main.tokens.get(p).name.equals("}")) {
-                p--;
-
-                return;
-            }
             writer.close();
-            System.out.println("dsfgh  "+Main.tokens.get(p).name);
+
             System.exit(12132);
         }
 
@@ -662,9 +623,7 @@ public class Grammer {
                 }
             }
         }
-//        for(Token c:all)
-//            System.out.println(c.name);
-        //System.out.println(all.size());
+
         if(all.get(all.size()-2).type==1&&!all.get(all.size()-2).name.equals(")"))
             System.exit(7);
         for(int i = 0;i<all.size()-1;i++){
@@ -1149,7 +1108,7 @@ public class Grammer {
             else
                 all.add(Main.tokens.get(p++));
 
-                // System.out.println(Main.tokens.get(p-1).name +String.valueOf(Main.tokens.get(p-1).type));
+
         }
         p--;
         all.add(new Token("#",1));
