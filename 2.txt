@@ -29,6 +29,7 @@ br label %x16
 x16:
 br label %x8
 x8:
-call void @putint(i32 %x1)
+%x19 = load i32, i32* %x1
+call void @putint(i32 %x19)
   ret i32 0
 }

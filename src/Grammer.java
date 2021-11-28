@@ -1075,7 +1075,9 @@ public class Grammer {
         if(isIdent(opnd.get(opnd.size()-1).name)){
             for(Symbol temp:symbols){
                 if(temp.token.name.equals(opnd.get(opnd.size()-1).name)){
-                    return temp.register;
+                    writer.write("%x"+r+" = load i32, i32* "+temp.register+'\n');
+                    r++;
+                    return "%x"+(r-1);
                 }
             }
 
