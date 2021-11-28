@@ -104,6 +104,7 @@ public class Grammer {
         p++;
         if(!Main.tokens.get(p).name.equals("}")){
             writer.close();
+            System.out.println(Main.tokens.get(p-1).name+" "+Main.tokens.get(p).name);
             System.exit(1123);
         }
         if(z==0)
@@ -436,6 +437,8 @@ public class Grammer {
             String cond = cond();
             writer.write("   %x"+r+" = icmp ne i32 "+cond+", 0"+'\n');
             r++;
+            int label1 = r;
+            int label2 = 1+r;
             writer.write("   br i1 %x"+(r-1)+",label %x"+r+", label %x"+(r+1)+'\n');
             r=r+2;
             p++;
@@ -448,48 +451,71 @@ public class Grammer {
 
             if(Main.tokens.get(p).name.equals("{")) {
                 //p--;
-                writer.write("x"+(r-2)+":\n");
+                writer.write("x"+label1+":\n");
 
-                int temp=r-1,temp2=r;
+
                 Block(1);
-                writer.write("br label %x"+temp2+'\n');
-                writer.write("x"+temp+":\n");
                 p++;
-
+                int label3=r++;
                 if(Main.tokens.get(p).name.equals("else")){
                     p++;
+                    writer.write("br label %x"+label3+'\n');
+                    writer.write("x"+label2+'\n');
                     if(Main.tokens.get(p).name.equals("{")){
 
                         Block(1);
-                        writer.write("br label %x"+temp2+'\n');
-                        writer.write("x"+temp2+":\n");
+                        writer.write("br label %x"+label3+'\n');
+                        writer.write("x"+label3+":\n");
                         p++;
-                        Stmt(0);
+                        //Stmt(0);
                     }
                     else{
+                        Stmt(1);
+                        writer.write("br label %x"+label3+'\n');
+                        writer.write("x"+label3+":\n");
 
-                        BlockItem();
-                        writer.write("br label %x"+temp2+'\n');
-                        writer.write("x"+temp2+":\n");
                     }
+                    Stmt(0);
                 }
                 else{
-                    writer.write("br label %x"+temp2+'\n');
-                    writer.write("x"+temp2+":\n");
-                    Stmt(0);
 
+                    writer.write("br label %x"+label2+'\n');
+                    writer.write("x"+label2+":\n");
                 }
             }
             else{
-                writer.write("x"+(r-2)+":\n");
-                int temp=r-1,temp2=r;
+                writer.write("x"+label1+":\n");
+                int label3=r++;
                 Stmt(1);
-                writer.write("br label %x"+temp2+'\n');
-                writer.write("x"+temp+":\n");
-                //BlockItem();
+                p++;
+                if(Main.tokens.get(p).name.equals("else")){
+                    p++;
+                    writer.write("br label %x"+label3+'\n');
+                    writer.write("x"+label2+'\n');
 
-                Stmt(0);
-                writer.write("x"+temp2+":\n");
+                    if(Main.tokens.get(p).name.equals("{")){
+                        Block(1);
+                        writer.write("br label %x"+label3+'\n');
+                        writer.write("x"+label3+":\n");
+                        p++;
+                        //Stmt(0);
+                    }
+                    else{
+
+                        Stmt(1);
+
+                        writer.write("br label %x"+label3+'\n');
+                        writer.write("x"+label3+":\n");
+                        //System.out.println(Main.tokens.get(p-1).name+"123");
+                    }
+                    Stmt(0);
+                }
+                else{
+                    writer.write("br label %x"+label2+'\n');
+                    writer.write("x"+label2+":\n");
+
+                    //Stmt(0);
+                }
             }
 
         }

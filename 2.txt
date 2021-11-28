@@ -18,28 +18,26 @@ x9:
 store i32 %x11, i32* %x3
 %x12 = call i32 @getint()
 store i32 %x12, i32* %x4
-br label %x11
-x10:
-%x13 = load i32, i32* %x1
-%x14= icmp eq i32 %x13, 1
-%x15= zext i1 %x14 to i32
-   %x16 = icmp ne i32 %x15, 0
-   br i1 %x16,label %x17, label %x18
-x17:
-%x19 = call i32 @getint()
-store i32 %x19, i32* %x4
-%x20 = call i32 @getint()
-store i32 %x20, i32* %x3
-br label %x19
+br label %x13
+x10
+%x14 = load i32, i32* %x1
+%x15= icmp eq i32 %x14, 1
+%x16= zext i1 %x15 to i32
+   %x17 = icmp ne i32 %x16, 0
+   br i1 %x17,label %x18, label %x19
 x18:
+%x20 = call i32 @getint()
+store i32 %x20, i32* %x4
+%x21 = call i32 @getint()
+store i32 %x21, i32* %x3
 br label %x19
 x19:
-%x21 = load i32, i32* %x3
- %x22 = mul i32 %x21, 10
-%x23 = load i32, i32* %x4
- %x24 = add i32 %x22, %x23
-call void @putint(i32 %x24)
+br label %x13
+x13:
+%x23 = load i32, i32* %x3
+ %x24 = mul i32 %x23, 10
+%x25 = load i32, i32* %x4
+ %x26 = add i32 %x24, %x25
+call void @putint(i32 %x26)
   ret i32 0
-br label %x11
-x11:
 }
