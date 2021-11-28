@@ -482,7 +482,7 @@ public class Grammer {
                 if(Main.tokens.get(p).name.equals("else")){
                     p++;
                     writer.write("br label %x"+label3+'\n');
-                    writer.write("x"+label2+'\n');
+                    writer.write("x"+label2+":\n");
 
                     if(Main.tokens.get(p).name.equals("{")){
                         Block(1);
