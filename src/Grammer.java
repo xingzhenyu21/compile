@@ -398,9 +398,10 @@ public class Grammer {
             if(!Main.tokens.get(p).name.equals(";"))
                 System.exit(56);
             p++;
+
             if(xy==1)
             return;
-            Stmt(0);
+            Stmt(xy);
         }
         else if(Main.tokens.get(p).name.equals("putint")||Main.tokens.get(p).name.equals("putch")){
             p++;
@@ -445,8 +446,7 @@ public class Grammer {
             }
             p++;
 
-            if(Main.tokens.get(p).name.equals("{"))
-            {
+            if(Main.tokens.get(p).name.equals("{")) {
                 //p--;
                 writer.write("x"+(r-2)+":\n");
 
@@ -458,38 +458,38 @@ public class Grammer {
 
                 if(Main.tokens.get(p).name.equals("else")){
                     p++;
-                }
-                if(Main.tokens.get(p).name.equals("{")){
+                    if(Main.tokens.get(p).name.equals("{")){
 
-                    Block(1);
-                    writer.write("br label %x"+temp2+'\n');
-                    writer.write("x"+temp2+'\n');
-                    p++;
-                    Stmt(0);
+                        Block(1);
+                        writer.write("br label %x"+temp2+'\n');
+                        writer.write("x"+temp2+":\n");
+                        p++;
+                        Stmt(0);
+                    }
+                    else{
+
+                        BlockItem();
+                        writer.write("br label %x"+temp2+'\n');
+                        writer.write("x"+temp2+":\n");
+                    }
                 }
                 else{
-
+                    writer.write("br label %x"+temp2+'\n');
+                    writer.write("x"+temp2+":\n");
                     Stmt(0);
+
                 }
             }
             else{
                 writer.write("x"+(r-2)+":\n");
-                int temp=r-1;
+                int temp=r-1,temp2=r;
                 Stmt(1);
+                writer.write("br label %x"+temp2+'\n');
                 writer.write("x"+temp+":\n");
                 //BlockItem();
 
                 Stmt(0);
-//                if(p>=Main.tokens.size())
-//                    return;
-//                p++;
-//                if(Main.tokens.get(p).name.equals("{")){
-//
-//                    Block();
-//                }
-//                else
-//                    Stmt(1);
-//                    BlockItem();
+                writer.write("x"+temp2+":\n");
             }
 
         }
@@ -563,7 +563,7 @@ public class Grammer {
                 return;
             }
             writer.close();
-            System.out.println("dsfgh  "+Main.tokens.get(p-2).name);
+            System.out.println("dsfgh  "+Main.tokens.get(p).name);
             System.exit(12132);
         }
 
