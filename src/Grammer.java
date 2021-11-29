@@ -706,8 +706,14 @@ public class Grammer {
 
                 System.exit(9);}
             p++;
-            if(!Main.tokens.get(p).name.equals("="))
-                System.exit(134);
+            if(!Main.tokens.get(p).name.equals("=")){
+
+                while(!Main.tokens.get(p).name.equals(";"))
+                {
+                    p++;
+                }
+                return;
+            }
             p++;
             if(Main.tokens.get(p).name.equals("getint")||Main.tokens.get(p).name.equals("getch")){
                 String s;
