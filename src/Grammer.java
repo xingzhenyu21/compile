@@ -196,13 +196,13 @@ public class Grammer {
                 System.exit(127);
             Symbol symbol = new Symbol();
             symbol.token = x;
-
-                symbol.type = "int";
+            symbol.type = "int";
             writer.write("%x" + r + " = alloca i32\n");
             r++;
             symbol.register = "%x" + (r - 1);
             symbols.add(symbol);
             p++;
+
             if (Main.tokens.get(p).name.equals("=")) {
                 p++;
                 if (Main.tokens.get(p).name.equals("getint") || Main.tokens.get(p).name.equals("getch")) {
@@ -218,7 +218,8 @@ public class Grammer {
                     r++;
                     writer.write("store i32 %x" + (r - 1) + ", i32* " + symbol.register + '\n');
 
-                } else {
+                }
+                else {
                     String cv = Exp();
                     writer.write("store i32 " + cv + ", i32* " + symbol.register + '\n');
                 }
@@ -896,15 +897,25 @@ public class Grammer {
                                 Symbol s=symbols.get(i);
                                 if(s.token.name.equals(f.name)){
                                     w1=s;
-                                }
-                                if(s.token.name.equals(d.name))
-                                    w2=s;
-
-                                if(w1!=null&&w2!=null)
                                     break;
+                                }
+
+                            }
+                            for(int i = symbols.size()-1;i>=0;i--){
+                                Symbol s=symbols.get(i);
+                                if(s.token.name.equals(d.name)){
+                                    w2=s;
+                                    break;
+                                }
                             }
                             if(w1==null||w2==null)
                                 System.exit(3);
+                            if(f.name.equals("sum")&&d.name.equals("a")){
+                                for(Symbol sd:symbols)
+                                    System.out.println(sd.token.name+" "+sd.register);
+                                System.out.println(w1.token.name+" "+w1.register);
+                                System.out.println(w2.token.name+" "+w2.register);
+                            }
                             writer.write("%x"+r+" = load i32, i32* "+w1.register+'\n');
                             r++;
                             writer.write("%x"+r+" = load i32, i32* "+w2.register+'\n');
@@ -956,16 +967,20 @@ public class Grammer {
                     }
                     else if(q.name.equals("-")){
                         if(isIdent(d.name)&&isIdent(f.name)){
-                            for(int i=symbols.size()-1;i>=0;i--){
+                            for(int i = symbols.size()-1;i>=0;i--){
                                 Symbol s=symbols.get(i);
                                 if(s.token.name.equals(f.name)){
                                     w1=s;
-                                }
-                                if(s.token.name.equals(d.name))
-                                    w2=s;
-
-                                if(w1!=null&&w2!=null)
                                     break;
+                                }
+
+                            }
+                            for(int i = symbols.size()-1;i>=0;i--){
+                                Symbol s=symbols.get(i);
+                                if(s.token.name.equals(d.name)){
+                                    w2=s;
+                                    break;
+                                }
                             }
                             if(w1==null||w2==null)
                                 System.exit(3);
@@ -1020,16 +1035,20 @@ public class Grammer {
                     }
                     else if(q.name.equals("*")){
                         if(isIdent(d.name)&&isIdent(f.name)){
-                            for(int i=symbols.size()-1;i>=0;i--){
+                            for(int i = symbols.size()-1;i>=0;i--){
                                 Symbol s=symbols.get(i);
                                 if(s.token.name.equals(f.name)){
                                     w1=s;
-                                }
-                                if(s.token.name.equals(d.name))
-                                    w2=s;
-
-                                if(w1!=null&&w2!=null)
                                     break;
+                                }
+
+                            }
+                            for(int i = symbols.size()-1;i>=0;i--){
+                                Symbol s=symbols.get(i);
+                                if(s.token.name.equals(d.name)){
+                                    w2=s;
+                                    break;
+                                }
                             }
                             if(w1==null||w2==null)
                                 System.exit(3);
@@ -1083,16 +1102,20 @@ public class Grammer {
                     }
                     else if(q.name.equals("/")){
                         if(isIdent(d.name)&&isIdent(f.name)){
-                            for(int i=symbols.size()-1;i>=0;i--){
+                            for(int i = symbols.size()-1;i>=0;i--){
                                 Symbol s=symbols.get(i);
                                 if(s.token.name.equals(f.name)){
                                     w1=s;
-                                }
-                                if(s.token.name.equals(d.name))
-                                    w2=s;
-
-                                if(w1!=null&&w2!=null)
                                     break;
+                                }
+
+                            }
+                            for(int i = symbols.size()-1;i>=0;i--){
+                                Symbol s=symbols.get(i);
+                                if(s.token.name.equals(d.name)){
+                                    w2=s;
+                                    break;
+                                }
                             }
                             if(w1==null||w2==null)
                                 System.exit(3);
@@ -1146,16 +1169,20 @@ public class Grammer {
                     }
                     else if(q.name.equals("%")){
                         if(isIdent(d.name)&&isIdent(f.name)){
-                            for(int i=symbols.size()-1;i>=0;i--){
+                            for(int i = symbols.size()-1;i>=0;i--){
                                 Symbol s=symbols.get(i);
                                 if(s.token.name.equals(f.name)){
                                     w1=s;
-                                }
-                                if(s.token.name.equals(d.name))
-                                    w2=s;
-
-                                if(w1!=null&&w2!=null)
                                     break;
+                                }
+
+                            }
+                            for(int i = symbols.size()-1;i>=0;i--){
+                                Symbol s=symbols.get(i);
+                                if(s.token.name.equals(d.name)){
+                                    w2=s;
+                                    break;
+                                }
                             }
                             if(w1==null||w2==null)
                                 System.exit(3);
@@ -1381,13 +1408,18 @@ public class Grammer {
                                 Symbol s=symbols.get(i);
                                 if(s.token.name.equals(f.name)){
                                     w1=s;
-                                }
-                                if(s.token.name.equals(d.name))
-                                    w2=s;
-
-                                if(w1!=null&&w2!=null)
                                     break;
+                                }
+
                             }
+                            for(int i = symbols.size()-1;i>=0;i--){
+                                Symbol s=symbols.get(i);
+                                if(s.token.name.equals(d.name)){
+                                    w2=s;
+                                    break;
+                                }
+                            }
+
                             if(w1==null||w2==null||!w1.type.equals("const int")||!w2.type.equals("const int"))
                                 System.exit(3);
 
@@ -1433,13 +1465,18 @@ public class Grammer {
                                 Symbol s=symbols.get(i);
                                 if(s.token.name.equals(f.name)){
                                     w1=s;
-                                }
-                                if(s.token.name.equals(d.name))
-                                    w2=s;
-
-                                if(w1!=null&&w2!=null)
                                     break;
+                                }
+
                             }
+                            for(int i = symbols.size()-1;i>=0;i--){
+                                Symbol s=symbols.get(i);
+                                if(s.token.name.equals(d.name)){
+                                    w2=s;
+                                    break;
+                                }
+                            }
+
                             if(w1==null||w2==null||!w1.type.equals("const int")||!w2.type.equals("const int"))
                                 System.exit(3);
 
@@ -1485,13 +1522,18 @@ public class Grammer {
                                 Symbol s=symbols.get(i);
                                 if(s.token.name.equals(f.name)){
                                     w1=s;
-                                }
-                                if(s.token.name.equals(d.name))
-                                    w2=s;
-
-                                if(w1!=null&&w2!=null)
                                     break;
+                                }
+
                             }
+                            for(int i = symbols.size()-1;i>=0;i--){
+                                Symbol s=symbols.get(i);
+                                if(s.token.name.equals(d.name)){
+                                    w2=s;
+                                    break;
+                                }
+                            }
+
                             if(w1==null||w2==null||!w1.type.equals("const int")||!w2.type.equals("const int"))
                                 System.exit(3);
 
@@ -1537,12 +1579,16 @@ public class Grammer {
                                 Symbol s=symbols.get(i);
                                 if(s.token.name.equals(f.name)){
                                     w1=s;
-                                }
-                                if(s.token.name.equals(d.name))
-                                    w2=s;
-
-                                if(w1!=null&&w2!=null)
                                     break;
+                                }
+
+                            }
+                            for(int i = symbols.size()-1;i>=0;i--){
+                                Symbol s=symbols.get(i);
+                                if(s.token.name.equals(d.name)){
+                                    w2=s;
+                                    break;
+                                }
                             }
                             if(w1==null||w2==null||!w1.type.equals("const int")||!w2.type.equals("const int"))
                                 System.exit(3);
@@ -1589,13 +1635,18 @@ public class Grammer {
                                 Symbol s=symbols.get(i);
                                 if(s.token.name.equals(f.name)){
                                     w1=s;
-                                }
-                                if(s.token.name.equals(d.name))
-                                    w2=s;
-
-                                if(w1!=null&&w2!=null)
                                     break;
+                                }
+
                             }
+                            for(int i = symbols.size()-1;i>=0;i--){
+                                Symbol s=symbols.get(i);
+                                if(s.token.name.equals(d.name)){
+                                    w2=s;
+                                    break;
+                                }
+                            }
+                            
                             if(w1==null||w2==null||!w1.type.equals("const int")||!w2.type.equals("const int"))
                                 System.exit(3);
 
