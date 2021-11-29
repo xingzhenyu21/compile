@@ -4,56 +4,45 @@ declare i32 @getch()
 declare void @putch(i32)
 define dso_local i32 @main(){
 %x1 = alloca i32
-store i32 48, i32* %x1
-%x2 = alloca i32
-store i32 1, i32* %x2
-br label %x3
-x3:
-%x4 = load i32, i32* %x2
-%x5= icmp slt i32 %x4, 12
-%x6= zext i1 %x5 to i32
-   %x7 = icmp ne i32 %x6, 0
-   br i1 %x7,label %x8, label %x9
-x8:
-%x10 = alloca i32
-store i32 0, i32* %x10
-br label %x11
+%x2 = call i32 @getint()
+store i32 %x2, i32* %x1
+%x3 = alloca i32
+store i32 0, i32* %x3
+%x4 = alloca i32
+store i32 0, i32* %x4
+br label %x5
+x5:
+%x6 = load i32, i32* %x3
+%x7 = load i32, i32* %x1
+%x8= icmp slt i32 %x6, %x7
+%x9= zext i1 %x8 to i32
+   %x10 = icmp ne i32 %x9, 0
+   br i1 %x10,label %x11, label %x12
 x11:
-%x12 = load i32, i32* %x10
-%x13 = load i32, i32* %x2
- %x14 = mul i32 2, %x13
- %x15 = sub i32 %x14, 1
-%x16= icmp slt i32 %x12, %x15
-%x17= zext i1 %x16 to i32
-   %x18 = icmp ne i32 %x17, 0
-   br i1 %x18,label %x19, label %x20
+%x13 = load i32, i32* %x3
+ %x14 = srem i32 %x13, 2
+%x15= icmp eq i32 %x14, 0
+%x16= zext i1 %x15 to i32
+   %x17 = icmp ne i32 %x16, 0
+   br i1 %x17,label %x18, label %x19
+x18:
+%x20 = load i32, i32* %x3
+ %x21 = add i32 %x20, 1
+store i32 %x21, i32* %x3
+br label %x5
+br label %x19
 x19:
-%x21 = load i32, i32* %x10
- %x22 = srem i32 %x21, 3
-%x23= icmp eq i32 %x22, 1
-%x24= zext i1 %x23 to i32
-   %x25 = icmp ne i32 %x24, 0
-   br i1 %x25,label %x26, label %x27
-x26:
-%x28 = load i32, i32* %x1
- %x29 = add i32 %x28, 1
-call void @putch(i32 %x29)
-br label %x30
-x27:
-%x31 = load i32, i32* %x1
-call void @putch(i32 %x31)
-br label %x30
-x30:
-%x32 = load i32, i32* %x10
- %x33 = add i32 %x32, 1
-store i32 %x33, i32* %x10
-  br label %x11
-x20:
+%x23 = load i32, i32* %x3
+ %x24 = add i32 %x23, 1
+store i32 %x24, i32* %x3
+%x25 = load i32, i32* %x4
+%x26 = load i32, i32* %x3
+ %x27 = add i32 %x25, %x26
+store i32 %x27, i32* %x4
+%x28 = load i32, i32* %x4
+call void @putint(i32 %x28)
 call void @putch(i32 10)
-%x34 = load i32, i32* %x2
- %x35 = add i32 %x34, 1
-store i32 %x35, i32* %x2
-  br label %x3
-x9:
+  br label %x5
+x12:
   ret i32 0
 }

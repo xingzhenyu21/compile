@@ -109,9 +109,9 @@ public class Grammer {
             System.exit(1);
         writer.write(")");
         p++;
-        Block(0);
+        Block(0,0,0);
     }
-    public void Block(int z) throws IOException {
+    public void Block(int z,int labelx,int labely) throws IOException {
         index[++current_block]=symbols.size();
         if(!Main.tokens.get(p).name.equals("{")){
             writer.close();
@@ -122,7 +122,7 @@ public class Grammer {
         p++;
 
         while (p<Main.tokens.size()&&!Main.tokens.get(p).name.equals("}")) {
-            BlockItem();
+            BlockItem(labelx,labely);
             p++;
 
         }
@@ -136,7 +136,7 @@ public class Grammer {
         }
         current_block--;
     }
-    public void BlockItem() throws IOException {
+    public void BlockItem(int labelx,int labely) throws IOException {
 
         if(Main.tokens.get(p).name.equals("const")){
             p++;
@@ -149,7 +149,7 @@ public class Grammer {
 
         }
         else {
-            Stmt(0);
+            Stmt(labelx,labely);
         }
     }
     public void VarDef2() throws IOException {
@@ -530,7 +530,7 @@ public class Grammer {
         else
             System.exit(19);
     }
-    public void Stmt(int xy) throws IOException {
+    public void Stmt(int labelx,int labely) throws IOException {
 
         if(Main.tokens.get(p).name.equals("return")){
             p++;
@@ -561,6 +561,18 @@ public class Grammer {
                 System.exit(57);
 
         }
+        else if(Main.tokens.get(p).name.equals("continue")){
+            p++;
+            if(!Main.tokens.get(p).name.equals(";"))
+                System.exit(34);
+            writer.write("br label %x"+labelx+'\n');
+        }
+        else if(Main.tokens.get(p).name.equals("break")){
+            p++;
+            if(!Main.tokens.get(p).name.equals(";"))
+                System.exit(34);
+            writer.write("br label %x"+labely+'\n');
+        }
         else if(Main.tokens.get(p).name.equals("while")){
             int label=r;
             r++;
@@ -585,7 +597,7 @@ public class Grammer {
             }
             p++;
             writer.write("x"+label1+":\n");
-            Stmt(1);
+            Stmt(label,label2);
             writer.write("  br label %x"+label+'\n');
             writer.write("x"+label2+":\n");
         }
@@ -614,7 +626,7 @@ public class Grammer {
             if(Main.tokens.get(p).name.equals("{")) {
                 writer.write("x"+label1+":\n");
 
-                Block(1);
+                Block(1,labelx,labely);
                 p++;
 
                 int label3=r++;
@@ -623,13 +635,13 @@ public class Grammer {
                     writer.write("br label %x"+label3+'\n');
                     writer.write("x"+label2+":\n");
                     if(Main.tokens.get(p).name.equals("{")){
-                        Block(1);
+                        Block(1,labelx,labely);
                         writer.write("br label %x"+label3+'\n');
                         writer.write("x"+label3+":\n");
 
                     }
                     else{
-                        BlockItem();
+                        BlockItem(labelx,labely);
                         writer.write("br label %x"+label3+'\n');
                         writer.write("x"+label3+":\n");
                     }
@@ -643,7 +655,7 @@ public class Grammer {
             else{
                 writer.write("x"+label1+":\n");
                 int label3=r++;
-                BlockItem();
+                BlockItem(labelx,labely);
                 p++;
 
                 if(Main.tokens.get(p).name.equals("else")){
@@ -652,7 +664,7 @@ public class Grammer {
                     writer.write("x"+label2+":\n");
 
                     if(Main.tokens.get(p).name.equals("{")){
-                        Block(1);
+                        Block(1,labelx,labely);
                         writer.write("br label %x"+label3+'\n');
                         writer.write("x"+label3+":\n");
                         //p++;
@@ -660,7 +672,7 @@ public class Grammer {
                     }
                     else{
 
-                        BlockItem();
+                        BlockItem(labelx,labely);
 
                         writer.write("br label %x"+label3+'\n');
                         writer.write("x"+label3+":\n");
@@ -721,7 +733,7 @@ public class Grammer {
                 System.exit(56);
         }
         else if(Main.tokens.get(p).name.equals("{")){
-            Block(1);
+            Block(1,labelx,labely);
         }
         else{
             writer.close();
