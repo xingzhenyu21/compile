@@ -715,28 +715,14 @@ public class Grammer {
                 return;
             }
             p++;
-            if(Main.tokens.get(p).name.equals("getint")||Main.tokens.get(p).name.equals("getch")){
-                String s;
-                s=Main.tokens.get(p).name;
-                p++;
-                if(!Main.tokens.get(p).name.equals("("))
-                    System.exit(34);
-                p++;
-                if(!Main.tokens.get(p).name.equals(")"))
-                    System.exit(34);
-                writer.write("%x"+r+" = call i32 @"+s+"()"+'\n');
-                r++;
-                writer.write("store i32 %x"+(r-1)+", i32* "+x.register+'\n');
-                p++;
 
-            }
-            else{
                 String cv=Exp();
                 writer.write("store i32 "+cv+", i32* "+x.register+'\n');
                 p++;
-            }
-            if(!Main.tokens.get(p).name.equals(";"))
-                System.exit(56);
+
+            if(!Main.tokens.get(p).name.equals(";")){
+
+                System.exit(56);}
         }
         else if(Main.tokens.get(p).name.equals("{")){
             Block(1,labelx,labely);
@@ -792,6 +778,21 @@ public class Grammer {
                         break;
                     right++;
                 }
+                if(Main.tokens.get(p).name.equals("getint")||Main.tokens.get(p).name.equals("getch")){
+                    p++;
+                    if(!Main.tokens.get(p).name.equals("("))
+                        System.exit(59);
+                    p++;
+                    if(!Main.tokens.get(p).name.equals(")"))
+                        System.exit(59);
+                    writer.write("%x"+r+" = call i32 @"+Main.tokens.get(p-2).name+"()\n");
+                    r++;
+                    Main.tokens.get(p-2).name="%x"+(r-1);
+                    all.add(Main.tokens.get(p-2));
+
+                    p++;
+                }
+                else
                 all.add(Main.tokens.get(p++));
             }
         }
