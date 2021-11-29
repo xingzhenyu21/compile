@@ -728,8 +728,9 @@ public class Grammer {
             Block(1,labelx,labely);
         }
         else{
-            writer.close();
-            System.out.println(Main.tokens.get(p).name);
+            
+            if(Main.tokens.get(p).name.equals(";"))
+                return;
             System.exit(12132);
         }
 
