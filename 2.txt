@@ -2,134 +2,35 @@ declare i32 @getint()
 declare void @putint(i32)
 declare i32 @getch()
 declare void @putch(i32)
-@ascii_0 = dso_local global i32 48
 define dso_local i32 @main(){
 %x1 = alloca i32
-store i32 0, i32* %x1
 %x2 = alloca i32
-br label %x3
-x3:
-   %x4 = icmp ne i32 1, 0
-   br i1 %x4,label %x5, label %x6
-x5:
-%x7 = call i32 @getch()
-%x8 = load i32, i32* @ascii_0
- %x9 = sub i32 %x7, %x8
-store i32 %x9, i32* %x2
-%x10 = load i32, i32* %x2
-%x11= icmp slt i32 %x10, 0
-%x12= zext i1 %x11 to i32
-%x13 = load i32, i32* %x2
-%x14= icmp sgt i32 %x13, 9
-%x15= zext i1 %x14 to i32%x16 = or i32 %x12, %x15
-   %x17 = icmp ne i32 %x16, 0
-   br i1 %x17,label %x18, label %x19
-x18:
-br label %x3
-br label %x20
-x19:
-br label %x6
-br label %x20
-x20:
-  br label %x3
-x6:
-%x21 = load i32, i32* %x2
-store i32 %x21, i32* %x1
-br label %x22
-x22:
-   %x23 = icmp ne i32 1, 0
-   br i1 %x23,label %x24, label %x25
-x24:
-%x26 = call i32 @getch()
-%x27 = load i32, i32* @ascii_0
- %x28 = sub i32 %x26, %x27
-store i32 %x28, i32* %x2
-%x29 = load i32, i32* %x2
-%x30= icmp sge i32 %x29, 0
-%x31= zext i1 %x30 to i32
-%x32 = load i32, i32* %x2
-%x33= icmp sle i32 %x32, 9
-%x34= zext i1 %x33 to i32
-%x35 = and i32 %x31, %x34
-   %x36 = icmp ne i32 %x35, 0
-   br i1 %x36,label %x37, label %x38
-x37:
-%x39 = load i32, i32* %x1
- %x40 = mul i32 %x39, 10
-%x41 = load i32, i32* %x2
- %x42 = add i32 %x40, %x41
-store i32 %x42, i32* %x1
-br label %x43
-x38:
-br label %x25
-br label %x43
-x43:
-  br label %x22
-x25:
-%x44 = load i32, i32* %x1
-call void @putint(i32 %x44)
-call void @putch(i32 10)
-store i32 0, i32* %x1
-br label %x45
-x45:
-   %x46 = icmp ne i32 1, 0
-   br i1 %x46,label %x47, label %x48
-x47:
-%x49 = call i32 @getch()
-%x50 = load i32, i32* @ascii_0
- %x51 = sub i32 %x49, %x50
-store i32 %x51, i32* %x2
-%x52 = load i32, i32* %x2
-%x53= icmp slt i32 %x52, 0
-%x54= zext i1 %x53 to i32
-%x55 = load i32, i32* %x2
-%x56= icmp sgt i32 %x55, 9
-%x57= zext i1 %x56 to i32%x58 = or i32 %x54, %x57
-   %x59 = icmp ne i32 %x58, 0
-   br i1 %x59,label %x60, label %x61
-x60:
-br label %x45
-br label %x62
-x61:
-br label %x48
-br label %x62
-x62:
-  br label %x45
-x48:
-%x63 = load i32, i32* %x2
-store i32 %x63, i32* %x1
-br label %x64
-x64:
-   %x65 = icmp ne i32 1, 0
-   br i1 %x65,label %x66, label %x67
-x66:
-%x68 = call i32 @getch()
-%x69 = load i32, i32* @ascii_0
- %x70 = sub i32 %x68, %x69
-store i32 %x70, i32* %x2
-%x71 = load i32, i32* %x2
-%x72= icmp sge i32 %x71, 0
-%x73= zext i1 %x72 to i32
-%x74 = load i32, i32* %x2
-%x75= icmp sle i32 %x74, 9
-%x76= zext i1 %x75 to i32
-%x77 = and i32 %x73, %x76
-   %x78 = icmp ne i32 %x77, 0
-   br i1 %x78,label %x79, label %x80
-x79:
-%x81 = load i32, i32* %x1
- %x82 = mul i32 %x81, 10
-%x83 = load i32, i32* %x2
- %x84 = add i32 %x82, %x83
-store i32 %x84, i32* %x1
-br label %x85
-x80:
-br label %x67
-br label %x85
-x85:
-  br label %x64
-x67:
-%x86 = load i32, i32* %x1
-call void @putint(i32 %x86)
+%x3 = alloca i32
+%x4 = call i32 @getint()
+store i32 %x4, i32* %x1
+%x5 = call i32 @getint()
+store i32 %x5, i32* %x2
+%x6 = alloca i32
+br label %x7
+x7:
+%x8 = load i32, i32* %x1
+%x9= icmp sgt i32 %x8, 0
+%x10= zext i1 %x9 to i32   %x11 = icmp ne i32 %x10, 0
+   br i1 %x11,label %x12, label %x13
+x12:
+%x14 = load i32, i32* %x2
+%x15 = load i32, i32* %x1
+ %x16 = srem i32 %x14, %x15
+store i32 %x16, i32* %x6
+%x17 = load i32, i32* %x1
+store i32 %x17, i32* %x2
+%x18 = load i32, i32* %x6
+store i32 %x18, i32* %x1
+  br label %x7
+x13:
+%x19 = load i32, i32* %x2
+store i32 %x19, i32* %x3
+%x20 = load i32, i32* %x3
+call void @putint(i32 %x20)
   ret i32 0
 }

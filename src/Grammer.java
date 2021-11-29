@@ -1304,7 +1304,7 @@ public class Grammer {
             }
             if(isDigit(all.get(0).name))
                 return String.valueOf(Integer.parseInt(all.get(0).name));
-            System.exit(10);
+            return all.get(0).name;
         }
         if(isIdent(opnd.get(opnd.size()-1).name)){
             for(int i=symbols.size()-1;i>=0;i--){
