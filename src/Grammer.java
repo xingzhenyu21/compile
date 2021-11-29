@@ -561,7 +561,34 @@ public class Grammer {
                 System.exit(57);
 
         }
+        else if(Main.tokens.get(p).name.equals("while")){
+            int label=r;
+            r++;
+            writer.write("br label %x"+label+'\n');
+            writer.write("x"+label+":\n");
+            p++;
+            if(!Main.tokens.get(p).name.equals("(")){
+                System.exit(124);
+            }
+            p++;
+            String cond = cond();
+            writer.write("   %x"+r+" = icmp ne i32 "+cond+", 0"+'\n');
+            r++;
+            int label1 = r;
+            int label2 = 1+r;
+            writer.write("   br i1 %x"+(r-1)+",label %x"+r+", label %x"+(r+1)+'\n');
+            r=r+2;
+            p++;
+            if(!Main.tokens.get(p).name.equals(")")){
 
+                System.exit(124);
+            }
+            p++;
+            writer.write("x"+label1+":\n");
+            Stmt(1);
+            writer.write("  br label %x"+label+'\n');
+            writer.write("x"+label2+":\n");
+        }
         else if(Main.tokens.get(p).name.equals("if")){
             p++;
             if(!Main.tokens.get(p).name.equals("(")){
@@ -1646,7 +1673,7 @@ public class Grammer {
                                     break;
                                 }
                             }
-                            
+
                             if(w1==null||w2==null||!w1.type.equals("const int")||!w2.type.equals("const int"))
                                 System.exit(3);
 
