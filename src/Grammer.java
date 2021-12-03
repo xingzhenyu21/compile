@@ -95,7 +95,6 @@ public class Grammer {
             else
                 break;
         }
-
         if(!Main.tokens.get(p).name.equals("int"))
             System.exit(19373367);
         writer.write("define dso_local i32");
