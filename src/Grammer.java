@@ -269,7 +269,7 @@ public class Grammer {
                         if(!Main.tokens.get(p).name.equals("{"))
                             System.exit(7658);
                         if(Main.tokens.get(p+1).name.equals("}")){
-                            writer.write(symbol.register+" = dso_local global ["+symbol.x+"x i32]] zeroinitializer \n");
+                            writer.write(symbol.register+" = dso_local global ["+symbol.x+"x i32] zeroinitializer \n");
                             p++;
                             return;
                         }
@@ -300,7 +300,7 @@ public class Grammer {
                     }
                     else if(Main.tokens.get(p).name.equals(",")||Main.tokens.get(p).name.equals(";")){
                         p--;
-                        writer.write(symbol.register+" = dso_local global ["+symbol.x+"x i32]] zeroinitializer \n");
+                        writer.write(symbol.register+" = dso_local global ["+symbol.x+"x i32] zeroinitializer \n");
                     }
                     else{
 
