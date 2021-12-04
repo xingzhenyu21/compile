@@ -23,7 +23,7 @@ public class Main {
 
             ch= reader.read();
         }
-////       System.out.println(tokens.size());
+//////       System.out.println(tokens.size());
 //        for(Token t:tokens){
 //            System.out.println(t.name);
 //        }
@@ -34,5 +34,6 @@ public class Main {
 
         grammer.CompUnit();
         grammer.writer.close();
+
     }
 }

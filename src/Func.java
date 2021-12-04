@@ -7,6 +7,8 @@ public class Func {
             return true;
         if((char)ch=='<'||(char)ch=='>'||(char)ch=='=')
             return true;
+        if((char)ch=='['||(char)ch==']')
+            return true;
         return false;
     }
 
@@ -54,7 +56,7 @@ public class Func {
             return null;
         String s="";
         s = s + (char)ch;
-        if((char)ch=='{'||(char)ch=='('||(char)ch=='-'||(char)ch=='+'||(char)ch=='*'||(char)ch=='/'||(char)ch==')'||(char)ch=='}'||(char)ch=='%'||(char)ch==',')
+        if((char)ch=='{'||(char)ch=='('||(char)ch=='-'||(char)ch=='+'||(char)ch=='*'||(char)ch=='/'||(char)ch==')'||(char)ch=='}'||(char)ch=='%'||(char)ch==','||(char)ch=='['||(char)ch==']')
             return new Token(s,1);
         if(((char)ch=='<'||(char)ch=='>'||(char)ch=='='||(char)ch=='!')){
             int temp=reader.read();
