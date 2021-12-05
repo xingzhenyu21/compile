@@ -9,6 +9,7 @@ public class Symbol {
     int x;
     int y;
     int[] array;
+    int flag=1;
     ArrayList<String> arguments;
     public void f(){
         array = new int[1000];

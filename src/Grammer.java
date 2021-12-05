@@ -137,6 +137,7 @@ public class Grammer {
                     System.exit(53674);
                 num++;
                 Symbol temp = new Symbol();
+                temp.flag=0;
                 p++;
                 if(!isIdent(Main.tokens.get(p).name))
                     System.exit(2134253);
@@ -233,6 +234,7 @@ public class Grammer {
             if(!isIdent(Main.tokens.get(p).name))
                 System.exit(1111);
             symbol.token=Main.tokens.get(p);
+
             symbols.add(symbol);
             writer.write("@"+symbol.token.name);
             p++;
@@ -256,6 +258,7 @@ public class Grammer {
                     System.exit(53674);}
                 num++;
                 Symbol temp = new Symbol();
+                temp.flag=0;
                 p++;
                 if(!isIdent(Main.tokens.get(p).name))
                     System.exit(2134253);
@@ -1576,7 +1579,7 @@ public class Grammer {
                     }
 
 
-                    if(flag==1)
+                    if(x.flag==0)
                     writer.write("%x"+r+" = getelementptr ["+x.x+" x i32], ["+x.x+" x i32]* "+x.register+", i32 0, i32 "+s1+'\n');
                     else{
                         writer.write("%x"+r+" = getelementptr i32, i32* "+x.register+", i32 "+s1+'\n');
@@ -1616,7 +1619,7 @@ public class Grammer {
                     p++;
                     String addr=Exp();
 
-                    if(flag==0){
+                    if(x.flag==0){
                         writer.write("%x"+r+" = getelementptr ["+x.y+" x i32], ["+x.y+" x i32]* "+x.register+", i32 "+s1+'\n');
                         r++;
                         writer.write("%x"+r+" = getelementptr ["+x.y+" x i32], ["+x.y+" x i32]* "+(r-1)+", i32 0,i32 "+s2+'\n');
@@ -1810,7 +1813,7 @@ public class Grammer {
                             System.exit(79183);
                         }
                         if(temp.dimension==1){
-                            if(flag==0){
+                            if(temp.flag==0){
                                 writer.write("%x"+r+" = getelementptr i32, i32* "+temp.register+", i32 "+s1+"\n");
                                 r++;
                                 writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
@@ -1854,7 +1857,7 @@ public class Grammer {
                                 p++;
                             }
                             else{
-                                if(flag==0){
+                                if(temp.flag==0){
                                     writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+temp.register+", i32 "+s1+'\n');
                                     r++;
                                     writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+(r-1)+", i32 0,i32 0"+'\n');
@@ -1876,7 +1879,7 @@ public class Grammer {
                     }
                     else{
                         if(temp.dimension==1){
-                            if(flag==0){
+                            if(temp.flag==0){
                                 writer.write("%x"+r+" = getelementptr i32, i32* "+temp.register+", i32 "+0+"\n");
                                 r++;
 //                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
@@ -1892,7 +1895,7 @@ public class Grammer {
 
                         }
                         else{
-                            if(flag==0){
+                            if(temp.flag==0){
                                 writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+temp.register+", i32 "+0+'\n');
                                 r++;
                                 writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+(r-1)+", i32 0,i32 0"+'\n');
