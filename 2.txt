@@ -5,23 +5,38 @@ declare void @putch(i32)
 declare void @memset(i32*, i32, i32)
 declare i32 @getarray(i32*)
 declare void @putarray(i32, i32*)
-@arr = dso_local global [5 x [5 x i32]] zeroinitializer 
-define dso_local i32 @foo(i32* %x1){
-%x2 = alloca i32*
-store i32*  %x1, i32* * %x2
- %x3 = load i32* , i32* * %x2
-%x4 = getelementptr [0 x i32], [0 x i32]* %x3, i32 0, i32 1
- store i32 1, i32* %x4
-  ret i32 2
+@a = dso_local global i32 0
+@r = dso_local global i32 0
+define dso_local i32 @fac(i32 %x1){
+%x2 = alloca i32
+ store i32 %x1, i32* %x2
+%x3 = load i32, i32* %x2
+%x4= icmp slt i32 %x3, 2
+%x5= zext i1 %x4 to i32
+   %x6 = icmp ne i32 %x5, 0
+   br i1 %x6,label %x7, label %x8
+x7:
+  ret i32 1
+br label %x8
+x8:
+%x10 = load i32, i32* %x2
+ %x11 = sub i32 %x10, 1
+store i32 %x11, i32* @a
+%x12 = load i32, i32* @a
+%x13 = call i32 @fac(i32 %x12)
+store i32 %x13, i32* @r
+%x14 = load i32, i32* %x2
+%x15 = load i32, i32* @r
+ %x16 = mul i32 %x14, %x15
+store i32 %x16, i32* @r
+%x17 = load i32, i32* @r
+  ret i32 %x17
 }
 define dso_local i32 @main(){
-%x5 = getelementptr [5 x [5 x i32]], [5 x [5 x i32]]* @arr, i32 0, i32 0
-%x6 = getelementptr [5 x i32], [5 x i32]* %x5, i32 0, i32 0
-%x7 = call i32 @foo(i32* %x6)
-call void @putint(i32 %x7)
-%x8 = getelementptr [5 x [5 x i32]], [5 x [5 x i32]]* @arr, i32 0, i32 1
-%x9 = getelementptr [5 x i32], [5 x i32]* %x8, i32 0, i32 1
-%x10 = load i32, i32* %x9
-call void @putint(i32 %x10)
+%x18 = alloca i32
+store i32 5, i32* %x18
+%x19 = load i32, i32* %x18
+%x20 = call i32 @fac(i32 %x19)
+call void @putint(i32 %x20)
   ret i32 0
 }

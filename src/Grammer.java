@@ -12,6 +12,8 @@ public class Grammer {
     int r;
     int current_block;
     int []index = new int[1000];
+    int eip;
+    int h;
     public Grammer(String destinction) throws IOException {
         p=0;
         r=1;
@@ -1390,6 +1392,7 @@ public class Grammer {
 
         if(Main.tokens.get(p).name.equals("return")){
             p++;
+            h=1;
             if(Main.tokens.get(p).name.equals(";")){
                 writer.write("ret void\n");
                 return;
@@ -1411,7 +1414,8 @@ public class Grammer {
                 System.exit(17);
             p++;
             String csv=Exp();
-
+            if(eip==2)
+                System.exit(666666);
             writer.write("call void @"+name+"(i32 "+csv+")\n");
             p++;
             if(!Main.tokens.get(p).name.equals(")"))
@@ -1463,6 +1467,7 @@ public class Grammer {
         }
         else if(Main.tokens.get(p).name.equals("if")){
             p++;
+            h=0;
             if(!Main.tokens.get(p).name.equals("(")){
 
                 System.exit(124);
@@ -1492,24 +1497,30 @@ public class Grammer {
                 int label3=r++;
                 if(Main.tokens.get(p).name.equals("else")){
                     p++;
+                    if (h==0)
                     writer.write("br label %x"+label3+'\n');
                     writer.write("x"+label2+":\n");
+                    h=0;
                     if(Main.tokens.get(p).name.equals("{")){
+
                         Block(1,labelx,labely);
+                        if (h==0){
                         writer.write("br label %x"+label3+'\n');
-                        writer.write("x"+label3+":\n");
+                        writer.write("x"+label3+":\n");}
 
                     }
                     else{
                         BlockItem(labelx,labely);
+                        if (h==0){
                         writer.write("br label %x"+label3+'\n');
-                        writer.write("x"+label3+":\n");
+                        writer.write("x"+label3+":\n");}
                     }
                 }
                 else{
                     p--;
+                    if (h==0){
                     writer.write("br label %x"+label2+'\n');
-                    writer.write("x"+label2+":\n");
+                    writer.write("x"+label2+":\n");}
                 }
             }
             else{
@@ -1520,30 +1531,33 @@ public class Grammer {
 
                 if(Main.tokens.get(p).name.equals("else")){
                     p++;
+                    if (h==0)
                     writer.write("br label %x"+label3+'\n');
                     writer.write("x"+label2+":\n");
-
+                    h=0;
                     if(Main.tokens.get(p).name.equals("{")){
                         Block(1,labelx,labely);
+                        if (h==0){
                         writer.write("br label %x"+label3+'\n');
-                        writer.write("x"+label3+":\n");
+                        writer.write("x"+label3+":\n");}
                         //p++;
 
                     }
                     else{
 
                         BlockItem(labelx,labely);
-
+                        if (h==0){
                         writer.write("br label %x"+label3+'\n');
-                        writer.write("x"+label3+":\n");
+                        writer.write("x"+label3+":\n");}
 
                     }
 
                 }
                 else{
                     p--;
+                    if (h==0){
                     writer.write("br label %x"+label2+'\n');
-                    writer.write("x"+label2+":\n");
+                    writer.write("x"+label2+":\n");}
                 }
             }
 
@@ -1651,6 +1665,7 @@ public class Grammer {
                 }
                 p++;
                 ArrayList<String> arguments=new ArrayList<>();
+
                 while (true){
                     String xy=Exp();
                     arguments.add(xy);
@@ -1812,6 +1827,7 @@ public class Grammer {
                             System.exit(79183);
                         }
                         if(temp.dimension==1){
+                            eip=1;
                             if(temp.flag==0){
                                 writer.write("%x"+r+" = getelementptr i32, i32* "+temp.register+", i32 "+s1+"\n");
                                 r++;
@@ -1832,6 +1848,7 @@ public class Grammer {
                             p++;
                             if(Main.tokens.get(p).name.equals("[")){
                                 p++;
+                                eip=2;
                                 String s2=Exp();
                                 p++;
                                 if(!Main.tokens.get(p).name.equals("]"))
@@ -1935,6 +1952,7 @@ public class Grammer {
                     }
                     p=p+2;
                     ArrayList<String> arguments=new ArrayList<>();
+
                     while (true){
                         String x=Exp();
                         arguments.add(x);
