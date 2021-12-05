@@ -1,18 +1,23 @@
-void set1(int pos, int arr[]) {
-    arr[pos] = 1;
+int _getMaxOfAll(int result[], int size) {
+    int maxNum;
+    maxNum = -999999;
+    size = size - 1;
+    while(size > -1) {
+        if (result[size] > maxNum) {
+            maxNum = result[size];
+        }
+        size = size - 1;
+    }
+    return maxNum;
 }
 
 int main() {
-    int a[2][5];
-    int n;
-    n = getarray(a[0]);
-    getarray(a[1]);
-    int i = 0;
-    while (i < n) {
-        set1(i, a[i % 2]);
-        i = i + 1;
-    }
-    putarray(n, a[0]);
-    putarray(n, a[1]);
+    int result[3];
+    result[0] = -2;
+    result[1] = 2;
+    result[2] = -7;
+    int x;
+    x = result[_getMaxOfAll(result, 3)];
+    putint(x);
     return 0;
 }

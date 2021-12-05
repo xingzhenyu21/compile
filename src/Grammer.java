@@ -1859,16 +1859,17 @@ public class Grammer {
                                     r++;
                                     writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+(r-1)+", i32 0,i32 0"+'\n');
                                     r++;
-                                    writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
-                                    r++;
+//                                    writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+//                                    r++;
                                 }
                                 else{
                                 writer.write("%x"+r+" = getelementptr ["+temp.x+" x ["+temp.y+" x i32]], ["+temp.x+" x ["+temp.y+" x i32]]* "+temp.register+", i32 0, i32 "+s1+'\n');
                                 r++;
                                 writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0, i32 0"+'\n');
                                 r++;
-                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
-                                r++;}
+//                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+//                                r++;
+                               }
                                 all.add(new Token("%x"+(r-1)));
                             }
                         }
@@ -1878,14 +1879,14 @@ public class Grammer {
                             if(flag==0){
                                 writer.write("%x"+r+" = getelementptr i32, i32* "+temp.register+", i32 "+0+"\n");
                                 r++;
-                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
-                                r++;
+//                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+//                                r++;
                             }
                             else{
                                 writer.write("%x"+r+" = getelementptr ["+temp.x+" x i32], ["+temp.x+" x i32]* "+temp.register+", i32 0, i32 "+0+'\n');
                                 r++;
-                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
-                                r++;
+//                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+//                                r++;
                             }
                             all.add(new Token("%x"+(r-1)));
 
@@ -1896,16 +1897,16 @@ public class Grammer {
                                 r++;
                                 writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+(r-1)+", i32 0,i32 0"+'\n');
                                 r++;
-                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
-                                r++;
+//                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+//                                r++;
                             }
                             else{
                                 writer.write("%x"+r+" = getelementptr ["+temp.x+" x ["+temp.y+" x i32]], ["+temp.x+" x ["+temp.y+" x i32]]* "+temp.register+", i32 0, i32 "+0+'\n');
                                 r++;
                                 writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0, i32 0"+'\n');
                                 r++;
-                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
-                                r++;
+//                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+//                                r++;
                             }
                             all.add(new Token("%x"+(r-1)));
                         }
