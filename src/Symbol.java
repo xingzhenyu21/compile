@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Symbol {
     Token token;
     String register;
@@ -7,8 +9,9 @@ public class Symbol {
     int x;
     int y;
     int[] array;
-
+    ArrayList<String> arguments;
     public void f(){
         array = new int[1000];
     }
+    public void g(){arguments = new ArrayList<>();}
 }

@@ -76,30 +76,318 @@ public class Grammer {
                 return 0;
         }
     }
+    void divideSpace() throws IOException {
+        for(int i=index[current_block];i<symbols.size();i++){
+            Symbol temp=symbols.get(i);
+            if(temp.type.equals("int")){
+                writer.write("%x"+r+" = alloca i32\n");
+                writer.write(" store i32 "+temp.register+", i32* %x"+r+'\n');
+                temp.register="%x"+r;
+                r++;
+            }
+            else if(temp.type.equals("array")){
+                if(temp.dimension==1){
+                    writer.write("%x"+r+" = alloca i32*\n");
+                    writer.write("store i32*  "+temp.register+", i32* * %x"+r+'\n');
+                    r=r+1;
+                    temp.register="%x"+(r-1);
+                }
+                else{
+                    writer.write("%x"+r+" = alloca ["+temp.y+" x i32]* \n");
+                    writer.write("store ["+temp.y+" x i32]* "+temp.register+", ["+temp.y+" x i32]* * %x"+r+'\n');
+                    r++;
+                    temp.register="%x"+(r-1);
+                }
+            }
+        }
+    }
+    void FuncDef() throws IOException {
+        if(Main.tokens.get(p).name.equals("void")){
+            writer.write("define dso_local void ");
+            p++;
+            Symbol symbol = new Symbol();
+            symbol.type="function";
+            if(!isIdent(Main.tokens.get(p).name))
+                System.exit(1111);
+            symbol.token=Main.tokens.get(p);
+            symbols.add(symbol);
+            writer.write("@"+symbol.token.name);
+            p++;
+            symbol.g();
+            if(!Main.tokens.get(p).name.equals("("))
+                System.exit(12132);
+            if(Main.tokens.get(p+1).name.equals(")")){
+                p++;
+                writer.write("()");
+                p++;
+                Block(0,0,0);
+                return;
+            }
+            writer.write("(");
+            p++;
+            index[++current_block]=symbols.size();
+            int num=0;
+            while (true){
+                if(!Main.tokens.get(p).name.equals("int"))
+                    System.exit(53674);
+                num++;
+                Symbol temp = new Symbol();
+                p++;
+                if(!isIdent(Main.tokens.get(p).name))
+                    System.exit(2134253);
+                if(!Main.tokens.get(p+1).name.equals("[")){
+                    temp.token=Main.tokens.get(p);
+                    temp.type="int";
+                    temp.register="%x"+r;
+                    if(num==1)
+                    writer.write("i32 "+temp.register);
+                    else
+                        writer.write(",i32 "+temp.register);
+                    r++;
+                    symbols.add(temp);
+                    symbol.arguments.add("i32");
+
+                }
+                else{
+                    p=p+2;
+                    if(!Main.tokens.get(p).name.equals("]"))
+                        System.exit(4536);
+
+                    if(Main.tokens.get(p+1).name.equals("["))
+                    {
+                        temp.token=Main.tokens.get(p-2);
+                        temp.type="array";
+                        temp.dimension=2;
+                        temp.register="%x"+r;
+
+                        r++;
+                        p=p+2;
+                        int y=Exp2();
+                        temp.y=y;
+                        symbols.add(temp);
+                        symbol.arguments.add("["+y+" x i32]*");
+                        if(num==1)
+                            writer.write("["+y+" x i32]*"+temp.register);
+                        else
+                            writer.write(",["+y+" x i32]*"+temp.register);
+                        p++;
+                        if(!Main.tokens.get(p).name.equals("]")){
+                            System.exit(1213231);
+                        }
+                    }
+                    else{
+                        temp.token=Main.tokens.get(p-2);
+                        temp.type="array";
+                        temp.dimension=1;
+                        temp.register="%x"+r;
+                        symbols.add(temp);
+                        symbol.arguments.add("i32*");
+                        if(num==1)
+                            writer.write("i32* "+temp.register);
+                        else
+                            writer.write(",i32* "+temp.register);
+                        r++;
+                    }
+                }
+                p++;
+                if(Main.tokens.get(p).name.equals(","))
+                    p++;
+                else if(Main.tokens.get(p).name.equals(")"))
+                    break;
+                else{
+                    System.out.println(Main.tokens.get(p+1).name);
+                    System.exit(80923);}
+            }
+            p++;
+            if(!Main.tokens.get(p).name.equals("{"))
+                System.exit(890);
+            writer.write("){\n");
+
+            divideSpace();
+            p++;
+
+            while (p<Main.tokens.size()&&!Main.tokens.get(p).name.equals("}")) {
+                BlockItem(0,0);
+                p++;
+            }
+            if(!Main.tokens.get(p-2).name.equals("return"))
+                writer.write("   ret void\n");
+            writer.write("}\n");
+            int nu = symbols.size()-index[current_block];
+            while(nu>0){
+                symbols.pop();
+                nu--;
+            }
+            current_block--;
+        }
+        else if(Main.tokens.get(p).name.equals("int")){
+            writer.write("define dso_local i32 ");
+            p++;
+            Symbol symbol = new Symbol();
+            symbol.type="function";
+            if(!isIdent(Main.tokens.get(p).name))
+                System.exit(1111);
+            symbol.token=Main.tokens.get(p);
+            symbols.add(symbol);
+            writer.write("@"+symbol.token.name);
+            p++;
+            symbol.g();
+            if(!Main.tokens.get(p).name.equals("("))
+                System.exit(12132);
+
+            if(Main.tokens.get(p+1).name.equals(")")){
+                p++;
+                writer.write("()");
+                p++;
+                Block(0,0,0);
+                return;
+            }
+            writer.write("(");
+            p++;
+            index[++current_block]=symbols.size();
+            int num=0;
+            while (true){
+                if(!Main.tokens.get(p).name.equals("int")){
+                    System.exit(53674);}
+                num++;
+                Symbol temp = new Symbol();
+                p++;
+                if(!isIdent(Main.tokens.get(p).name))
+                    System.exit(2134253);
+                if(!Main.tokens.get(p+1).name.equals("[")){
+                    temp.token=Main.tokens.get(p);
+                    temp.type="int";
+                    temp.register="%x"+r;
+                    if(num==1)
+                        writer.write("i32 "+temp.register);
+                    else
+                        writer.write(",i32 "+temp.register);
+                    r++;
+                    symbols.add(temp);
+                    symbol.arguments.add("i32");
+                }
+                else{
+                    p=p+2;
+                    if(!Main.tokens.get(p).name.equals("]"))
+                        System.exit(4536);
+
+                    if(Main.tokens.get(p+1).name.equals("["))
+                    {
+                        temp.token=Main.tokens.get(p-2);
+                        temp.type="array";
+                        temp.dimension=2;
+                        temp.register="%x"+r;
+
+                        r++;
+                        p=p+2;
+                        int y=Exp2();
+                        temp.y=y;
+                        symbols.add(temp);
+                        symbol.arguments.add("["+y+" x i32]*");
+                        if(num==1)
+                            writer.write("["+y+" x i32]*"+temp.register);
+                        else
+                            writer.write(",["+y+" x i32]*"+temp.register);
+                        p++;
+                        if(!Main.tokens.get(p).name.equals("]")){
+                            System.exit(1213231);
+                        }
+                    }
+                    else{
+                        temp.token=Main.tokens.get(p-2);
+                        temp.type="array";
+                        temp.dimension=1;
+                        temp.register="%x"+r;
+                        symbols.add(temp);
+                        symbol.arguments.add("i32*");
+                        if(num==1)
+                            writer.write("i32* "+temp.register);
+                        else
+                            writer.write(",i32* "+temp.register);
+                        r++;
+                    }
+                }
+                p++;
+                if(Main.tokens.get(p).name.equals(","))
+                    p++;
+                else if(Main.tokens.get(p).name.equals(")"))
+                    break;
+                else{
+                    System.out.println(Main.tokens.get(p+1).name);
+                    System.exit(80923);}
+            }
+            p++;
+            if(!Main.tokens.get(p).name.equals("{"))
+                System.exit(890);
+            writer.write("){\n");
+
+            divideSpace();
+            p++;
+
+            while (p<Main.tokens.size()&&!Main.tokens.get(p).name.equals("}")) {
+                BlockItem(0,0);
+                p++;
+            }
+            writer.write("}\n");
+            int nu = symbols.size()-index[current_block];
+            while(nu>0){
+                symbols.pop();
+                nu--;
+            }
+            current_block--;
+        }
+        else
+            System.exit(12134423);
+    }
     public void CompUnit() throws IOException {
         writer.write("declare i32 @getint()\n");
         writer.write("declare void @putint(i32)\n");
         writer.write("declare i32 @getch()\n");
         writer.write("declare void @putch(i32)\n");
         writer.write("declare void @memset(i32*, i32, i32)\n");
+        writer.write("declare i32 @getarray(i32*)\n");
+        writer.write("declare void @putarray(i32, i32*)\n");
+        Symbol x1 = new Symbol();
+        x1.type="function";
+        x1.token=new Token("getarray");
+        x1.g();
+        x1.arguments.add("i32*");
+        symbols.add(x1);
+        Symbol x2 = new Symbol();
+        x2.type="function";
+        x2.token=new Token("putarray");
+        x2.g();
+        x2.arguments.add("i32");
+        x2.arguments.add("i32*");
+        symbols.add(x2);
         while(true){
             if(Main.tokens.get(p).name.equals("const")){
                 p++;
                 ConstDecl2();
                 p++;
             }
+            else if(Main.tokens.get(p).name.equals("void")){
+                FuncDef();
+                p++;
+            }
             else if(Main.tokens.get(p).name.equals("int")){
                 if(Main.tokens.get(p+1).name.equals("main"))
                     break;
+                if(Main.tokens.get(p+2).name.equals("(")){
+                    FuncDef();
+                    p++;
+                }
+                else{
                 p++;
                 VarDecl2();
-                p++;
+                p++;}
             }
             else
                 break;
         }
-        if(!Main.tokens.get(p).name.equals("int"))
-            System.exit(19373367);
+        if(!Main.tokens.get(p).name.equals("int")){
+            System.out.println(Main.tokens.get(p).name);
+            System.exit(19373367);}
         writer.write("define dso_local i32");
         if(!Main.tokens.get(++p).name.equals("main"))
             System.exit(1);
@@ -130,7 +418,7 @@ public class Grammer {
         }
 
         if(z==0)
-        writer.write("}");
+        writer.write("}\n");
         int num = symbols.size()-index[current_block];
         while(num>0){
             symbols.pop();
@@ -1094,6 +1382,10 @@ public class Grammer {
 
         if(Main.tokens.get(p).name.equals("return")){
             p++;
+            if(Main.tokens.get(p).name.equals(";")){
+                writer.write("ret void\n");
+                return;
+            }
             String zx=Exp();
             writer.write("  ret i32 ");
             writer.write(zx+'\n');
@@ -1263,7 +1555,7 @@ public class Grammer {
                 }
             }
             if(x==null){
-
+                System.out.println(Main.tokens.get(p).name);
                 System.exit(9);}
             p++;
             if(x.type.equals("array")){
@@ -1322,6 +1614,44 @@ public class Grammer {
                         System.exit(213);
                 }
             }
+            else if(x.type.equals("function")){
+                if(!Main.tokens.get(p).name.equals("("))
+                    System.exit(129803);
+                if(Main.tokens.get(p+1).name.equals(")")){
+                    writer.write("call i32 @"+x.token.name+"()\n");
+
+                    p=p+2;
+                    if(!Main.tokens.get(p).name.equals(";"))
+                        System.exit(2132435);
+                    return;
+                }
+                p++;
+                ArrayList<String> arguments=new ArrayList<>();
+                while (true){
+                    String xy=Exp();
+                    arguments.add(xy);
+                    p++;
+
+                    if(Main.tokens.get(p).name.equals(",")){
+                        p++;}
+                    else if(Main.tokens.get(p).name.equals(")"))
+                        break;
+                    else{
+                        System.out.println(Main.tokens.get(p-1).name);
+                        System.exit(5390422);}
+                }
+
+                if(arguments.size()!=x.arguments.size())
+                    System.exit(2314563);
+                writer.write("call void @"+x.token.name+'(');
+                for(int i =0;i<x.arguments.size()-1;i++)
+                    writer.write(x.arguments.get(i)+' '+arguments.get(i)+',');
+                writer.write(x.arguments.get(x.arguments.size()-1)+' '+arguments.get(arguments.size()-1)+")\n");
+                p++;
+                if(!Main.tokens.get(p).name.equals(";")){
+                    System.exit(231);
+                }
+            }
             else{
                 if(!Main.tokens.get(p).name.equals("=")){
 
@@ -1357,6 +1687,26 @@ public class Grammer {
         String t=Main.tokens.get(p).name;
         if(isDigit(t)||isIdent(t)||t.equals("!")||t.equals("+")||t.equals("-")||t.equals("*")||t.equals("/")||t.equals("%")||t.equals("(")||t.equals(")")||t.equals("[")||t.equals("]"))
             return true;
+        return false;
+    }
+    public boolean isFunction(String s){
+        for(int k=symbols.size()-1;k>=0;k--){
+            if(symbols.get(k).token.name.equals(s)){
+                if(symbols.get(k).type.equals("function"))
+                    return true;
+                return false;
+            }
+        }
+        return false;
+    }
+    public boolean isArray(String s){
+        for(int k=symbols.size()-1;k>=0;k--){
+            if(symbols.get(k).token.name.equals(s)){
+                if(symbols.get(k).type.equals("array"))
+                    return true;
+                return false;
+            }
+        }
         return false;
     }
     public String Exp() throws IOException {
@@ -1419,9 +1769,8 @@ public class Grammer {
 
                     p++;
                 }
-                else if(isIdent(Main.tokens.get(p).name)&&Main.tokens.get(p+1).name.equals("[")){
+                else if(isIdent(Main.tokens.get(p).name)&&isArray(Main.tokens.get(p).name)){
                     Symbol temp=null;
-
                     for(int k=symbols.size()-1;k>=0;k--){
                         if(symbols.get(k).token.name.equals(Main.tokens.get(p).name)){
                             temp=symbols.get(k);
@@ -1429,48 +1778,115 @@ public class Grammer {
                         }
                     }
                     if(temp == null)
-                        System.exit(3452);
-                    p=p+2;
-                    String s1=Exp();
+                        System.exit(34532);
                     p++;
-                    if(!Main.tokens.get(p).name.equals("]")){
-                        System.exit(7983);
-                    }
+                    if(Main.tokens.get(p).name.equals("[")){
+                        p++;
+                        String s1=Exp();
+                        p++;
+                        if(!Main.tokens.get(p).name.equals("]")){
+                            System.exit(79183);
+                        }
+                        if(temp.dimension==1){
+                            writer.write("%x"+r+" = getelementptr ["+temp.x+" x i32], ["+temp.x+" x i32]* "+temp.register+", i32 0, i32 "+s1+'\n');
+                            r++;
+                            writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+                            r++;
+                            all.add(new Token("%x"+(r-1)));
+                            p++;
+                        }
+                        else{
+                            p++;
+                            if(Main.tokens.get(p).name.equals("[")){
+                                p++;
+                                String s2=Exp();
+                                p++;
+                                if(!Main.tokens.get(p).name.equals("]"))
+                                    System.exit(1213);
 
-                    if(temp.dimension==1){
-                        writer.write("%x"+r+" = getelementptr ["+temp.x+" x i32], ["+temp.x+" x i32]* "+temp.register+", i32 0, i32 "+s1+'\n');
-                        r++;
-                        writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
-                        r++;
-                        all.add(new Token("%x"+(r-1)));
-                        p++;
-                    }
-                    else{
-                        p++;
-
-                        if(!Main.tokens.get(p).name.equals("[")){
-                            System.out.println(temp.token.name+temp.dimension+temp.type+Main.tokens.get(p).name);
-                            System.exit(5232);}
-                        p++;
-                        String s2=Exp();
-
-                        p++;
-                        if(!Main.tokens.get(p).name.equals("]"))
-                            System.exit(1213);
-
-                        writer.write("%x"+r+" = getelementptr ["+temp.x+" x ["+temp.y+" x i32]], ["+temp.x+" x ["+temp.y+" x i32]]* "+temp.register+", i32 0, i32 "+s1+'\n');
-                        r++;
-                        writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0, i32 "+s2+'\n');
-                        r++;
-                        writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
-                        r++;
-                        all.add(new Token("%x"+(r-1)));
-                        p++;
-                        if(temp.token.name.equals("a")){
-                            System.out.println(Main.tokens.get(p).name);
+                                writer.write("%x"+r+" = getelementptr ["+temp.x+" x ["+temp.y+" x i32]], ["+temp.x+" x ["+temp.y+" x i32]]* "+temp.register+", i32 0, i32 "+s1+'\n');
+                                r++;
+                                writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0, i32 "+s2+'\n');
+                                r++;
+                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+                                r++;
+                                all.add(new Token("%x"+(r-1)));
+                                p++;
+                            }
+                            else{
+                                writer.write("%x"+r+" = getelementptr ["+temp.x+" x ["+temp.y+" x i32]], ["+temp.x+" x ["+temp.y+" x i32]]* "+temp.register+", i32 0, i32 "+s1+'\n');
+                                r++;
+                                writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0, i32 0"+'\n');
+                                r++;
+                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+                                r++;
+                                all.add(new Token("%x"+(r-1)));
+                            }
                         }
                     }
+                    else{
+                        if(temp.dimension==1){
+                            writer.write("%x"+r+" = getelementptr ["+temp.x+" x i32], ["+temp.x+" x i32]* "+temp.register+", i32 0, i32 "+0+'\n');
+                            r++;
+                            writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+                            r++;
+                            all.add(new Token("%x"+(r-1)));
 
+                        }
+                        else{
+                            writer.write("%x"+r+" = getelementptr ["+temp.x+" x ["+temp.y+" x i32]], ["+temp.x+" x ["+temp.y+" x i32]]* "+temp.register+", i32 0, i32 "+0+'\n');
+                            r++;
+                            writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0, i32 0"+'\n');
+                            r++;
+                            writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+                            r++;
+                            all.add(new Token("%x"+(r-1)));
+                        }
+                    }
+                }
+                else if(isIdent(Main.tokens.get(p).name)&&isFunction(Main.tokens.get(p).name)){
+                    Symbol temp=null;
+
+                    for(int k=symbols.size()-1;k>=0;k--){
+                        if(symbols.get(k).token.name.equals(Main.tokens.get(p).name)){
+                            temp=symbols.get(k);
+                            break;
+                        }
+                    }
+                    if(temp == null){
+                        System.out.println(Main.tokens.get(p).name);
+                        System.exit(3452);}
+                    if(Main.tokens.get(p+2).name.equals(")")){
+                        writer.write("%x"+r+" = call i32 @"+temp.token.name+"()\n");
+                        r++;
+                        all.add(new Token("%x"+(r-1)));
+                        p=p+3;
+                        continue;
+                    }
+                    p=p+2;
+                    ArrayList<String> arguments=new ArrayList<>();
+                    while (true){
+                        String x=Exp();
+                        arguments.add(x);
+                        p++;
+
+                        if(Main.tokens.get(p).name.equals(",")){
+                            p++;}
+                        else if(Main.tokens.get(p).name.equals(")"))
+                            break;
+                        else{
+                            System.out.println(Main.tokens.get(p-1).name);
+                            System.exit(5390422);}
+                    }
+                    p++;
+                    if(arguments.size()!=temp.arguments.size())
+                        System.exit(2314563);
+                    writer.write("%x"+r+" = "+"call i32 @"+temp.token.name+'(');
+                    for(int i =0;i<temp.arguments.size()-1;i++)
+                        writer.write(temp.arguments.get(i)+' '+arguments.get(i)+',');
+                    writer.write(temp.arguments.get(temp.arguments.size()-1)+' '+arguments.get(arguments.size()-1)+")\n");
+                    all.add(new Token("%x"+r));
+                    r++;
                 }
                 else
                 all.add(Main.tokens.get(p++));
@@ -1481,9 +1897,6 @@ public class Grammer {
 
         all.add(new Token("#",1));
         int k=0;
-//        for(Token w:all)
-//            System.out.print(w.name);
-//        System.out.print('\n');
         for(int y=0;y<all.size();y++){
             if(all.get(y).type == 0){
                 if(y>0&&(all.get(y-1).name.equals("+")||all.get(y-1).name.equals("-"))){
@@ -1497,11 +1910,29 @@ public class Grammer {
 
                         }
                     }
+
                 }
             }
         }
+        for(int y=0;y<all.size();y++){
+            if(all.get(y).type==0){
+                if(y>2&&all.get(y-1).name.equals("+")&&all.get(y-2).type==1){
+                    all.remove(y-1);
+                }
+                else if(y>2&&all.get(y-1).name.equals("-")&&all.get(y-2).type==1){
+                    all.add(y-1,new Token("(",1));
+                    all.add(y,new Token("0"));
+                    all.add(y+1,new Token(")",1));
+                    y=y+3;
+                }
+            }
+        }
+        for(Token w:all)
+            System.out.print(w.name+' ');
+        System.out.print('\n');
         if(all.get(all.size()-2).type==1&&!all.get(all.size()-2).name.equals(")")){
-            System.exit(798);}
+
+            System.exit(7982);}
         for(int i = 0;i<all.size()-1;i++){
             if(all.get(i).name.equals("*")&&all.get(i+1).name.equals("*"))
                 System.exit(8);
@@ -1611,6 +2042,9 @@ public class Grammer {
                         }
 
                         continue;
+                    }
+                    if(opnd.isEmpty()){
+                        System.out.println(q.name);
                     }
                     f = opnd.remove(opnd.size()-1);
 
@@ -1983,6 +2417,9 @@ public class Grammer {
             }
             if(isDigit(all.get(0).name))
                 return String.valueOf(Integer.parseInt(all.get(0).name));
+            for(Symbol s:symbols)
+                System.out.print(s.token.name);
+            System.out.println('\n');
             return all.get(0).name;
         }
         if(isIdent(opnd.get(opnd.size()-1).name)){
@@ -2051,7 +2488,7 @@ public class Grammer {
                         }
                     }
                     if(temp == null)
-                        System.exit(3452);
+                        System.exit(34522);
                     if(!temp.type.startsWith("const"))
                         System.exit(13422);
                     p=p+2;
