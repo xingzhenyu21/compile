@@ -10,7 +10,6 @@ public class Grammer {
     FileWriter writer;
     Stack<Symbol> symbols=new Stack<Symbol>();
     int r;
-    int flag=0;
     int current_block;
     int []index = new int[1000];
     public Grammer(String destinction) throws IOException {
@@ -393,7 +392,7 @@ public class Grammer {
             else
                 break;
         }
-        flag=1;
+
         if(!Main.tokens.get(p).name.equals("int")){
             System.out.println(Main.tokens.get(p).name);
             System.exit(19373367);}
@@ -1579,7 +1578,7 @@ public class Grammer {
                     }
 
 
-                    if(x.flag==0)
+                    if(x.flag==1)
                     writer.write("%x"+r+" = getelementptr ["+x.x+" x i32], ["+x.x+" x i32]* "+x.register+", i32 0, i32 "+s1+'\n');
                     else{
                         writer.write("%x"+r+" = getelementptr i32, i32* "+x.register+", i32 "+s1+'\n');
@@ -1837,7 +1836,7 @@ public class Grammer {
                                 p++;
                                 if(!Main.tokens.get(p).name.equals("]"))
                                     System.exit(1213);
-                                if(flag==0){
+                                if(temp.flag==0){
                                     writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+temp.register+", i32 "+s1+'\n');
                                     r++;
                                     writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+(r-1)+", i32 0,i32 "+s2+'\n');
