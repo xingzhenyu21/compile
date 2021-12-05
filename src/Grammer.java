@@ -10,6 +10,7 @@ public class Grammer {
     FileWriter writer;
     Stack<Symbol> symbols=new Stack<Symbol>();
     int r;
+    int flag=0;
     int current_block;
     int []index = new int[1000];
     public Grammer(String destinction) throws IOException {
@@ -90,11 +91,15 @@ public class Grammer {
                     writer.write("%x"+r+" = alloca i32*\n");
                     writer.write("store i32*  "+temp.register+", i32* * %x"+r+'\n');
                     r=r+1;
+                    writer.write(" %x"+r+" = load i32* , i32* * %x"+(r-1)+'\n');
+                    r++;
                     temp.register="%x"+(r-1);
                 }
                 else{
                     writer.write("%x"+r+" = alloca ["+temp.y+" x i32]* \n");
                     writer.write("store ["+temp.y+" x i32]* "+temp.register+", ["+temp.y+" x i32]* * %x"+r+'\n');
+                    r++;
+                    writer.write(" %x"+r+" = load ["+temp.y+" x i32]*, ["+temp.y+" x i32]* * %x"+(r-1)+'\n');
                     r++;
                     temp.register="%x"+(r-1);
                 }
@@ -385,6 +390,7 @@ public class Grammer {
             else
                 break;
         }
+        flag=1;
         if(!Main.tokens.get(p).name.equals("int")){
             System.out.println(Main.tokens.get(p).name);
             System.exit(19373367);}
@@ -1568,7 +1574,13 @@ public class Grammer {
                     if(!Main.tokens.get(p).name.equals("]")){
                         System.exit(80789);
                     }
+
+
+                    if(flag==1)
                     writer.write("%x"+r+" = getelementptr ["+x.x+" x i32], ["+x.x+" x i32]* "+x.register+", i32 0, i32 "+s1+'\n');
+                    else{
+                        writer.write("%x"+r+" = getelementptr i32, i32* "+x.register+", i32 "+s1+'\n');
+                    }
                     r++;
                     int yh=r-1;
                     p++;
@@ -1604,10 +1616,20 @@ public class Grammer {
                     p++;
                     String addr=Exp();
 
-                    writer.write("%x"+r+" = getelementptr ["+x.x+" x ["+x.y+" x i32]], ["+x.x+" x ["+x.y+" x i32]]* "+x.register+", i32 0, i32 "+s1+'\n');
-                    r++;
-                    writer.write("%x"+r+" = getelementptr ["+x.y+" x i32], ["+x.y+" x i32]* %x"+(r-1)+", i32 0, i32 "+s2+'\n');
-                    r++;
+                    if(flag==0){
+                        writer.write("%x"+r+" = getelementptr ["+x.y+" x i32], ["+x.y+" x i32]* "+x.register+", i32 "+s1+'\n');
+                        r++;
+                        writer.write("%x"+r+" = getelementptr ["+x.y+" x i32], ["+x.y+" x i32]* "+(r-1)+", i32 0,i32 "+s2+'\n');
+                        r++;
+                    }
+                    else{
+                        writer.write("%x"+r+" = getelementptr ["+x.x+" x ["+x.y+" x i32]], ["+x.x+" x ["+x.y+" x i32]]* "+x.register+", i32 0, i32 "+s1+'\n');
+                        r++;
+                        writer.write("%x"+r+" = getelementptr ["+x.y+" x i32], ["+x.y+" x i32]* %x"+(r-1)+", i32 0, i32 "+s2+'\n');
+                        r++;
+                    }
+
+
                     writer.write("store i32 "+addr+", i32* %x"+(r-1)+'\n');
                     p++;
                     if(!Main.tokens.get(p).name.equals(";"))
@@ -1788,10 +1810,19 @@ public class Grammer {
                             System.exit(79183);
                         }
                         if(temp.dimension==1){
-                            writer.write("%x"+r+" = getelementptr ["+temp.x+" x i32], ["+temp.x+" x i32]* "+temp.register+", i32 0, i32 "+s1+'\n');
-                            r++;
-                            writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
-                            r++;
+                            if(flag==0){
+                                writer.write("%x"+r+" = getelementptr i32, i32* "+temp.register+", i32 "+s1+"\n");
+                                r++;
+                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+                                r++;
+                            }
+
+                            else {
+                                writer.write("%x"+r+" = getelementptr ["+temp.x+" x i32], ["+temp.x+" x i32]* "+temp.register+", i32 0, i32 "+s1+'\n');
+                                r++;
+                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+                                r++;
+                            }
                             all.add(new Token("%x"+(r-1)));
                             p++;
                         }
@@ -1803,43 +1834,79 @@ public class Grammer {
                                 p++;
                                 if(!Main.tokens.get(p).name.equals("]"))
                                     System.exit(1213);
-
-                                writer.write("%x"+r+" = getelementptr ["+temp.x+" x ["+temp.y+" x i32]], ["+temp.x+" x ["+temp.y+" x i32]]* "+temp.register+", i32 0, i32 "+s1+'\n');
-                                r++;
-                                writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0, i32 "+s2+'\n');
-                                r++;
-                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
-                                r++;
+                                if(flag==0){
+                                    writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+temp.register+", i32 "+s1+'\n');
+                                    r++;
+                                    writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+(r-1)+", i32 0,i32 "+s2+'\n');
+                                    r++;
+                                    writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+                                    r++;
+                                }
+                                else{
+                                    writer.write("%x"+r+" = getelementptr ["+temp.x+" x ["+temp.y+" x i32]], ["+temp.x+" x ["+temp.y+" x i32]]* "+temp.register+", i32 0, i32 "+s1+'\n');
+                                    r++;
+                                    writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0, i32 "+s2+'\n');
+                                    r++;
+                                    writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+                                    r++;
+                                }
                                 all.add(new Token("%x"+(r-1)));
                                 p++;
                             }
                             else{
+                                if(flag==0){
+                                    writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+temp.register+", i32 "+s1+'\n');
+                                    r++;
+                                    writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+(r-1)+", i32 0,i32 0"+'\n');
+                                    r++;
+                                    writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+                                    r++;
+                                }
+                                else{
                                 writer.write("%x"+r+" = getelementptr ["+temp.x+" x ["+temp.y+" x i32]], ["+temp.x+" x ["+temp.y+" x i32]]* "+temp.register+", i32 0, i32 "+s1+'\n');
                                 r++;
                                 writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0, i32 0"+'\n');
                                 r++;
                                 writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
-                                r++;
+                                r++;}
                                 all.add(new Token("%x"+(r-1)));
                             }
                         }
                     }
                     else{
                         if(temp.dimension==1){
-                            writer.write("%x"+r+" = getelementptr ["+temp.x+" x i32], ["+temp.x+" x i32]* "+temp.register+", i32 0, i32 "+0+'\n');
-                            r++;
-                            writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
-                            r++;
+                            if(flag==0){
+                                writer.write("%x"+r+" = getelementptr i32, i32* "+temp.register+", i32 "+0+"\n");
+                                r++;
+                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+                                r++;
+                            }
+                            else{
+                                writer.write("%x"+r+" = getelementptr ["+temp.x+" x i32], ["+temp.x+" x i32]* "+temp.register+", i32 0, i32 "+0+'\n');
+                                r++;
+                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+                                r++;
+                            }
                             all.add(new Token("%x"+(r-1)));
 
                         }
                         else{
-                            writer.write("%x"+r+" = getelementptr ["+temp.x+" x ["+temp.y+" x i32]], ["+temp.x+" x ["+temp.y+" x i32]]* "+temp.register+", i32 0, i32 "+0+'\n');
-                            r++;
-                            writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0, i32 0"+'\n');
-                            r++;
-                            writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
-                            r++;
+                            if(flag==0){
+                                writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+temp.register+", i32 "+0+'\n');
+                                r++;
+                                writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+(r-1)+", i32 0,i32 0"+'\n');
+                                r++;
+                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+                                r++;
+                            }
+                            else{
+                                writer.write("%x"+r+" = getelementptr ["+temp.x+" x ["+temp.y+" x i32]], ["+temp.x+" x ["+temp.y+" x i32]]* "+temp.register+", i32 0, i32 "+0+'\n');
+                                r++;
+                                writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0, i32 0"+'\n');
+                                r++;
+                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
+                                r++;
+                            }
                             all.add(new Token("%x"+(r-1)));
                         }
                     }
