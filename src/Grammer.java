@@ -114,6 +114,7 @@ public class Grammer {
             p++;
             Symbol symbol = new Symbol();
             symbol.type="function";
+            symbol.functiontype=0;
             if(!isIdent(Main.tokens.get(p).name))
                 System.exit(1111);
             symbol.token=Main.tokens.get(p);
@@ -241,6 +242,7 @@ public class Grammer {
             p++;
             Symbol symbol = new Symbol();
             symbol.type="function";
+            symbol.functiontype=1;
             if(!isIdent(Main.tokens.get(p).name))
                 System.exit(1111);
             symbol.token=Main.tokens.get(p);
@@ -1692,7 +1694,12 @@ public class Grammer {
 
                 if(arguments.size()!=x.arguments.size())
                     System.exit(2314563);
+                if(x.functiontype==0)
                 writer.write("call void @"+x.token.name+'(');
+                else{
+                    writer.write("%x"+r+"= call i32 @"+x.token.name+'(');
+                    r++;
+                }
                 for(int i =0;i<x.arguments.size()-1;i++)
                     writer.write(x.arguments.get(i)+' '+arguments.get(i)+',');
                 writer.write(x.arguments.get(x.arguments.size()-1)+' '+arguments.get(arguments.size()-1)+")\n");
