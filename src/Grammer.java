@@ -1650,7 +1650,7 @@ public class Grammer {
                     if(x.flag==0){
                         writer.write("%x"+r+" = getelementptr ["+x.y+" x i32], ["+x.y+" x i32]* "+x.register+", i32 "+s1+'\n');
                         r++;
-                        writer.write("%x"+r+" = getelementptr ["+x.y+" x i32], ["+x.y+" x i32]* "+(r-1)+", i32 0,i32 "+s2+'\n');
+                        writer.write("%x"+r+" = getelementptr ["+x.y+" x i32], ["+x.y+" x i32]* %x"+(r-1)+", i32 0,i32 "+s2+'\n');
                         r++;
                     }
                     else{
@@ -1877,7 +1877,7 @@ public class Grammer {
                                 if(temp.flag==0){
                                     writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+temp.register+", i32 "+s1+'\n');
                                     r++;
-                                    writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+(r-1)+", i32 0,i32 "+s2+'\n');
+                                    writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0,i32 "+s2+'\n');
                                     r++;
                                     writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
                                     r++;
@@ -1898,7 +1898,7 @@ public class Grammer {
                                 if(temp.flag==0){
                                     writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+temp.register+", i32 "+s1+'\n');
                                     r++;
-                                    writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+(r-1)+", i32 0,i32 0"+'\n');
+                                    writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0,i32 0"+'\n');
                                     r++;
 //                                    writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
 //                                    r++;
@@ -1939,7 +1939,7 @@ public class Grammer {
                             if(temp.flag==0){
                                 writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+temp.register+", i32 "+0+'\n');
                                 r++;
-                                writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* "+(r-1)+", i32 0,i32 0"+'\n');
+                                writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0,i32 0"+'\n');
                                 r++;
 //                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
 //                                r++;

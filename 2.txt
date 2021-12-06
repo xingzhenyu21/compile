@@ -5,794 +5,1511 @@ declare void @putch(i32)
 declare void @memset(i32*, i32, i32)
 declare i32 @getarray(i32*)
 declare void @putarray(i32, i32*)
-@ints = dso_local global [10000x i32] zeroinitializer 
-@intt = dso_local global i32 0
-@chas = dso_local global [10000x i32] zeroinitializer 
-@chat = dso_local global i32 0
-@i = dso_local global i32 0
-@ii = dso_local global i32 1
-@c = dso_local global i32 0
-@get = dso_local global [10000x i32] zeroinitializer 
-@get2 = dso_local global [10000x i32] zeroinitializer 
-define dso_local i32 @isdigit(i32 %x1){
+define dso_local i32 @relu_reg(i32 %x1){
 %x2 = alloca i32
  store i32 %x1, i32* %x2
 %x3 = load i32, i32* %x2
-%x4= icmp sge i32 %x3, 48
-%x5= zext i1 %x4 to i32
-%x6 = load i32, i32* %x2
-%x7= icmp sle i32 %x6, 57
-%x8= zext i1 %x7 to i32
-%x9 = mul i32 %x5, %x8
-   %x10 = icmp ne i32 %x9, 0
-   br i1 %x10,label %x11, label %x12
-x11:
-  ret i32 1
-br label %x12
-x12:
+%x4= icmp sgt i32 %x3, 127
+%x5= zext i1 %x4 to i32   %x6 = icmp ne i32 %x5, 0
+   br i1 %x6,label %x7, label %x8
+x7:
+  ret i32 127
+br label %x8
+x8:
+%x10 = load i32, i32* %x2
+%x11= icmp slt i32 %x10, 0
+%x12= zext i1 %x11 to i32
+   %x13 = icmp ne i32 %x12, 0
+   br i1 %x13,label %x14, label %x15
+x14:
   ret i32 0
+br label %x15
+x15:
+%x17 = load i32, i32* %x2
+  ret i32 %x17
 }
-define dso_local i32 @power(i32 %x14,i32 %x15){
-%x16 = alloca i32
- store i32 %x14, i32* %x16
-%x17 = alloca i32
- store i32 %x15, i32* %x17
-%x18 = alloca i32
-store i32 1, i32* %x18
-br label %x19
-x19:
-%x20 = load i32, i32* %x17
-%x21= icmp ne i32 %x20, 0
-%x22= zext i1 %x21 to i32
-   %x23 = icmp ne i32 %x22, 0
-   br i1 %x23,label %x24, label %x25
-x24:
-%x26 = load i32, i32* %x18
-%x27 = load i32, i32* %x16
- %x28 = mul i32 %x26, %x27
-store i32 %x28, i32* %x18
-%x29 = load i32, i32* %x17
- %x30 = sub i32 %x29, 1
-store i32 %x30, i32* %x17
-  br label %x19
-x25:
-%x31 = load i32, i32* %x18
-  ret i32 %x31
-}
-define dso_local i32 @getstr(i32* %x32){
-%x33 = alloca i32*
-store i32*  %x32, i32* * %x33
- %x34 = load i32* , i32* * %x33
-%x35 = alloca i32
-%x36 = call i32 @getch()
-store i32 %x36, i32* %x35
-%x37 = alloca i32
-store i32 0, i32* %x37
-br label %x38
-x38:
-%x39 = load i32, i32* %x35
-%x40= icmp ne i32 %x39, 13
-%x41= zext i1 %x40 to i32
-%x42 = load i32, i32* %x35
-%x43= icmp ne i32 %x42, 10
-%x44= zext i1 %x43 to i32
-%x45 = mul i32 %x41, %x44
-   %x46 = icmp ne i32 %x45, 0
-   br i1 %x46,label %x47, label %x48
-x47:
-%x49 = load i32, i32* %x37
-%x50 = getelementptr i32, i32* %x34, i32 %x49
-%x51 = load i32, i32* %x35
- store i32 %x51, i32* %x50
-%x52 = load i32, i32* %x37
- %x53 = add i32 %x52, 1
-store i32 %x53, i32* %x37
-%x54 = call i32 @getch()
-store i32 %x54, i32* %x35
-  br label %x38
-x48:
-%x55 = load i32, i32* %x37
-  ret i32 %x55
-}
-define dso_local void @intpush(i32 %x56){
-%x57 = alloca i32
- store i32 %x56, i32* %x57
-%x58 = load i32, i32* @intt
- %x59 = add i32 %x58, 1
-store i32 %x59, i32* @intt
-%x60 = load i32, i32* @intt
-%x61 = getelementptr [10000 x i32], [10000 x i32]* @ints, i32 0, i32 %x60
-%x62 = load i32, i32* %x57
- store i32 %x62, i32* %x61
-ret void
-}
-define dso_local void @chapush(i32 %x63){
-%x64 = alloca i32
- store i32 %x63, i32* %x64
-%x65 = load i32, i32* @chat
- %x66 = add i32 %x65, 1
-store i32 %x66, i32* @chat
-%x67 = load i32, i32* @chat
-%x68 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x67
-%x69 = load i32, i32* %x64
- store i32 %x69, i32* %x68
-ret void
-}
-define dso_local i32 @intpop(){
-%x70 = load i32, i32* @intt
- %x71 = sub i32 %x70, 1
-store i32 %x71, i32* @intt
-%x72 = load i32, i32* @intt
- %x73 = add i32 %x72, 1
-%x74 = getelementptr [10000 x i32], [10000 x i32]* @ints, i32 0, i32 %x73
-%x75 = load i32, i32* %x74
-  ret i32 %x75
-}
-define dso_local i32 @chapop(){
-%x76 = load i32, i32* @chat
- %x77 = sub i32 %x76, 1
-store i32 %x77, i32* @chat
-%x78 = load i32, i32* @chat
- %x79 = add i32 %x78, 1
-%x80 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x79
-%x81 = load i32, i32* %x80
-  ret i32 %x81
-}
-define dso_local void @intadd(i32 %x82){
-%x83 = alloca i32
- store i32 %x82, i32* %x83
-%x84 = load i32, i32* @intt
-%x85 = getelementptr [10000 x i32], [10000 x i32]* @ints, i32 0, i32 %x84
-%x86 = load i32, i32* @intt
-%x87 = getelementptr [10000 x i32], [10000 x i32]* @ints, i32 0, i32 %x86
-%x88 = load i32, i32* %x87
- %x89 = mul i32 %x88, 10
- store i32 %x89, i32* %x85
-%x90 = load i32, i32* @intt
-%x91 = getelementptr [10000 x i32], [10000 x i32]* @ints, i32 0, i32 %x90
-%x92 = load i32, i32* @intt
-%x93 = getelementptr [10000 x i32], [10000 x i32]* @ints, i32 0, i32 %x92
-%x94 = load i32, i32* %x93
-%x95 = load i32, i32* %x83
- %x96 = add i32 %x94, %x95
- store i32 %x96, i32* %x91
-ret void
-}
-define dso_local i32 @find(){
-%x97 = call i32 @chapop()
-store i32 %x97, i32* @c
-%x98 = load i32, i32* @ii
-%x99 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x98
- store i32 32, i32* %x99
-%x100 = load i32, i32* @ii
- %x101 = add i32 %x100, 1
-%x102 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x101
-%x103 = load i32, i32* @c
- store i32 %x103, i32* %x102
-%x104 = load i32, i32* @ii
- %x105 = add i32 %x104, 2
-store i32 %x105, i32* @ii
-%x106 = load i32, i32* @chat
-%x107= icmp eq i32 %x106, 0
-%x108= zext i1 %x107 to i32
-   %x109 = icmp ne i32 %x108, 0
-   br i1 %x109,label %x110, label %x111
-x110:
-  ret i32 0
-br label %x111
-x111:
+define dso_local i32 @model([5 x i32]*%x18){
+%x19 = alloca [5 x i32]* 
+store [5 x i32]* %x18, [5 x i32]* * %x19
+ %x20 = load [5 x i32]*, [5 x i32]* * %x19
+%x21 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x22 = getelementptr [5 x i32], [5 x i32]* 21, i32 0,i32 0
+%x23 = load i32, i32* %x22
+%x24 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x25 = getelementptr [5 x i32], [5 x i32]* 24, i32 0,i32 1
+%x26 = load i32, i32* %x25
+%x27 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x28 = getelementptr [5 x i32], [5 x i32]* 27, i32 0,i32 2
+%x29 = load i32, i32* %x28
+%x30 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x31 = getelementptr [5 x i32], [5 x i32]* 30, i32 0,i32 3
+%x32 = load i32, i32* %x31
+%x33 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x34 = getelementptr [5 x i32], [5 x i32]* 33, i32 0,i32 4
+%x35 = load i32, i32* %x34
+%x36 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x37 = getelementptr [5 x i32], [5 x i32]* 36, i32 0,i32 0
+%x38 = load i32, i32* %x37
+%x39 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x40 = getelementptr [5 x i32], [5 x i32]* 39, i32 0,i32 1
+%x41 = load i32, i32* %x40
+%x42 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x43 = getelementptr [5 x i32], [5 x i32]* 42, i32 0,i32 2
+%x44 = load i32, i32* %x43
+%x45 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x46 = getelementptr [5 x i32], [5 x i32]* 45, i32 0,i32 3
+%x47 = load i32, i32* %x46
+%x48 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x49 = getelementptr [5 x i32], [5 x i32]* 48, i32 0,i32 4
+%x50 = load i32, i32* %x49
+%x51 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x52 = getelementptr [5 x i32], [5 x i32]* 51, i32 0,i32 0
+%x53 = load i32, i32* %x52
+%x54 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x55 = getelementptr [5 x i32], [5 x i32]* 54, i32 0,i32 1
+%x56 = load i32, i32* %x55
+%x57 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x58 = getelementptr [5 x i32], [5 x i32]* 57, i32 0,i32 2
+%x59 = load i32, i32* %x58
+%x60 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x61 = getelementptr [5 x i32], [5 x i32]* 60, i32 0,i32 3
+%x62 = load i32, i32* %x61
+%x63 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x64 = getelementptr [5 x i32], [5 x i32]* 63, i32 0,i32 4
+%x65 = load i32, i32* %x64
+%x66 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x67 = getelementptr [5 x i32], [5 x i32]* 66, i32 0,i32 0
+%x68 = load i32, i32* %x67
+%x69 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x70 = getelementptr [5 x i32], [5 x i32]* 69, i32 0,i32 1
+%x71 = load i32, i32* %x70
+%x72 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x73 = getelementptr [5 x i32], [5 x i32]* 72, i32 0,i32 2
+%x74 = load i32, i32* %x73
+%x75 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x76 = getelementptr [5 x i32], [5 x i32]* 75, i32 0,i32 3
+%x77 = load i32, i32* %x76
+%x78 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x79 = getelementptr [5 x i32], [5 x i32]* 78, i32 0,i32 4
+%x80 = load i32, i32* %x79
+%x81 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x82 = getelementptr [5 x i32], [5 x i32]* 81, i32 0,i32 0
+%x83 = load i32, i32* %x82
+%x84 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x85 = getelementptr [5 x i32], [5 x i32]* 84, i32 0,i32 1
+%x86 = load i32, i32* %x85
+%x87 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x88 = getelementptr [5 x i32], [5 x i32]* 87, i32 0,i32 2
+%x89 = load i32, i32* %x88
+%x90 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x91 = getelementptr [5 x i32], [5 x i32]* 90, i32 0,i32 3
+%x92 = load i32, i32* %x91
+%x93 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x94 = getelementptr [5 x i32], [5 x i32]* 93, i32 0,i32 4
+%x95 = load i32, i32* %x94
+ %x96 = mul i32 %x23, 85
+ %x97 = mul i32 %x26, 23
+ %x98 = add i32 %x96, %x97
+ %x99 = mul i32 %x29, 0
+ %x100 = add i32 %x98, %x99
+ %x101 = sub i32 %x100, 82
+ %x102 = mul i32 %x32, 0
+ %x103 = add i32 %x101, %x102
+ %x104 = sub i32 %x103, 103
+ %x105 = mul i32 %x35, 0
+ %x106 = add i32 %x104, %x105
+ %x107 = sub i32 %x106, 123
+ %x108 = mul i32 %x38, 64
+ %x109 = add i32 %x107, %x108
+ %x110 = mul i32 %x41, 0
+ %x111 = add i32 %x109, %x110
+ %x112 = sub i32 %x111, 120
+ %x113 = mul i32 %x44, 50
+ %x114 = add i32 %x112, %x113
+ %x115 = mul i32 %x47, 0
+ %x116 = add i32 %x114, %x115
+ %x117 = sub i32 %x116, 59
+ %x118 = mul i32 %x50, 47
+ %x119 = add i32 %x117, %x118
+ %x120 = mul i32 %x53, 0
+ %x121 = add i32 %x119, %x120
+ %x122 = sub i32 %x121, 111
+ %x123 = mul i32 %x56, 0
+ %x124 = add i32 %x122, %x123
+ %x125 = sub i32 %x124, 67
+ %x126 = mul i32 %x59, 0
+ %x127 = add i32 %x125, %x126
+ %x128 = sub i32 %x127, 106
+ %x129 = mul i32 %x62, 0
+ %x130 = add i32 %x128, %x129
+ %x131 = sub i32 %x130, 75
+ %x132 = mul i32 %x65, 0
+ %x133 = add i32 %x131, %x132
+ %x134 = sub i32 %x133, 102
+ %x135 = mul i32 %x68, 34
+ %x136 = add i32 %x134, %x135
+ %x137 = mul i32 %x71, 0
+ %x138 = add i32 %x136, %x137
+ %x139 = sub i32 %x138, 39
+ %x140 = mul i32 %x74, 65
+ %x141 = add i32 %x139, %x140
+ %x142 = mul i32 %x77, 47
+ %x143 = add i32 %x141, %x142
+ %x144 = mul i32 %x80, 113
+ %x145 = add i32 %x143, %x144
+ %x146 = mul i32 %x83, 110
+ %x147 = add i32 %x145, %x146
+ %x148 = mul i32 %x86, 47
+ %x149 = add i32 %x147, %x148
+ %x150 = mul i32 %x89, 0
+ %x151 = add i32 %x149, %x150
+ %x152 = sub i32 %x151, 4
+ %x153 = mul i32 %x92, 80
+ %x154 = add i32 %x152, %x153
+ %x155 = mul i32 %x95, 46
+ %x156 = add i32 %x154, %x155
+%x157 = call i32 @relu_reg(i32 %x156)
+%x158 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x159 = getelementptr [5 x i32], [5 x i32]* 158, i32 0,i32 0
+%x160 = load i32, i32* %x159
+%x161 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x162 = getelementptr [5 x i32], [5 x i32]* 161, i32 0,i32 1
+%x163 = load i32, i32* %x162
+%x164 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x165 = getelementptr [5 x i32], [5 x i32]* 164, i32 0,i32 2
+%x166 = load i32, i32* %x165
+%x167 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x168 = getelementptr [5 x i32], [5 x i32]* 167, i32 0,i32 3
+%x169 = load i32, i32* %x168
+%x170 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x171 = getelementptr [5 x i32], [5 x i32]* 170, i32 0,i32 4
+%x172 = load i32, i32* %x171
+%x173 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x174 = getelementptr [5 x i32], [5 x i32]* 173, i32 0,i32 0
+%x175 = load i32, i32* %x174
+%x176 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x177 = getelementptr [5 x i32], [5 x i32]* 176, i32 0,i32 1
+%x178 = load i32, i32* %x177
+%x179 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x180 = getelementptr [5 x i32], [5 x i32]* 179, i32 0,i32 2
+%x181 = load i32, i32* %x180
+%x182 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x183 = getelementptr [5 x i32], [5 x i32]* 182, i32 0,i32 3
+%x184 = load i32, i32* %x183
+%x185 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x186 = getelementptr [5 x i32], [5 x i32]* 185, i32 0,i32 4
+%x187 = load i32, i32* %x186
+%x188 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x189 = getelementptr [5 x i32], [5 x i32]* 188, i32 0,i32 0
+%x190 = load i32, i32* %x189
+%x191 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x192 = getelementptr [5 x i32], [5 x i32]* 191, i32 0,i32 1
+%x193 = load i32, i32* %x192
+%x194 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x195 = getelementptr [5 x i32], [5 x i32]* 194, i32 0,i32 2
+%x196 = load i32, i32* %x195
+%x197 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x198 = getelementptr [5 x i32], [5 x i32]* 197, i32 0,i32 3
+%x199 = load i32, i32* %x198
+%x200 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x201 = getelementptr [5 x i32], [5 x i32]* 200, i32 0,i32 4
+%x202 = load i32, i32* %x201
+%x203 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x204 = getelementptr [5 x i32], [5 x i32]* 203, i32 0,i32 0
+%x205 = load i32, i32* %x204
+%x206 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x207 = getelementptr [5 x i32], [5 x i32]* 206, i32 0,i32 1
+%x208 = load i32, i32* %x207
+%x209 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x210 = getelementptr [5 x i32], [5 x i32]* 209, i32 0,i32 2
+%x211 = load i32, i32* %x210
+%x212 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x213 = getelementptr [5 x i32], [5 x i32]* 212, i32 0,i32 3
+%x214 = load i32, i32* %x213
+%x215 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x216 = getelementptr [5 x i32], [5 x i32]* 215, i32 0,i32 4
+%x217 = load i32, i32* %x216
+%x218 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x219 = getelementptr [5 x i32], [5 x i32]* 218, i32 0,i32 0
+%x220 = load i32, i32* %x219
+%x221 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x222 = getelementptr [5 x i32], [5 x i32]* 221, i32 0,i32 1
+%x223 = load i32, i32* %x222
+%x224 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x225 = getelementptr [5 x i32], [5 x i32]* 224, i32 0,i32 2
+%x226 = load i32, i32* %x225
+%x227 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x228 = getelementptr [5 x i32], [5 x i32]* 227, i32 0,i32 3
+%x229 = load i32, i32* %x228
+%x230 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x231 = getelementptr [5 x i32], [5 x i32]* 230, i32 0,i32 4
+%x232 = load i32, i32* %x231
+ %x233 = mul i32 %x160, 0
+ %x234 = sub i32 %x233, 106
+ %x235 = mul i32 %x163, 126
+ %x236 = add i32 %x234, %x235
+ %x237 = mul i32 %x166, 0
+ %x238 = add i32 %x236, %x237
+ %x239 = sub i32 %x238, 18
+ %x240 = mul i32 %x169, 0
+ %x241 = add i32 %x239, %x240
+ %x242 = sub i32 %x241, 31
+ %x243 = mul i32 %x172, 0
+ %x244 = add i32 %x242, %x243
+ %x245 = sub i32 %x244, 8
+ %x246 = mul i32 %x175, 47
+ %x247 = add i32 %x245, %x246
+ %x248 = mul i32 %x178, 0
+ %x249 = add i32 %x247, %x248
+ %x250 = sub i32 %x249, 4
+ %x251 = mul i32 %x181, 67
+ %x252 = add i32 %x250, %x251
+ %x253 = mul i32 %x184, 0
+ %x254 = add i32 %x252, %x253
+ %x255 = sub i32 %x254, 94
+ %x256 = mul i32 %x187, 0
+ %x257 = add i32 %x255, %x256
+ %x258 = sub i32 %x257, 121
+ %x259 = mul i32 %x190, 7
+ %x260 = add i32 %x258, %x259
+ %x261 = mul i32 %x193, 0
+ %x262 = add i32 %x260, %x261
+ %x263 = sub i32 %x262, 21
+ %x264 = mul i32 %x196, 0
+ %x265 = add i32 %x263, %x264
+ %x266 = sub i32 %x265, 60
+ %x267 = mul i32 %x199, 0
+ %x268 = add i32 %x266, %x267
+ %x269 = sub i32 %x268, 43
+ %x270 = mul i32 %x202, 105
+ %x271 = add i32 %x269, %x270
+ %x272 = mul i32 %x205, 0
+ %x273 = add i32 %x271, %x272
+ %x274 = sub i32 %x273, 42
+ %x275 = mul i32 %x208, 87
+ %x276 = add i32 %x274, %x275
+ %x277 = mul i32 %x211, 29
+ %x278 = add i32 %x276, %x277
+ %x279 = mul i32 %x214, 0
+ %x280 = add i32 %x278, %x279
+ %x281 = sub i32 %x280, 106
+ %x282 = mul i32 %x217, 0
+ %x283 = add i32 %x281, %x282
+ %x284 = sub i32 %x283, 31
+ %x285 = mul i32 %x220, 0
+ %x286 = add i32 %x284, %x285
+ %x287 = sub i32 %x286, 110
+ %x288 = mul i32 %x223, 0
+ %x289 = add i32 %x287, %x288
+ %x290 = sub i32 %x289, 100
+ %x291 = mul i32 %x226, 0
+ %x292 = add i32 %x290, %x291
+ %x293 = sub i32 %x292, 22
+ %x294 = mul i32 %x229, 0
+ %x295 = add i32 %x293, %x294
+ %x296 = sub i32 %x295, 75
+ %x297 = mul i32 %x232, 0
+ %x298 = add i32 %x296, %x297
+ %x299 = sub i32 %x298, 125
+%x300 = call i32 @relu_reg(i32 %x299)
+%x301 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x302 = getelementptr [5 x i32], [5 x i32]* 301, i32 0,i32 0
+%x303 = load i32, i32* %x302
+%x304 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x305 = getelementptr [5 x i32], [5 x i32]* 304, i32 0,i32 1
+%x306 = load i32, i32* %x305
+%x307 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x308 = getelementptr [5 x i32], [5 x i32]* 307, i32 0,i32 2
+%x309 = load i32, i32* %x308
+%x310 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x311 = getelementptr [5 x i32], [5 x i32]* 310, i32 0,i32 3
+%x312 = load i32, i32* %x311
+%x313 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x314 = getelementptr [5 x i32], [5 x i32]* 313, i32 0,i32 4
+%x315 = load i32, i32* %x314
+%x316 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x317 = getelementptr [5 x i32], [5 x i32]* 316, i32 0,i32 0
+%x318 = load i32, i32* %x317
+%x319 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x320 = getelementptr [5 x i32], [5 x i32]* 319, i32 0,i32 1
+%x321 = load i32, i32* %x320
+%x322 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x323 = getelementptr [5 x i32], [5 x i32]* 322, i32 0,i32 2
+%x324 = load i32, i32* %x323
+%x325 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x326 = getelementptr [5 x i32], [5 x i32]* 325, i32 0,i32 3
+%x327 = load i32, i32* %x326
+%x328 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x329 = getelementptr [5 x i32], [5 x i32]* 328, i32 0,i32 4
+%x330 = load i32, i32* %x329
+%x331 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x332 = getelementptr [5 x i32], [5 x i32]* 331, i32 0,i32 0
+%x333 = load i32, i32* %x332
+%x334 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x335 = getelementptr [5 x i32], [5 x i32]* 334, i32 0,i32 1
+%x336 = load i32, i32* %x335
+%x337 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x338 = getelementptr [5 x i32], [5 x i32]* 337, i32 0,i32 2
+%x339 = load i32, i32* %x338
+%x340 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x341 = getelementptr [5 x i32], [5 x i32]* 340, i32 0,i32 3
+%x342 = load i32, i32* %x341
+%x343 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x344 = getelementptr [5 x i32], [5 x i32]* 343, i32 0,i32 4
+%x345 = load i32, i32* %x344
+%x346 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x347 = getelementptr [5 x i32], [5 x i32]* 346, i32 0,i32 0
+%x348 = load i32, i32* %x347
+%x349 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x350 = getelementptr [5 x i32], [5 x i32]* 349, i32 0,i32 1
+%x351 = load i32, i32* %x350
+%x352 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x353 = getelementptr [5 x i32], [5 x i32]* 352, i32 0,i32 2
+%x354 = load i32, i32* %x353
+%x355 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x356 = getelementptr [5 x i32], [5 x i32]* 355, i32 0,i32 3
+%x357 = load i32, i32* %x356
+%x358 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x359 = getelementptr [5 x i32], [5 x i32]* 358, i32 0,i32 4
+%x360 = load i32, i32* %x359
+%x361 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x362 = getelementptr [5 x i32], [5 x i32]* 361, i32 0,i32 0
+%x363 = load i32, i32* %x362
+%x364 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x365 = getelementptr [5 x i32], [5 x i32]* 364, i32 0,i32 1
+%x366 = load i32, i32* %x365
+%x367 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x368 = getelementptr [5 x i32], [5 x i32]* 367, i32 0,i32 2
+%x369 = load i32, i32* %x368
+%x370 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x371 = getelementptr [5 x i32], [5 x i32]* 370, i32 0,i32 3
+%x372 = load i32, i32* %x371
+%x373 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x374 = getelementptr [5 x i32], [5 x i32]* 373, i32 0,i32 4
+%x375 = load i32, i32* %x374
+ %x376 = mul i32 %x303, 26
+ %x377 = mul i32 %x306, 76
+ %x378 = add i32 %x376, %x377
+ %x379 = mul i32 %x309, 0
+ %x380 = add i32 %x378, %x379
+ %x381 = sub i32 %x380, 70
+ %x382 = mul i32 %x312, 29
+ %x383 = add i32 %x381, %x382
+ %x384 = mul i32 %x315, 0
+ %x385 = add i32 %x383, %x384
+ %x386 = sub i32 %x385, 95
+ %x387 = mul i32 %x318, 96
+ %x388 = add i32 %x386, %x387
+ %x389 = mul i32 %x321, 52
+ %x390 = add i32 %x388, %x389
+ %x391 = mul i32 %x324, 0
+ %x392 = add i32 %x390, %x391
+ %x393 = sub i32 %x392, 68
+ %x394 = mul i32 %x327, 0
+ %x395 = add i32 %x393, %x394
+ %x396 = sub i32 %x395, 5
+ %x397 = mul i32 %x330, 34
+ %x398 = add i32 %x396, %x397
+ %x399 = mul i32 %x333, 0
+ %x400 = add i32 %x398, %x399
+ %x401 = sub i32 %x400, 34
+ %x402 = mul i32 %x336, 102
+ %x403 = add i32 %x401, %x402
+ %x404 = mul i32 %x339, 6
+ %x405 = add i32 %x403, %x404
+ %x406 = mul i32 %x342, 0
+ %x407 = add i32 %x405, %x406
+ %x408 = sub i32 %x407, 38
+ %x409 = mul i32 %x345, 27
+ %x410 = add i32 %x408, %x409
+ %x411 = mul i32 %x348, 110
+ %x412 = add i32 %x410, %x411
+ %x413 = mul i32 %x351, 116
+ %x414 = add i32 %x412, %x413
+ %x415 = mul i32 %x354, 39
+ %x416 = add i32 %x414, %x415
+ %x417 = mul i32 %x357, 0
+ %x418 = add i32 %x416, %x417
+ %x419 = sub i32 %x418, 63
+ %x420 = mul i32 %x360, 0
+ %x421 = add i32 %x419, %x420
+ %x422 = sub i32 %x421, 99
+ %x423 = mul i32 %x363, 65
+ %x424 = add i32 %x422, %x423
+ %x425 = mul i32 %x366, 120
+ %x426 = add i32 %x424, %x425
+ %x427 = mul i32 %x369, 0
+ %x428 = add i32 %x426, %x427
+ %x429 = sub i32 %x428, 39
+ %x430 = mul i32 %x372, 0
+ %x431 = add i32 %x429, %x430
+ %x432 = sub i32 %x431, 6
+ %x433 = mul i32 %x375, 94
+ %x434 = add i32 %x432, %x433
+%x435 = call i32 @relu_reg(i32 %x434)
+%x436 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x437 = getelementptr [5 x i32], [5 x i32]* 436, i32 0,i32 0
+%x438 = load i32, i32* %x437
+%x439 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x440 = getelementptr [5 x i32], [5 x i32]* 439, i32 0,i32 1
+%x441 = load i32, i32* %x440
+%x442 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x443 = getelementptr [5 x i32], [5 x i32]* 442, i32 0,i32 2
+%x444 = load i32, i32* %x443
+%x445 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x446 = getelementptr [5 x i32], [5 x i32]* 445, i32 0,i32 3
+%x447 = load i32, i32* %x446
+%x448 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x449 = getelementptr [5 x i32], [5 x i32]* 448, i32 0,i32 4
+%x450 = load i32, i32* %x449
+%x451 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x452 = getelementptr [5 x i32], [5 x i32]* 451, i32 0,i32 0
+%x453 = load i32, i32* %x452
+%x454 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x455 = getelementptr [5 x i32], [5 x i32]* 454, i32 0,i32 1
+%x456 = load i32, i32* %x455
+%x457 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x458 = getelementptr [5 x i32], [5 x i32]* 457, i32 0,i32 2
+%x459 = load i32, i32* %x458
+%x460 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x461 = getelementptr [5 x i32], [5 x i32]* 460, i32 0,i32 3
+%x462 = load i32, i32* %x461
+%x463 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x464 = getelementptr [5 x i32], [5 x i32]* 463, i32 0,i32 4
+%x465 = load i32, i32* %x464
+%x466 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x467 = getelementptr [5 x i32], [5 x i32]* 466, i32 0,i32 0
+%x468 = load i32, i32* %x467
+%x469 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x470 = getelementptr [5 x i32], [5 x i32]* 469, i32 0,i32 1
+%x471 = load i32, i32* %x470
+%x472 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x473 = getelementptr [5 x i32], [5 x i32]* 472, i32 0,i32 2
+%x474 = load i32, i32* %x473
+%x475 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x476 = getelementptr [5 x i32], [5 x i32]* 475, i32 0,i32 3
+%x477 = load i32, i32* %x476
+%x478 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x479 = getelementptr [5 x i32], [5 x i32]* 478, i32 0,i32 4
+%x480 = load i32, i32* %x479
+%x481 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x482 = getelementptr [5 x i32], [5 x i32]* 481, i32 0,i32 0
+%x483 = load i32, i32* %x482
+%x484 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x485 = getelementptr [5 x i32], [5 x i32]* 484, i32 0,i32 1
+%x486 = load i32, i32* %x485
+%x487 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x488 = getelementptr [5 x i32], [5 x i32]* 487, i32 0,i32 2
+%x489 = load i32, i32* %x488
+%x490 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x491 = getelementptr [5 x i32], [5 x i32]* 490, i32 0,i32 3
+%x492 = load i32, i32* %x491
+%x493 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x494 = getelementptr [5 x i32], [5 x i32]* 493, i32 0,i32 4
+%x495 = load i32, i32* %x494
+%x496 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x497 = getelementptr [5 x i32], [5 x i32]* 496, i32 0,i32 0
+%x498 = load i32, i32* %x497
+%x499 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x500 = getelementptr [5 x i32], [5 x i32]* 499, i32 0,i32 1
+%x501 = load i32, i32* %x500
+%x502 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x503 = getelementptr [5 x i32], [5 x i32]* 502, i32 0,i32 2
+%x504 = load i32, i32* %x503
+%x505 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x506 = getelementptr [5 x i32], [5 x i32]* 505, i32 0,i32 3
+%x507 = load i32, i32* %x506
+%x508 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x509 = getelementptr [5 x i32], [5 x i32]* 508, i32 0,i32 4
+%x510 = load i32, i32* %x509
+ %x511 = mul i32 %x438, 0
+ %x512 = sub i32 %x511, 23
+ %x513 = mul i32 %x441, 0
+ %x514 = add i32 %x512, %x513
+ %x515 = sub i32 %x514, 63
+ %x516 = mul i32 %x444, 49
+ %x517 = add i32 %x515, %x516
+ %x518 = mul i32 %x447, 50
+ %x519 = add i32 %x517, %x518
+ %x520 = mul i32 %x450, 72
+ %x521 = add i32 %x519, %x520
+ %x522 = mul i32 %x453, 85
+ %x523 = add i32 %x521, %x522
+ %x524 = mul i32 %x456, 0
+ %x525 = add i32 %x523, %x524
+ %x526 = sub i32 %x525, 30
+ %x527 = mul i32 %x459, 12
+ %x528 = add i32 %x526, %x527
+ %x529 = mul i32 %x462, 125
+ %x530 = add i32 %x528, %x529
+ %x531 = mul i32 %x465, 0
+ %x532 = add i32 %x530, %x531
+ %x533 = sub i32 %x532, 117
+ %x534 = mul i32 %x468, 0
+ %x535 = add i32 %x533, %x534
+ %x536 = sub i32 %x535, 65
+ %x537 = mul i32 %x471, 0
+ %x538 = add i32 %x536, %x537
+ %x539 = sub i32 %x538, 67
+ %x540 = mul i32 %x474, 125
+ %x541 = add i32 %x539, %x540
+ %x542 = mul i32 %x477, 110
+ %x543 = add i32 %x541, %x542
+ %x544 = mul i32 %x480, 0
+ %x545 = add i32 %x543, %x544
+ %x546 = sub i32 %x545, 31
+ %x547 = mul i32 %x483, 0
+ %x548 = add i32 %x546, %x547
+ %x549 = sub i32 %x548, 123
+ %x550 = mul i32 %x486, 83
+ %x551 = add i32 %x549, %x550
+ %x552 = mul i32 %x489, 122
+ %x553 = add i32 %x551, %x552
+ %x554 = mul i32 %x492, 11
+ %x555 = add i32 %x553, %x554
+ %x556 = mul i32 %x495, 0
+ %x557 = add i32 %x555, %x556
+ %x558 = sub i32 %x557, 23
+ %x559 = mul i32 %x498, 0
+ %x560 = add i32 %x558, %x559
+ %x561 = sub i32 %x560, 47
+ %x562 = mul i32 %x501, 0
+ %x563 = add i32 %x561, %x562
+ %x564 = sub i32 %x563, 32
+ %x565 = mul i32 %x504, 0
+ %x566 = add i32 %x564, %x565
+ %x567 = sub i32 %x566, 117
+ %x568 = mul i32 %x507, 95
+ %x569 = add i32 %x567, %x568
+ %x570 = mul i32 %x510, 118
+ %x571 = add i32 %x569, %x570
+%x572 = call i32 @relu_reg(i32 %x571)
+%x573 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x574 = getelementptr [5 x i32], [5 x i32]* 573, i32 0,i32 0
+%x575 = load i32, i32* %x574
+%x576 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x577 = getelementptr [5 x i32], [5 x i32]* 576, i32 0,i32 1
+%x578 = load i32, i32* %x577
+%x579 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x580 = getelementptr [5 x i32], [5 x i32]* 579, i32 0,i32 2
+%x581 = load i32, i32* %x580
+%x582 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x583 = getelementptr [5 x i32], [5 x i32]* 582, i32 0,i32 3
+%x584 = load i32, i32* %x583
+%x585 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x586 = getelementptr [5 x i32], [5 x i32]* 585, i32 0,i32 4
+%x587 = load i32, i32* %x586
+%x588 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x589 = getelementptr [5 x i32], [5 x i32]* 588, i32 0,i32 0
+%x590 = load i32, i32* %x589
+%x591 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x592 = getelementptr [5 x i32], [5 x i32]* 591, i32 0,i32 1
+%x593 = load i32, i32* %x592
+%x594 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x595 = getelementptr [5 x i32], [5 x i32]* 594, i32 0,i32 2
+%x596 = load i32, i32* %x595
+%x597 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x598 = getelementptr [5 x i32], [5 x i32]* 597, i32 0,i32 3
+%x599 = load i32, i32* %x598
+%x600 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x601 = getelementptr [5 x i32], [5 x i32]* 600, i32 0,i32 4
+%x602 = load i32, i32* %x601
+%x603 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x604 = getelementptr [5 x i32], [5 x i32]* 603, i32 0,i32 0
+%x605 = load i32, i32* %x604
+%x606 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x607 = getelementptr [5 x i32], [5 x i32]* 606, i32 0,i32 1
+%x608 = load i32, i32* %x607
+%x609 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x610 = getelementptr [5 x i32], [5 x i32]* 609, i32 0,i32 2
+%x611 = load i32, i32* %x610
+%x612 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x613 = getelementptr [5 x i32], [5 x i32]* 612, i32 0,i32 3
+%x614 = load i32, i32* %x613
+%x615 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x616 = getelementptr [5 x i32], [5 x i32]* 615, i32 0,i32 4
+%x617 = load i32, i32* %x616
+%x618 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x619 = getelementptr [5 x i32], [5 x i32]* 618, i32 0,i32 0
+%x620 = load i32, i32* %x619
+%x621 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x622 = getelementptr [5 x i32], [5 x i32]* 621, i32 0,i32 1
+%x623 = load i32, i32* %x622
+%x624 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x625 = getelementptr [5 x i32], [5 x i32]* 624, i32 0,i32 2
+%x626 = load i32, i32* %x625
+%x627 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x628 = getelementptr [5 x i32], [5 x i32]* 627, i32 0,i32 3
+%x629 = load i32, i32* %x628
+%x630 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x631 = getelementptr [5 x i32], [5 x i32]* 630, i32 0,i32 4
+%x632 = load i32, i32* %x631
+%x633 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x634 = getelementptr [5 x i32], [5 x i32]* 633, i32 0,i32 0
+%x635 = load i32, i32* %x634
+%x636 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x637 = getelementptr [5 x i32], [5 x i32]* 636, i32 0,i32 1
+%x638 = load i32, i32* %x637
+%x639 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x640 = getelementptr [5 x i32], [5 x i32]* 639, i32 0,i32 2
+%x641 = load i32, i32* %x640
+%x642 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x643 = getelementptr [5 x i32], [5 x i32]* 642, i32 0,i32 3
+%x644 = load i32, i32* %x643
+%x645 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x646 = getelementptr [5 x i32], [5 x i32]* 645, i32 0,i32 4
+%x647 = load i32, i32* %x646
+ %x648 = mul i32 %x575, 8
+ %x649 = mul i32 %x578, 82
+ %x650 = add i32 %x648, %x649
+ %x651 = mul i32 %x581, 0
+ %x652 = add i32 %x650, %x651
+ %x653 = sub i32 %x652, 104
+ %x654 = mul i32 %x584, 101
+ %x655 = add i32 %x653, %x654
+ %x656 = mul i32 %x587, 0
+ %x657 = add i32 %x655, %x656
+ %x658 = sub i32 %x657, 116
+ %x659 = mul i32 %x590, 0
+ %x660 = add i32 %x658, %x659
+ %x661 = sub i32 %x660, 63
+ %x662 = mul i32 %x593, 0
+ %x663 = add i32 %x661, %x662
+ %x664 = sub i32 %x663, 16
+ %x665 = mul i32 %x596, 0
+ %x666 = add i32 %x664, %x665
+ %x667 = sub i32 %x666, 70
+ %x668 = mul i32 %x599, 125
+ %x669 = add i32 %x667, %x668
+ %x670 = mul i32 %x602, 75
+ %x671 = add i32 %x669, %x670
+ %x672 = mul i32 %x605, 66
+ %x673 = add i32 %x671, %x672
+ %x674 = mul i32 %x608, 0
+ %x675 = add i32 %x673, %x674
+ %x676 = sub i32 %x675, 96
+ %x677 = mul i32 %x611, 0
+ %x678 = add i32 %x676, %x677
+ %x679 = sub i32 %x678, 101
+ %x680 = mul i32 %x614, 0
+ %x681 = add i32 %x679, %x680
+ %x682 = sub i32 %x681, 114
+ %x683 = mul i32 %x617, 59
+ %x684 = add i32 %x682, %x683
+ %x685 = mul i32 %x620, 12
+ %x686 = add i32 %x684, %x685
+ %x687 = mul i32 %x623, 5
+ %x688 = add i32 %x686, %x687
+ %x689 = mul i32 %x626, 0
+ %x690 = add i32 %x688, %x689
+ %x691 = sub i32 %x690, 95
+ %x692 = mul i32 %x629, 116
+ %x693 = add i32 %x691, %x692
+ %x694 = mul i32 %x632, 0
+ %x695 = add i32 %x693, %x694
+ %x696 = sub i32 %x695, 93
+ %x697 = mul i32 %x635, 15
+ %x698 = add i32 %x696, %x697
+ %x699 = mul i32 %x638, 79
+ %x700 = add i32 %x698, %x699
+ %x701 = mul i32 %x641, 3
+ %x702 = add i32 %x700, %x701
+ %x703 = mul i32 %x644, 49
+ %x704 = add i32 %x702, %x703
+ %x705 = mul i32 %x647, 0
+ %x706 = add i32 %x704, %x705
+ %x707 = sub i32 %x706, 124
+%x708 = call i32 @relu_reg(i32 %x707)
+%x709 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x710 = getelementptr [5 x i32], [5 x i32]* 709, i32 0,i32 0
+%x711 = load i32, i32* %x710
+%x712 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x713 = getelementptr [5 x i32], [5 x i32]* 712, i32 0,i32 1
+%x714 = load i32, i32* %x713
+%x715 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x716 = getelementptr [5 x i32], [5 x i32]* 715, i32 0,i32 2
+%x717 = load i32, i32* %x716
+%x718 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x719 = getelementptr [5 x i32], [5 x i32]* 718, i32 0,i32 3
+%x720 = load i32, i32* %x719
+%x721 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x722 = getelementptr [5 x i32], [5 x i32]* 721, i32 0,i32 4
+%x723 = load i32, i32* %x722
+%x724 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x725 = getelementptr [5 x i32], [5 x i32]* 724, i32 0,i32 0
+%x726 = load i32, i32* %x725
+%x727 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x728 = getelementptr [5 x i32], [5 x i32]* 727, i32 0,i32 1
+%x729 = load i32, i32* %x728
+%x730 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x731 = getelementptr [5 x i32], [5 x i32]* 730, i32 0,i32 2
+%x732 = load i32, i32* %x731
+%x733 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x734 = getelementptr [5 x i32], [5 x i32]* 733, i32 0,i32 3
+%x735 = load i32, i32* %x734
+%x736 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x737 = getelementptr [5 x i32], [5 x i32]* 736, i32 0,i32 4
+%x738 = load i32, i32* %x737
+%x739 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x740 = getelementptr [5 x i32], [5 x i32]* 739, i32 0,i32 0
+%x741 = load i32, i32* %x740
+%x742 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x743 = getelementptr [5 x i32], [5 x i32]* 742, i32 0,i32 1
+%x744 = load i32, i32* %x743
+%x745 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x746 = getelementptr [5 x i32], [5 x i32]* 745, i32 0,i32 2
+%x747 = load i32, i32* %x746
+%x748 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x749 = getelementptr [5 x i32], [5 x i32]* 748, i32 0,i32 3
+%x750 = load i32, i32* %x749
+%x751 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x752 = getelementptr [5 x i32], [5 x i32]* 751, i32 0,i32 4
+%x753 = load i32, i32* %x752
+%x754 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x755 = getelementptr [5 x i32], [5 x i32]* 754, i32 0,i32 0
+%x756 = load i32, i32* %x755
+%x757 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x758 = getelementptr [5 x i32], [5 x i32]* 757, i32 0,i32 1
+%x759 = load i32, i32* %x758
+%x760 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x761 = getelementptr [5 x i32], [5 x i32]* 760, i32 0,i32 2
+%x762 = load i32, i32* %x761
+%x763 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x764 = getelementptr [5 x i32], [5 x i32]* 763, i32 0,i32 3
+%x765 = load i32, i32* %x764
+%x766 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x767 = getelementptr [5 x i32], [5 x i32]* 766, i32 0,i32 4
+%x768 = load i32, i32* %x767
+%x769 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x770 = getelementptr [5 x i32], [5 x i32]* 769, i32 0,i32 0
+%x771 = load i32, i32* %x770
+%x772 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x773 = getelementptr [5 x i32], [5 x i32]* 772, i32 0,i32 1
+%x774 = load i32, i32* %x773
+%x775 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x776 = getelementptr [5 x i32], [5 x i32]* 775, i32 0,i32 2
+%x777 = load i32, i32* %x776
+%x778 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x779 = getelementptr [5 x i32], [5 x i32]* 778, i32 0,i32 3
+%x780 = load i32, i32* %x779
+%x781 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x782 = getelementptr [5 x i32], [5 x i32]* 781, i32 0,i32 4
+%x783 = load i32, i32* %x782
+ %x784 = mul i32 %x711, 81
+ %x785 = mul i32 %x714, 68
+ %x786 = add i32 %x784, %x785
+ %x787 = mul i32 %x717, 0
+ %x788 = add i32 %x786, %x787
+ %x789 = sub i32 %x788, 102
+ %x790 = mul i32 %x720, 0
+ %x791 = add i32 %x789, %x790
+ %x792 = sub i32 %x791, 74
+ %x793 = mul i32 %x723, 121
+ %x794 = add i32 %x792, %x793
+ %x795 = mul i32 %x726, 0
+ %x796 = add i32 %x794, %x795
+ %x797 = sub i32 %x796, 15
+ %x798 = mul i32 %x729, 55
+ %x799 = add i32 %x797, %x798
+ %x800 = mul i32 %x732, 101
+ %x801 = add i32 %x799, %x800
+ %x802 = mul i32 %x735, 0
+ %x803 = add i32 %x801, %x802
+ %x804 = sub i32 %x803, 13
+ %x805 = mul i32 %x738, 0
+ %x806 = add i32 %x804, %x805
+ %x807 = sub i32 %x806, 62
+ %x808 = mul i32 %x741, 64
+ %x809 = add i32 %x807, %x808
+ %x810 = mul i32 %x744, 114
+ %x811 = add i32 %x809, %x810
+ %x812 = mul i32 %x747, 38
+ %x813 = add i32 %x811, %x812
+ %x814 = mul i32 %x750, 0
+ %x815 = add i32 %x813, %x814
+ %x816 = sub i32 %x815, 21
+ %x817 = mul i32 %x753, 112
+ %x818 = add i32 %x816, %x817
+ %x819 = mul i32 %x756, 114
+ %x820 = add i32 %x818, %x819
+ %x821 = mul i32 %x759, 112
+ %x822 = add i32 %x820, %x821
+ %x823 = mul i32 %x762, 0
+ %x824 = add i32 %x822, %x823
+ %x825 = sub i32 %x824, 10
+ %x826 = mul i32 %x765, 0
+ %x827 = add i32 %x825, %x826
+ %x828 = sub i32 %x827, 16
+ %x829 = mul i32 %x768, 0
+ %x830 = add i32 %x828, %x829
+ %x831 = sub i32 %x830, 50
+ %x832 = mul i32 %x771, 0
+ %x833 = add i32 %x831, %x832
+ %x834 = sub i32 %x833, 112
+ %x835 = mul i32 %x774, 0
+ %x836 = add i32 %x834, %x835
+ %x837 = sub i32 %x836, 116
+ %x838 = mul i32 %x777, 0
+ %x839 = add i32 %x837, %x838
+ %x840 = sub i32 %x839, 54
+ %x841 = mul i32 %x780, 82
+ %x842 = add i32 %x840, %x841
+ %x843 = mul i32 %x783, 0
+ %x844 = add i32 %x842, %x843
+ %x845 = sub i32 %x844, 72
+%x846 = call i32 @relu_reg(i32 %x845)
+%x847 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x848 = getelementptr [5 x i32], [5 x i32]* 847, i32 0,i32 0
+%x849 = load i32, i32* %x848
+%x850 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x851 = getelementptr [5 x i32], [5 x i32]* 850, i32 0,i32 1
+%x852 = load i32, i32* %x851
+%x853 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x854 = getelementptr [5 x i32], [5 x i32]* 853, i32 0,i32 2
+%x855 = load i32, i32* %x854
+%x856 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x857 = getelementptr [5 x i32], [5 x i32]* 856, i32 0,i32 3
+%x858 = load i32, i32* %x857
+%x859 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x860 = getelementptr [5 x i32], [5 x i32]* 859, i32 0,i32 4
+%x861 = load i32, i32* %x860
+%x862 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x863 = getelementptr [5 x i32], [5 x i32]* 862, i32 0,i32 0
+%x864 = load i32, i32* %x863
+%x865 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x866 = getelementptr [5 x i32], [5 x i32]* 865, i32 0,i32 1
+%x867 = load i32, i32* %x866
+%x868 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x869 = getelementptr [5 x i32], [5 x i32]* 868, i32 0,i32 2
+%x870 = load i32, i32* %x869
+%x871 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x872 = getelementptr [5 x i32], [5 x i32]* 871, i32 0,i32 3
+%x873 = load i32, i32* %x872
+%x874 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x875 = getelementptr [5 x i32], [5 x i32]* 874, i32 0,i32 4
+%x876 = load i32, i32* %x875
+%x877 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x878 = getelementptr [5 x i32], [5 x i32]* 877, i32 0,i32 0
+%x879 = load i32, i32* %x878
+%x880 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x881 = getelementptr [5 x i32], [5 x i32]* 880, i32 0,i32 1
+%x882 = load i32, i32* %x881
+%x883 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x884 = getelementptr [5 x i32], [5 x i32]* 883, i32 0,i32 2
+%x885 = load i32, i32* %x884
+%x886 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x887 = getelementptr [5 x i32], [5 x i32]* 886, i32 0,i32 3
+%x888 = load i32, i32* %x887
+%x889 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x890 = getelementptr [5 x i32], [5 x i32]* 889, i32 0,i32 4
+%x891 = load i32, i32* %x890
+%x892 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x893 = getelementptr [5 x i32], [5 x i32]* 892, i32 0,i32 0
+%x894 = load i32, i32* %x893
+%x895 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x896 = getelementptr [5 x i32], [5 x i32]* 895, i32 0,i32 1
+%x897 = load i32, i32* %x896
+%x898 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x899 = getelementptr [5 x i32], [5 x i32]* 898, i32 0,i32 2
+%x900 = load i32, i32* %x899
+%x901 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x902 = getelementptr [5 x i32], [5 x i32]* 901, i32 0,i32 3
+%x903 = load i32, i32* %x902
+%x904 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x905 = getelementptr [5 x i32], [5 x i32]* 904, i32 0,i32 4
+%x906 = load i32, i32* %x905
+%x907 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x908 = getelementptr [5 x i32], [5 x i32]* 907, i32 0,i32 0
+%x909 = load i32, i32* %x908
+%x910 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x911 = getelementptr [5 x i32], [5 x i32]* 910, i32 0,i32 1
+%x912 = load i32, i32* %x911
+%x913 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x914 = getelementptr [5 x i32], [5 x i32]* 913, i32 0,i32 2
+%x915 = load i32, i32* %x914
+%x916 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x917 = getelementptr [5 x i32], [5 x i32]* 916, i32 0,i32 3
+%x918 = load i32, i32* %x917
+%x919 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x920 = getelementptr [5 x i32], [5 x i32]* 919, i32 0,i32 4
+%x921 = load i32, i32* %x920
+ %x922 = mul i32 %x849, 15
+ %x923 = mul i32 %x852, 0
+ %x924 = add i32 %x922, %x923
+ %x925 = sub i32 %x924, 77
+ %x926 = mul i32 %x855, 66
+ %x927 = add i32 %x925, %x926
+ %x928 = mul i32 %x858, 0
+ %x929 = add i32 %x927, %x928
+ %x930 = sub i32 %x929, 90
+ %x931 = mul i32 %x861, 0
+ %x932 = add i32 %x930, %x931
+ %x933 = sub i32 %x932, 6
+ %x934 = mul i32 %x864, 0
+ %x935 = add i32 %x933, %x934
+ %x936 = sub i32 %x935, 30
+ %x937 = mul i32 %x867, 0
+ %x938 = add i32 %x936, %x937
+ %x939 = sub i32 %x938, 8
+ %x940 = mul i32 %x870, 81
+ %x941 = add i32 %x939, %x940
+ %x942 = mul i32 %x873, 2
+ %x943 = add i32 %x941, %x942
+ %x944 = mul i32 %x876, 0
+ %x945 = add i32 %x943, %x944
+ %x946 = sub i32 %x945, 110
+ %x947 = mul i32 %x879, 0
+ %x948 = add i32 %x946, %x947
+ %x949 = sub i32 %x948, 95
+ %x950 = mul i32 %x882, 59
+ %x951 = add i32 %x949, %x950
+ %x952 = mul i32 %x885, 52
+ %x953 = add i32 %x951, %x952
+ %x954 = mul i32 %x888, 15
+ %x955 = add i32 %x953, %x954
+ %x956 = mul i32 %x891, 55
+ %x957 = add i32 %x955, %x956
+ %x958 = mul i32 %x894, 0
+ %x959 = add i32 %x957, %x958
+ %x960 = sub i32 %x959, 33
+ %x961 = mul i32 %x897, 14
+ %x962 = add i32 %x960, %x961
+ %x963 = mul i32 %x900, 58
+ %x964 = add i32 %x962, %x963
+ %x965 = mul i32 %x903, 67
+ %x966 = add i32 %x964, %x965
+ %x967 = mul i32 %x906, 86
+ %x968 = add i32 %x966, %x967
+ %x969 = mul i32 %x909, 0
+ %x970 = add i32 %x968, %x969
+ %x971 = sub i32 %x970, 79
+ %x972 = mul i32 %x912, 48
+ %x973 = add i32 %x971, %x972
+ %x974 = mul i32 %x915, 0
+ %x975 = add i32 %x973, %x974
+ %x976 = sub i32 %x975, 13
+ %x977 = mul i32 %x918, 0
+ %x978 = add i32 %x976, %x977
+ %x979 = sub i32 %x978, 15
+ %x980 = mul i32 %x921, 66
+ %x981 = add i32 %x979, %x980
+%x982 = call i32 @relu_reg(i32 %x981)
+%x983 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x984 = getelementptr [5 x i32], [5 x i32]* 983, i32 0,i32 0
+%x985 = load i32, i32* %x984
+%x986 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x987 = getelementptr [5 x i32], [5 x i32]* 986, i32 0,i32 1
+%x988 = load i32, i32* %x987
+%x989 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x990 = getelementptr [5 x i32], [5 x i32]* 989, i32 0,i32 2
+%x991 = load i32, i32* %x990
+%x992 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x993 = getelementptr [5 x i32], [5 x i32]* 992, i32 0,i32 3
+%x994 = load i32, i32* %x993
+%x995 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x996 = getelementptr [5 x i32], [5 x i32]* 995, i32 0,i32 4
+%x997 = load i32, i32* %x996
+%x998 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x999 = getelementptr [5 x i32], [5 x i32]* 998, i32 0,i32 0
+%x1000 = load i32, i32* %x999
+%x1001 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x1002 = getelementptr [5 x i32], [5 x i32]* 1001, i32 0,i32 1
+%x1003 = load i32, i32* %x1002
+%x1004 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x1005 = getelementptr [5 x i32], [5 x i32]* 1004, i32 0,i32 2
+%x1006 = load i32, i32* %x1005
+%x1007 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x1008 = getelementptr [5 x i32], [5 x i32]* 1007, i32 0,i32 3
+%x1009 = load i32, i32* %x1008
+%x1010 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x1011 = getelementptr [5 x i32], [5 x i32]* 1010, i32 0,i32 4
+%x1012 = load i32, i32* %x1011
+%x1013 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x1014 = getelementptr [5 x i32], [5 x i32]* 1013, i32 0,i32 0
+%x1015 = load i32, i32* %x1014
+%x1016 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x1017 = getelementptr [5 x i32], [5 x i32]* 1016, i32 0,i32 1
+%x1018 = load i32, i32* %x1017
+%x1019 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x1020 = getelementptr [5 x i32], [5 x i32]* 1019, i32 0,i32 2
+%x1021 = load i32, i32* %x1020
+%x1022 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x1023 = getelementptr [5 x i32], [5 x i32]* 1022, i32 0,i32 3
+%x1024 = load i32, i32* %x1023
+%x1025 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x1026 = getelementptr [5 x i32], [5 x i32]* 1025, i32 0,i32 4
+%x1027 = load i32, i32* %x1026
+%x1028 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x1029 = getelementptr [5 x i32], [5 x i32]* 1028, i32 0,i32 0
+%x1030 = load i32, i32* %x1029
+%x1031 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x1032 = getelementptr [5 x i32], [5 x i32]* 1031, i32 0,i32 1
+%x1033 = load i32, i32* %x1032
+%x1034 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x1035 = getelementptr [5 x i32], [5 x i32]* 1034, i32 0,i32 2
+%x1036 = load i32, i32* %x1035
+%x1037 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x1038 = getelementptr [5 x i32], [5 x i32]* 1037, i32 0,i32 3
+%x1039 = load i32, i32* %x1038
+%x1040 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x1041 = getelementptr [5 x i32], [5 x i32]* 1040, i32 0,i32 4
+%x1042 = load i32, i32* %x1041
+%x1043 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x1044 = getelementptr [5 x i32], [5 x i32]* 1043, i32 0,i32 0
+%x1045 = load i32, i32* %x1044
+%x1046 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x1047 = getelementptr [5 x i32], [5 x i32]* 1046, i32 0,i32 1
+%x1048 = load i32, i32* %x1047
+%x1049 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x1050 = getelementptr [5 x i32], [5 x i32]* 1049, i32 0,i32 2
+%x1051 = load i32, i32* %x1050
+%x1052 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x1053 = getelementptr [5 x i32], [5 x i32]* 1052, i32 0,i32 3
+%x1054 = load i32, i32* %x1053
+%x1055 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x1056 = getelementptr [5 x i32], [5 x i32]* 1055, i32 0,i32 4
+%x1057 = load i32, i32* %x1056
+ %x1058 = mul i32 %x985, 33
+ %x1059 = mul i32 %x988, 82
+ %x1060 = add i32 %x1058, %x1059
+ %x1061 = mul i32 %x991, 67
+ %x1062 = add i32 %x1060, %x1061
+ %x1063 = mul i32 %x994, 30
+ %x1064 = add i32 %x1062, %x1063
+ %x1065 = mul i32 %x997, 0
+ %x1066 = add i32 %x1064, %x1065
+ %x1067 = sub i32 %x1066, 2
+ %x1068 = mul i32 %x1000, 65
+ %x1069 = add i32 %x1067, %x1068
+ %x1070 = mul i32 %x1003, 120
+ %x1071 = add i32 %x1069, %x1070
+ %x1072 = mul i32 %x1006, 0
+ %x1073 = add i32 %x1071, %x1072
+ %x1074 = sub i32 %x1073, 13
+ %x1075 = mul i32 %x1009, 18
+ %x1076 = add i32 %x1074, %x1075
+ %x1077 = mul i32 %x1012, 5
+ %x1078 = add i32 %x1076, %x1077
+ %x1079 = mul i32 %x1015, 104
+ %x1080 = add i32 %x1078, %x1079
+ %x1081 = mul i32 %x1018, 0
+ %x1082 = add i32 %x1080, %x1081
+ %x1083 = sub i32 %x1082, 119
+ %x1084 = mul i32 %x1021, 0
+ %x1085 = add i32 %x1083, %x1084
+ %x1086 = sub i32 %x1085, 7
+ %x1087 = mul i32 %x1024, 71
+ %x1088 = add i32 %x1086, %x1087
+ %x1089 = mul i32 %x1027, 107
+ %x1090 = add i32 %x1088, %x1089
+ %x1091 = mul i32 %x1030, 24
+ %x1092 = add i32 %x1090, %x1091
+ %x1093 = mul i32 %x1033, 82
+ %x1094 = add i32 %x1092, %x1093
+ %x1095 = mul i32 %x1036, 0
+ %x1096 = add i32 %x1094, %x1095
+ %x1097 = sub i32 %x1096, 96
+ %x1098 = mul i32 %x1039, 0
+ %x1099 = add i32 %x1097, %x1098
+ %x1100 = sub i32 %x1099, 104
+ %x1101 = mul i32 %x1042, 0
+ %x1102 = add i32 %x1100, %x1101
+ %x1103 = sub i32 %x1102, 121
+ %x1104 = mul i32 %x1045, 65
+ %x1105 = add i32 %x1103, %x1104
+ %x1106 = mul i32 %x1048, 97
+ %x1107 = add i32 %x1105, %x1106
+ %x1108 = mul i32 %x1051, 83
+ %x1109 = add i32 %x1107, %x1108
+ %x1110 = mul i32 %x1054, 46
+ %x1111 = add i32 %x1109, %x1110
+ %x1112 = mul i32 %x1057, 0
+ %x1113 = add i32 %x1111, %x1112
+ %x1114 = sub i32 %x1113, 84
+%x1115 = call i32 @relu_reg(i32 %x1114)
+%x1116 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x1117 = getelementptr [5 x i32], [5 x i32]* 1116, i32 0,i32 0
+%x1118 = load i32, i32* %x1117
+%x1119 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x1120 = getelementptr [5 x i32], [5 x i32]* 1119, i32 0,i32 1
+%x1121 = load i32, i32* %x1120
+%x1122 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x1123 = getelementptr [5 x i32], [5 x i32]* 1122, i32 0,i32 2
+%x1124 = load i32, i32* %x1123
+%x1125 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x1126 = getelementptr [5 x i32], [5 x i32]* 1125, i32 0,i32 3
+%x1127 = load i32, i32* %x1126
+%x1128 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x1129 = getelementptr [5 x i32], [5 x i32]* 1128, i32 0,i32 4
+%x1130 = load i32, i32* %x1129
+%x1131 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x1132 = getelementptr [5 x i32], [5 x i32]* 1131, i32 0,i32 0
+%x1133 = load i32, i32* %x1132
+%x1134 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x1135 = getelementptr [5 x i32], [5 x i32]* 1134, i32 0,i32 1
+%x1136 = load i32, i32* %x1135
+%x1137 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x1138 = getelementptr [5 x i32], [5 x i32]* 1137, i32 0,i32 2
+%x1139 = load i32, i32* %x1138
+%x1140 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x1141 = getelementptr [5 x i32], [5 x i32]* 1140, i32 0,i32 3
+%x1142 = load i32, i32* %x1141
+%x1143 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x1144 = getelementptr [5 x i32], [5 x i32]* 1143, i32 0,i32 4
+%x1145 = load i32, i32* %x1144
+%x1146 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x1147 = getelementptr [5 x i32], [5 x i32]* 1146, i32 0,i32 0
+%x1148 = load i32, i32* %x1147
+%x1149 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x1150 = getelementptr [5 x i32], [5 x i32]* 1149, i32 0,i32 1
+%x1151 = load i32, i32* %x1150
+%x1152 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x1153 = getelementptr [5 x i32], [5 x i32]* 1152, i32 0,i32 2
+%x1154 = load i32, i32* %x1153
+%x1155 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x1156 = getelementptr [5 x i32], [5 x i32]* 1155, i32 0,i32 3
+%x1157 = load i32, i32* %x1156
+%x1158 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x1159 = getelementptr [5 x i32], [5 x i32]* 1158, i32 0,i32 4
+%x1160 = load i32, i32* %x1159
+%x1161 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x1162 = getelementptr [5 x i32], [5 x i32]* 1161, i32 0,i32 0
+%x1163 = load i32, i32* %x1162
+%x1164 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x1165 = getelementptr [5 x i32], [5 x i32]* 1164, i32 0,i32 1
+%x1166 = load i32, i32* %x1165
+%x1167 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x1168 = getelementptr [5 x i32], [5 x i32]* 1167, i32 0,i32 2
+%x1169 = load i32, i32* %x1168
+%x1170 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x1171 = getelementptr [5 x i32], [5 x i32]* 1170, i32 0,i32 3
+%x1172 = load i32, i32* %x1171
+%x1173 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x1174 = getelementptr [5 x i32], [5 x i32]* 1173, i32 0,i32 4
+%x1175 = load i32, i32* %x1174
+%x1176 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x1177 = getelementptr [5 x i32], [5 x i32]* 1176, i32 0,i32 0
+%x1178 = load i32, i32* %x1177
+%x1179 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x1180 = getelementptr [5 x i32], [5 x i32]* 1179, i32 0,i32 1
+%x1181 = load i32, i32* %x1180
+%x1182 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x1183 = getelementptr [5 x i32], [5 x i32]* 1182, i32 0,i32 2
+%x1184 = load i32, i32* %x1183
+%x1185 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x1186 = getelementptr [5 x i32], [5 x i32]* 1185, i32 0,i32 3
+%x1187 = load i32, i32* %x1186
+%x1188 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x1189 = getelementptr [5 x i32], [5 x i32]* 1188, i32 0,i32 4
+%x1190 = load i32, i32* %x1189
+ %x1191 = mul i32 %x1118, 0
+ %x1192 = sub i32 %x1191, 29
+ %x1193 = mul i32 %x1121, 7
+ %x1194 = add i32 %x1192, %x1193
+ %x1195 = mul i32 %x1124, 0
+ %x1196 = add i32 %x1194, %x1195
+ %x1197 = sub i32 %x1196, 70
+ %x1198 = mul i32 %x1127, 38
+ %x1199 = add i32 %x1197, %x1198
+ %x1200 = mul i32 %x1130, 0
+ %x1201 = add i32 %x1199, %x1200
+ %x1202 = sub i32 %x1201, 90
+ %x1203 = mul i32 %x1133, 0
+ %x1204 = add i32 %x1202, %x1203
+ %x1205 = sub i32 %x1204, 15
+ %x1206 = mul i32 %x1136, 0
+ %x1207 = add i32 %x1205, %x1206
+ %x1208 = sub i32 %x1207, 32
+ %x1209 = mul i32 %x1139, 37
+ %x1210 = add i32 %x1208, %x1209
+ %x1211 = mul i32 %x1142, 36
+ %x1212 = add i32 %x1210, %x1211
+ %x1213 = mul i32 %x1145, 0
+ %x1214 = add i32 %x1212, %x1213
+ %x1215 = sub i32 %x1214, 62
+ %x1216 = mul i32 %x1148, 0
+ %x1217 = add i32 %x1215, %x1216
+ %x1218 = sub i32 %x1217, 125
+ %x1219 = mul i32 %x1151, 0
+ %x1220 = add i32 %x1218, %x1219
+ %x1221 = sub i32 %x1220, 46
+ %x1222 = mul i32 %x1154, 0
+ %x1223 = add i32 %x1221, %x1222
+ %x1224 = sub i32 %x1223, 70
+ %x1225 = mul i32 %x1157, 37
+ %x1226 = add i32 %x1224, %x1225
+ %x1227 = mul i32 %x1160, 0
+ %x1228 = add i32 %x1226, %x1227
+ %x1229 = sub i32 %x1228, 73
+ %x1230 = mul i32 %x1163, 0
+ %x1231 = add i32 %x1229, %x1230
+ %x1232 = sub i32 %x1231, 34
+ %x1233 = mul i32 %x1166, 0
+ %x1234 = add i32 %x1232, %x1233
+ %x1235 = sub i32 %x1234, 87
+ %x1236 = mul i32 %x1169, 0
+ %x1237 = add i32 %x1235, %x1236
+ %x1238 = sub i32 %x1237, 75
+ %x1239 = mul i32 %x1172, 71
+ %x1240 = add i32 %x1238, %x1239
+ %x1241 = mul i32 %x1175, 0
+ %x1242 = add i32 %x1240, %x1241
+ %x1243 = sub i32 %x1242, 77
+ %x1244 = mul i32 %x1178, 53
+ %x1245 = add i32 %x1243, %x1244
+ %x1246 = mul i32 %x1181, 37
+ %x1247 = add i32 %x1245, %x1246
+ %x1248 = mul i32 %x1184, 0
+ %x1249 = add i32 %x1247, %x1248
+ %x1250 = sub i32 %x1249, 103
+ %x1251 = mul i32 %x1187, 0
+ %x1252 = add i32 %x1250, %x1251
+ %x1253 = sub i32 %x1252, 13
+ %x1254 = mul i32 %x1190, 0
+ %x1255 = add i32 %x1253, %x1254
+ %x1256 = sub i32 %x1255, 114
+%x1257 = call i32 @relu_reg(i32 %x1256)
+%x1258 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x1259 = getelementptr [5 x i32], [5 x i32]* 1258, i32 0,i32 0
+%x1260 = load i32, i32* %x1259
+%x1261 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x1262 = getelementptr [5 x i32], [5 x i32]* 1261, i32 0,i32 1
+%x1263 = load i32, i32* %x1262
+%x1264 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x1265 = getelementptr [5 x i32], [5 x i32]* 1264, i32 0,i32 2
+%x1266 = load i32, i32* %x1265
+%x1267 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x1268 = getelementptr [5 x i32], [5 x i32]* 1267, i32 0,i32 3
+%x1269 = load i32, i32* %x1268
+%x1270 = getelementptr [5 x i32], [5 x i32]* %x20, i32 0
+%x1271 = getelementptr [5 x i32], [5 x i32]* 1270, i32 0,i32 4
+%x1272 = load i32, i32* %x1271
+%x1273 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x1274 = getelementptr [5 x i32], [5 x i32]* 1273, i32 0,i32 0
+%x1275 = load i32, i32* %x1274
+%x1276 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x1277 = getelementptr [5 x i32], [5 x i32]* 1276, i32 0,i32 1
+%x1278 = load i32, i32* %x1277
+%x1279 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x1280 = getelementptr [5 x i32], [5 x i32]* 1279, i32 0,i32 2
+%x1281 = load i32, i32* %x1280
+%x1282 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x1283 = getelementptr [5 x i32], [5 x i32]* 1282, i32 0,i32 3
+%x1284 = load i32, i32* %x1283
+%x1285 = getelementptr [5 x i32], [5 x i32]* %x20, i32 1
+%x1286 = getelementptr [5 x i32], [5 x i32]* 1285, i32 0,i32 4
+%x1287 = load i32, i32* %x1286
+%x1288 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x1289 = getelementptr [5 x i32], [5 x i32]* 1288, i32 0,i32 0
+%x1290 = load i32, i32* %x1289
+%x1291 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x1292 = getelementptr [5 x i32], [5 x i32]* 1291, i32 0,i32 1
+%x1293 = load i32, i32* %x1292
+%x1294 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x1295 = getelementptr [5 x i32], [5 x i32]* 1294, i32 0,i32 2
+%x1296 = load i32, i32* %x1295
+%x1297 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x1298 = getelementptr [5 x i32], [5 x i32]* 1297, i32 0,i32 3
+%x1299 = load i32, i32* %x1298
+%x1300 = getelementptr [5 x i32], [5 x i32]* %x20, i32 2
+%x1301 = getelementptr [5 x i32], [5 x i32]* 1300, i32 0,i32 4
+%x1302 = load i32, i32* %x1301
+%x1303 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x1304 = getelementptr [5 x i32], [5 x i32]* 1303, i32 0,i32 0
+%x1305 = load i32, i32* %x1304
+%x1306 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x1307 = getelementptr [5 x i32], [5 x i32]* 1306, i32 0,i32 1
+%x1308 = load i32, i32* %x1307
+%x1309 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x1310 = getelementptr [5 x i32], [5 x i32]* 1309, i32 0,i32 2
+%x1311 = load i32, i32* %x1310
+%x1312 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x1313 = getelementptr [5 x i32], [5 x i32]* 1312, i32 0,i32 3
+%x1314 = load i32, i32* %x1313
+%x1315 = getelementptr [5 x i32], [5 x i32]* %x20, i32 3
+%x1316 = getelementptr [5 x i32], [5 x i32]* 1315, i32 0,i32 4
+%x1317 = load i32, i32* %x1316
+%x1318 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x1319 = getelementptr [5 x i32], [5 x i32]* 1318, i32 0,i32 0
+%x1320 = load i32, i32* %x1319
+%x1321 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x1322 = getelementptr [5 x i32], [5 x i32]* 1321, i32 0,i32 1
+%x1323 = load i32, i32* %x1322
+%x1324 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x1325 = getelementptr [5 x i32], [5 x i32]* 1324, i32 0,i32 2
+%x1326 = load i32, i32* %x1325
+%x1327 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x1328 = getelementptr [5 x i32], [5 x i32]* 1327, i32 0,i32 3
+%x1329 = load i32, i32* %x1328
+%x1330 = getelementptr [5 x i32], [5 x i32]* %x20, i32 4
+%x1331 = getelementptr [5 x i32], [5 x i32]* 1330, i32 0,i32 4
+%x1332 = load i32, i32* %x1331
+ %x1333 = mul i32 %x1260, 67
+ %x1334 = mul i32 %x1263, 42
+ %x1335 = add i32 %x1333, %x1334
+ %x1336 = mul i32 %x1266, 41
+ %x1337 = add i32 %x1335, %x1336
+ %x1338 = mul i32 %x1269, 0
+ %x1339 = add i32 %x1337, %x1338
+ %x1340 = sub i32 %x1339, 123
+ %x1341 = mul i32 %x1272, 0
+ %x1342 = add i32 %x1340, %x1341
+ %x1343 = sub i32 %x1342, 92
+ %x1344 = mul i32 %x1275, 10
+ %x1345 = add i32 %x1343, %x1344
+ %x1346 = mul i32 %x1278, 0
+ %x1347 = add i32 %x1345, %x1346
+ %x1348 = sub i32 %x1347, 77
+ %x1349 = mul i32 %x1281, 75
+ %x1350 = add i32 %x1348, %x1349
+ %x1351 = mul i32 %x1284, 96
+ %x1352 = add i32 %x1350, %x1351
+ %x1353 = mul i32 %x1287, 0
+ %x1354 = add i32 %x1352, %x1353
+ %x1355 = sub i32 %x1354, 51
+ %x1356 = mul i32 %x1290, 109
+ %x1357 = add i32 %x1355, %x1356
+ %x1358 = mul i32 %x1293, 0
+ %x1359 = add i32 %x1357, %x1358
+ %x1360 = sub i32 %x1359, 74
+ %x1361 = mul i32 %x1296, 0
+ %x1362 = add i32 %x1360, %x1361
+ %x1363 = sub i32 %x1362, 7
+ %x1364 = mul i32 %x1299, 0
+ %x1365 = add i32 %x1363, %x1364
+ %x1366 = sub i32 %x1365, 122
+ %x1367 = mul i32 %x1302, 67
+ %x1368 = add i32 %x1366, %x1367
+ %x1369 = mul i32 %x1305, 47
+ %x1370 = add i32 %x1368, %x1369
+ %x1371 = mul i32 %x1308, 22
+ %x1372 = add i32 %x1370, %x1371
+ %x1373 = mul i32 %x1311, 0
+ %x1374 = add i32 %x1372, %x1373
+ %x1375 = sub i32 %x1374, 68
+ %x1376 = mul i32 %x1314, 38
+ %x1377 = add i32 %x1375, %x1376
+ %x1378 = mul i32 %x1317, 29
+ %x1379 = add i32 %x1377, %x1378
+ %x1380 = mul i32 %x1320, 115
+ %x1381 = add i32 %x1379, %x1380
+ %x1382 = mul i32 %x1323, 0
+ %x1383 = add i32 %x1381, %x1382
+ %x1384 = sub i32 %x1383, 121
+ %x1385 = mul i32 %x1326, 36
+ %x1386 = add i32 %x1384, %x1385
+ %x1387 = mul i32 %x1329, 0
+ %x1388 = add i32 %x1386, %x1387
+ %x1389 = sub i32 %x1388, 49
+ %x1390 = mul i32 %x1332, 85
+ %x1391 = add i32 %x1389, %x1390
+%x1392 = call i32 @relu_reg(i32 %x1391)
+ %x1393 = mul i32 %x157, 39
+ %x1394 = mul i32 %x300, 77
+ %x1395 = add i32 %x1393, %x1394
+ %x1396 = mul i32 %x435, 127
+ %x1397 = add i32 %x1395, %x1396
+ %x1398 = mul i32 %x572, 0
+ %x1399 = add i32 %x1397, %x1398
+ %x1400 = sub i32 %x1399, 106
+ %x1401 = mul i32 %x708, 0
+ %x1402 = add i32 %x1400, %x1401
+ %x1403 = sub i32 %x1402, 3
+ %x1404 = mul i32 %x846, 32
+ %x1405 = add i32 %x1403, %x1404
+ %x1406 = mul i32 %x982, 0
+ %x1407 = add i32 %x1405, %x1406
+ %x1408 = sub i32 %x1407, 95
+ %x1409 = mul i32 %x1115, 0
+ %x1410 = add i32 %x1408, %x1409
+ %x1411 = sub i32 %x1410, 50
+ %x1412 = mul i32 %x1257, 0
+ %x1413 = add i32 %x1411, %x1412
+ %x1414 = sub i32 %x1413, 23
+ %x1415 = mul i32 %x1392, 46
+ %x1416 = add i32 %x1414, %x1415
+%x1417= icmp sgt i32 %x1416, 0
+%x1418= zext i1 %x1417 to i32   %x1419 = icmp ne i32 %x1418, 0
+   br i1 %x1419,label %x1420, label %x1421
+x1420:
   ret i32 1
+br label %x1421
+x1421:
+  ret i32 0
 }
 define dso_local i32 @main(){
-store i32 0, i32* @intt
-store i32 0, i32* @chat
-%x113 = alloca i32
-%x114 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 0
-%x115 = call i32 @getstr(i32* %x114)
-store i32 %x115, i32* %x113
-br label %x116
-x116:
-%x117 = load i32, i32* @i
-%x118 = load i32, i32* %x113
-%x119= icmp slt i32 %x117, %x118
-%x120= zext i1 %x119 to i32
-   %x121 = icmp ne i32 %x120, 0
-   br i1 %x121,label %x122, label %x123
-x122:
-%x124 = load i32, i32* @i
-%x125 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x124
-%x126 = load i32, i32* %x125
-%x127 = call i32 @isdigit(i32 %x126)
-%x128= icmp eq i32 %x127, 1
-%x129= zext i1 %x128 to i32
-   %x130 = icmp ne i32 %x129, 0
-   br i1 %x130,label %x131, label %x132
-x131:
-%x133 = load i32, i32* @ii
-%x134 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x133
-%x135 = load i32, i32* @i
-%x136 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x135
-%x137 = load i32, i32* %x136
- store i32 %x137, i32* %x134
-%x138 = load i32, i32* @ii
- %x139 = add i32 %x138, 1
-store i32 %x139, i32* @ii
-br label %x140
-x132:
-%x141 = load i32, i32* @i
-%x142 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x141
-%x143 = load i32, i32* %x142
-%x144= icmp eq i32 %x143, 40
-%x145= zext i1 %x144 to i32
-   %x146 = icmp ne i32 %x145, 0
-   br i1 %x146,label %x147, label %x148
-x147:
-call void @chapush(i32 40)
-br label %x148
-x148:
-%x150 = load i32, i32* @i
-%x151 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x150
-%x152 = load i32, i32* %x151
-%x153= icmp eq i32 %x152, 94
-%x154= zext i1 %x153 to i32
-   %x155 = icmp ne i32 %x154, 0
-   br i1 %x155,label %x156, label %x157
-x156:
-call void @chapush(i32 94)
-br label %x157
-x157:
-%x159 = load i32, i32* @i
-%x160 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x159
-%x161 = load i32, i32* %x160
-%x162= icmp eq i32 %x161, 41
-%x163= zext i1 %x162 to i32
-   %x164 = icmp ne i32 %x163, 0
-   br i1 %x164,label %x165, label %x166
-x165:
-%x167 = call i32 @chapop()
-store i32 %x167, i32* @c
-br label %x168
-x168:
-%x169 = load i32, i32* @c
-%x170= icmp ne i32 %x169, 40
-%x171= zext i1 %x170 to i32
-   %x172 = icmp ne i32 %x171, 0
-   br i1 %x172,label %x173, label %x174
-x173:
-%x175 = load i32, i32* @ii
-%x176 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x175
- store i32 32, i32* %x176
-%x177 = load i32, i32* @ii
- %x178 = add i32 %x177, 1
-%x179 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x178
-%x180 = load i32, i32* @c
- store i32 %x180, i32* %x179
-%x181 = load i32, i32* @ii
- %x182 = add i32 %x181, 2
-store i32 %x182, i32* @ii
-%x183 = call i32 @chapop()
-store i32 %x183, i32* @c
-  br label %x168
-x174:
-br label %x166
-x166:
-%x185 = load i32, i32* @i
-%x186 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x185
-%x187 = load i32, i32* %x186
-%x188= icmp eq i32 %x187, 43
-%x189= zext i1 %x188 to i32
-   %x190 = icmp ne i32 %x189, 0
-   br i1 %x190,label %x191, label %x192
-x191:
-br label %x193
-x193:
-%x194 = load i32, i32* @chat
-%x195 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x194
-%x196 = load i32, i32* %x195
-%x197= icmp eq i32 %x196, 43
-%x198= zext i1 %x197 to i32
-%x199 = load i32, i32* @chat
-%x200 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x199
-%x201 = load i32, i32* %x200
-%x202= icmp eq i32 %x201, 45
-%x203= zext i1 %x202 to i32
-%x204 = or i32 %x198, %x203
-%x205 = load i32, i32* @chat
-%x206 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x205
-%x207 = load i32, i32* %x206
-%x208= icmp eq i32 %x207, 42
-%x209= zext i1 %x208 to i32
-%x210 = or i32 %x204, %x209
-%x211 = load i32, i32* @chat
-%x212 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x211
-%x213 = load i32, i32* %x212
-%x214= icmp eq i32 %x213, 47
-%x215= zext i1 %x214 to i32
-%x216 = or i32 %x210, %x215
-%x217 = load i32, i32* @chat
-%x218 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x217
-%x219 = load i32, i32* %x218
-%x220= icmp eq i32 %x219, 37
-%x221= zext i1 %x220 to i32
-%x222 = or i32 %x216, %x221
-%x223 = load i32, i32* @chat
-%x224 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x223
-%x225 = load i32, i32* %x224
-%x226= icmp eq i32 %x225, 94
-%x227= zext i1 %x226 to i32
-%x228 = or i32 %x222, %x227
-   %x229 = icmp ne i32 %x228, 0
-   br i1 %x229,label %x230, label %x231
-x230:
-%x232 = call i32 @find()
-%x233= icmp eq i32 %x232, 0
-%x234= zext i1 %x233 to i32
-   %x235 = icmp ne i32 %x234, 0
-   br i1 %x235,label %x236, label %x237
-x236:
-br label %x231
-br label %x237
-x237:
-ret i32 0
-  br label %x193
-x231:
-call void @chapush(i32 43)
-br label %x192
-x192:
-%x240 = load i32, i32* @i
-%x241 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x240
-%x242 = load i32, i32* %x241
-%x243= icmp eq i32 %x242, 45
-%x244= zext i1 %x243 to i32
-   %x245 = icmp ne i32 %x244, 0
-   br i1 %x245,label %x246, label %x247
-x246:
-br label %x248
-x248:
-%x249 = load i32, i32* @chat
-%x250 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x249
-%x251 = load i32, i32* %x250
-%x252= icmp eq i32 %x251, 43
-%x253= zext i1 %x252 to i32
-%x254 = load i32, i32* @chat
-%x255 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x254
-%x256 = load i32, i32* %x255
-%x257= icmp eq i32 %x256, 45
-%x258= zext i1 %x257 to i32
-%x259 = or i32 %x253, %x258
-%x260 = load i32, i32* @chat
-%x261 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x260
-%x262 = load i32, i32* %x261
-%x263= icmp eq i32 %x262, 42
-%x264= zext i1 %x263 to i32
-%x265 = or i32 %x259, %x264
-%x266 = load i32, i32* @chat
-%x267 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x266
-%x268 = load i32, i32* %x267
-%x269= icmp eq i32 %x268, 47
-%x270= zext i1 %x269 to i32
-%x271 = or i32 %x265, %x270
-%x272 = load i32, i32* @chat
-%x273 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x272
-%x274 = load i32, i32* %x273
-%x275= icmp eq i32 %x274, 37
-%x276= zext i1 %x275 to i32
-%x277 = or i32 %x271, %x276
-%x278 = load i32, i32* @chat
-%x279 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x278
-%x280 = load i32, i32* %x279
-%x281= icmp eq i32 %x280, 94
-%x282= zext i1 %x281 to i32
-%x283 = or i32 %x277, %x282
-   %x284 = icmp ne i32 %x283, 0
-   br i1 %x284,label %x285, label %x286
-x285:
-%x287 = call i32 @find()
-%x288= icmp eq i32 %x287, 0
-%x289= zext i1 %x288 to i32
-   %x290 = icmp ne i32 %x289, 0
-   br i1 %x290,label %x291, label %x292
-x291:
-br label %x286
-br label %x292
-x292:
-ret i32 0
-  br label %x248
-x286:
-call void @chapush(i32 45)
-br label %x247
-x247:
-%x295 = load i32, i32* @i
-%x296 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x295
-%x297 = load i32, i32* %x296
-%x298= icmp eq i32 %x297, 42
-%x299= zext i1 %x298 to i32
-   %x300 = icmp ne i32 %x299, 0
-   br i1 %x300,label %x301, label %x302
-x301:
-br label %x303
-x303:
-%x304 = load i32, i32* @chat
-%x305 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x304
-%x306 = load i32, i32* %x305
-%x307= icmp eq i32 %x306, 42
-%x308= zext i1 %x307 to i32
-%x309 = load i32, i32* @chat
-%x310 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x309
-%x311 = load i32, i32* %x310
-%x312= icmp eq i32 %x311, 47
-%x313= zext i1 %x312 to i32
-%x314 = or i32 %x308, %x313
-%x315 = load i32, i32* @chat
-%x316 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x315
-%x317 = load i32, i32* %x316
-%x318= icmp eq i32 %x317, 37
-%x319= zext i1 %x318 to i32
-%x320 = or i32 %x314, %x319
-%x321 = load i32, i32* @chat
-%x322 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x321
-%x323 = load i32, i32* %x322
-%x324= icmp eq i32 %x323, 94
-%x325= zext i1 %x324 to i32
-%x326 = or i32 %x320, %x325
-   %x327 = icmp ne i32 %x326, 0
-   br i1 %x327,label %x328, label %x329
-x328:
-%x330 = call i32 @find()
-%x331= icmp eq i32 %x330, 0
-%x332= zext i1 %x331 to i32
-   %x333 = icmp ne i32 %x332, 0
-   br i1 %x333,label %x334, label %x335
-x334:
-br label %x329
-br label %x335
-x335:
-ret i32 0
-  br label %x303
-x329:
-call void @chapush(i32 42)
-br label %x302
-x302:
-%x338 = load i32, i32* @i
-%x339 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x338
-%x340 = load i32, i32* %x339
-%x341= icmp eq i32 %x340, 47
-%x342= zext i1 %x341 to i32
-   %x343 = icmp ne i32 %x342, 0
-   br i1 %x343,label %x344, label %x345
-x344:
-br label %x346
-x346:
-%x347 = load i32, i32* @chat
-%x348 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x347
-%x349 = load i32, i32* %x348
-%x350= icmp eq i32 %x349, 42
-%x351= zext i1 %x350 to i32
-%x352 = load i32, i32* @chat
-%x353 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x352
-%x354 = load i32, i32* %x353
-%x355= icmp eq i32 %x354, 47
-%x356= zext i1 %x355 to i32
-%x357 = or i32 %x351, %x356
-%x358 = load i32, i32* @chat
-%x359 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x358
-%x360 = load i32, i32* %x359
-%x361= icmp eq i32 %x360, 37
-%x362= zext i1 %x361 to i32
-%x363 = or i32 %x357, %x362
-%x364 = load i32, i32* @chat
-%x365 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x364
-%x366 = load i32, i32* %x365
-%x367= icmp eq i32 %x366, 94
-%x368= zext i1 %x367 to i32
-%x369 = or i32 %x363, %x368
-   %x370 = icmp ne i32 %x369, 0
-   br i1 %x370,label %x371, label %x372
-x371:
-%x373 = call i32 @find()
-%x374= icmp eq i32 %x373, 0
-%x375= zext i1 %x374 to i32
-   %x376 = icmp ne i32 %x375, 0
-   br i1 %x376,label %x377, label %x378
-x377:
-br label %x372
-br label %x378
-x378:
-ret i32 0
-  br label %x346
-x372:
-call void @chapush(i32 47)
-br label %x345
-x345:
-%x381 = load i32, i32* @i
-%x382 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x381
-%x383 = load i32, i32* %x382
-%x384= icmp eq i32 %x383, 37
-%x385= zext i1 %x384 to i32
-   %x386 = icmp ne i32 %x385, 0
-   br i1 %x386,label %x387, label %x388
-x387:
-br label %x389
-x389:
-%x390 = load i32, i32* @chat
-%x391 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x390
-%x392 = load i32, i32* %x391
-%x393= icmp eq i32 %x392, 42
-%x394= zext i1 %x393 to i32
-%x395 = load i32, i32* @chat
-%x396 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x395
-%x397 = load i32, i32* %x396
-%x398= icmp eq i32 %x397, 47
-%x399= zext i1 %x398 to i32
-%x400 = or i32 %x394, %x399
-%x401 = load i32, i32* @chat
-%x402 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x401
-%x403 = load i32, i32* %x402
-%x404= icmp eq i32 %x403, 37
-%x405= zext i1 %x404 to i32
-%x406 = or i32 %x400, %x405
-%x407 = load i32, i32* @chat
-%x408 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x407
-%x409 = load i32, i32* %x408
-%x410= icmp eq i32 %x409, 94
-%x411= zext i1 %x410 to i32
-%x412 = or i32 %x406, %x411
-   %x413 = icmp ne i32 %x412, 0
-   br i1 %x413,label %x414, label %x415
-x414:
-%x416 = call i32 @find()
-%x417= icmp eq i32 %x416, 0
-%x418= zext i1 %x417 to i32
-   %x419 = icmp ne i32 %x418, 0
-   br i1 %x419,label %x420, label %x421
-x420:
-br label %x415
-br label %x421
-x421:
-ret i32 0
-  br label %x389
-x415:
-call void @chapush(i32 37)
-br label %x388
-x388:
-%x424 = load i32, i32* @ii
-%x425 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x424
- store i32 32, i32* %x425
-%x426 = load i32, i32* @ii
- %x427 = add i32 %x426, 1
-store i32 %x427, i32* @ii
-br label %x140
-x140:
-%x428 = load i32, i32* @i
- %x429 = add i32 %x428, 1
-store i32 %x429, i32* @i
-  br label %x116
-x123:
-br label %x430
-x430:
-%x431 = load i32, i32* @chat
-%x432= icmp sgt i32 %x431, 0
-%x433= zext i1 %x432 to i32   %x434 = icmp ne i32 %x433, 0
-   br i1 %x434,label %x435, label %x436
-x435:
-%x437 = alloca i32
-%x438 = call i32 @chapop()
-store i32 %x438, i32* %x437
-%x439 = load i32, i32* @ii
-%x440 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x439
- store i32 32, i32* %x440
-%x441 = load i32, i32* @ii
- %x442 = add i32 %x441, 1
-%x443 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x442
-%x444 = load i32, i32* %x437
- store i32 %x444, i32* %x443
-%x445 = load i32, i32* @ii
- %x446 = add i32 %x445, 2
-store i32 %x446, i32* @ii
-  br label %x430
-x436:
-%x447 = load i32, i32* @ii
-%x448 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x447
- store i32 64, i32* %x448
-store i32 1, i32* @i
-br label %x449
-x449:
-%x450 = load i32, i32* @i
-%x451 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x450
-%x452 = load i32, i32* %x451
-%x453= icmp ne i32 %x452, 64
-%x454= zext i1 %x453 to i32
-   %x455 = icmp ne i32 %x454, 0
-   br i1 %x455,label %x456, label %x457
-x456:
-%x458 = load i32, i32* @i
-%x459 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x458
-%x460 = load i32, i32* %x459
-%x461= icmp eq i32 %x460, 43
-%x462= zext i1 %x461 to i32
-%x463 = load i32, i32* @i
-%x464 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x463
-%x465 = load i32, i32* %x464
-%x466= icmp eq i32 %x465, 45
-%x467= zext i1 %x466 to i32
-%x468 = or i32 %x462, %x467
-%x469 = load i32, i32* @i
-%x470 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x469
-%x471 = load i32, i32* %x470
-%x472= icmp eq i32 %x471, 42
-%x473= zext i1 %x472 to i32
-%x474 = or i32 %x468, %x473
-%x475 = load i32, i32* @i
-%x476 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x475
-%x477 = load i32, i32* %x476
-%x478= icmp eq i32 %x477, 47
-%x479= zext i1 %x478 to i32
-%x480 = or i32 %x474, %x479
-%x481 = load i32, i32* @i
-%x482 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x481
-%x483 = load i32, i32* %x482
-%x484= icmp eq i32 %x483, 37
-%x485= zext i1 %x484 to i32
-%x486 = or i32 %x480, %x485
-%x487 = load i32, i32* @i
-%x488 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x487
-%x489 = load i32, i32* %x488
-%x490= icmp eq i32 %x489, 94
-%x491= zext i1 %x490 to i32
-%x492 = or i32 %x486, %x491
-   %x493 = icmp ne i32 %x492, 0
-   br i1 %x493,label %x494, label %x495
-x494:
-%x496 = alloca i32
-%x497 = call i32 @intpop()
-store i32 %x497, i32* %x496
-%x498 = alloca i32
-%x499 = call i32 @intpop()
-store i32 %x499, i32* %x498
-%x500 = alloca i32
-%x501 = load i32, i32* @i
-%x502 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x501
-%x503 = load i32, i32* %x502
-%x504= icmp eq i32 %x503, 43
-%x505= zext i1 %x504 to i32
-   %x506 = icmp ne i32 %x505, 0
-   br i1 %x506,label %x507, label %x508
-x507:
-%x510 = load i32, i32* %x496
-%x511 = load i32, i32* %x498
- %x512 = add i32 %x510, %x511
-store i32 %x512, i32* %x500
-br label %x508
-x508:
-%x513 = load i32, i32* @i
-%x514 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x513
-%x515 = load i32, i32* %x514
-%x516= icmp eq i32 %x515, 45
-%x517= zext i1 %x516 to i32
-   %x518 = icmp ne i32 %x517, 0
-   br i1 %x518,label %x519, label %x520
-x519:
-%x522 = load i32, i32* %x498
-%x523 = load i32, i32* %x496
- %x524 = sub i32 %x522, %x523
-store i32 %x524, i32* %x500
-br label %x520
-x520:
-%x525 = load i32, i32* @i
-%x526 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x525
-%x527 = load i32, i32* %x526
-%x528= icmp eq i32 %x527, 42
-%x529= zext i1 %x528 to i32
-   %x530 = icmp ne i32 %x529, 0
-   br i1 %x530,label %x531, label %x532
-x531:
-%x534 = load i32, i32* %x496
-%x535 = load i32, i32* %x498
- %x536 = mul i32 %x534, %x535
-store i32 %x536, i32* %x500
-br label %x532
-x532:
-%x537 = load i32, i32* @i
-%x538 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x537
-%x539 = load i32, i32* %x538
-%x540= icmp eq i32 %x539, 47
-%x541= zext i1 %x540 to i32
-   %x542 = icmp ne i32 %x541, 0
-   br i1 %x542,label %x543, label %x544
-x543:
-%x546 = load i32, i32* %x498
-%x547 = load i32, i32* %x496
- %x548 = sdiv i32 %x546, %x547
-store i32 %x548, i32* %x500
-br label %x544
-x544:
-%x549 = load i32, i32* @i
-%x550 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x549
-%x551 = load i32, i32* %x550
-%x552= icmp eq i32 %x551, 37
-%x553= zext i1 %x552 to i32
-   %x554 = icmp ne i32 %x553, 0
-   br i1 %x554,label %x555, label %x556
-x555:
-%x558 = load i32, i32* %x498
-%x559 = load i32, i32* %x496
- %x560 = srem i32 %x558, %x559
-store i32 %x560, i32* %x500
-br label %x556
-x556:
-%x561 = load i32, i32* @i
-%x562 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x561
-%x563 = load i32, i32* %x562
-%x564= icmp eq i32 %x563, 94
-%x565= zext i1 %x564 to i32
-   %x566 = icmp ne i32 %x565, 0
-   br i1 %x566,label %x567, label %x568
-x567:
-%x570 = load i32, i32* %x498
-%x571 = load i32, i32* %x496
-%x572 = call i32 @power(i32 %x570,i32 %x571)
-store i32 %x572, i32* %x500
-br label %x568
-x568:
-%x573 = load i32, i32* %x500
-call void @intpush(i32 %x573)
-br label %x574
-x495:
-%x575 = load i32, i32* @i
-%x576 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x575
-%x577 = load i32, i32* %x576
-%x578= icmp ne i32 %x577, 32
-%x579= zext i1 %x578 to i32
-   %x580 = icmp ne i32 %x579, 0
-   br i1 %x580,label %x581, label %x582
-x581:
-%x583 = load i32, i32* @i
-%x584 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x583
-%x585 = load i32, i32* %x584
- %x586 = sub i32 %x585, 48
-call void @intpush(i32 %x586)
-store i32 1, i32* @ii
-br label %x587
-x587:
-%x588 = load i32, i32* @i
-%x589 = load i32, i32* @ii
- %x590 = add i32 %x588, %x589
-%x591 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x590
-%x592 = load i32, i32* %x591
-%x593= icmp ne i32 %x592, 32
-%x594= zext i1 %x593 to i32
-   %x595 = icmp ne i32 %x594, 0
-   br i1 %x595,label %x596, label %x597
-x596:
-%x598 = load i32, i32* @i
-%x599 = load i32, i32* @ii
- %x600 = add i32 %x598, %x599
-%x601 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x600
-%x602 = load i32, i32* %x601
- %x603 = sub i32 %x602, 48
-call void @intadd(i32 %x603)
-%x604 = load i32, i32* @ii
- %x605 = add i32 %x604, 1
-store i32 %x605, i32* @ii
-  br label %x587
-x597:
-%x606 = load i32, i32* @i
-%x607 = load i32, i32* @ii
- %x608 = add i32 %x606, %x607
- %x609 = sub i32 %x608, 1
-store i32 %x609, i32* @i
-br label %x582
-x582:
-ret i32 0
-br label %x574
-x574:
-%x611 = load i32, i32* @i
- %x612 = add i32 %x611, 1
-store i32 %x612, i32* @i
-  br label %x449
-x457:
-%x613 = getelementptr [10000 x i32], [10000 x i32]* @ints, i32 0, i32 1
-%x614 = load i32, i32* %x613
-call void @putint(i32 %x614)
+%x1423 = alloca i32
+%x1424 = call i32 @getint()
+store i32 %x1424, i32* %x1423
+%x1425 = alloca [5 x [5 x i32]]
+%x1426 = getelementptr [5 x [5 x i32]], [5 x [5 x i32]]* %x1425, i32 0, i32 0
+%x1427 = getelementptr [5 x i32], [5 x i32]* %x1426, i32 0, i32 0
+call void @memset(i32* %x1427, i32 0, i32 100)
+br label %x1428
+x1428:
+%x1429 = load i32, i32* %x1423
+%x1430= icmp sgt i32 %x1429, 0
+%x1431= zext i1 %x1430 to i32   %x1432 = icmp ne i32 %x1431, 0
+   br i1 %x1432,label %x1433, label %x1434
+x1433:
+%x1435 = alloca i32
+store i32 0, i32* %x1435
+br label %x1436
+x1436:
+%x1437 = load i32, i32* %x1435
+%x1438= icmp slt i32 %x1437, 5
+%x1439= zext i1 %x1438 to i32
+   %x1440 = icmp ne i32 %x1439, 0
+   br i1 %x1440,label %x1441, label %x1442
+x1441:
+%x1443 = alloca i32
+store i32 0, i32* %x1443
+br label %x1444
+x1444:
+%x1445 = load i32, i32* %x1443
+%x1446= icmp slt i32 %x1445, 5
+%x1447= zext i1 %x1446 to i32
+   %x1448 = icmp ne i32 %x1447, 0
+   br i1 %x1448,label %x1449, label %x1450
+x1449:
+%x1451 = load i32, i32* %x1435
+%x1452 = load i32, i32* %x1443
+%x1453 = call i32 @getint()
+%x1454 = getelementptr [5 x [5 x i32]], [5 x [5 x i32]]* %x1425, i32 0, i32 %x1451
+%x1455 = getelementptr [5 x i32], [5 x i32]* %x1454, i32 0, i32 %x1452
+store i32 %x1453, i32* %x1455
+%x1456 = load i32, i32* %x1443
+ %x1457 = add i32 %x1456, 1
+store i32 %x1457, i32* %x1443
+  br label %x1444
+x1450:
+%x1458 = load i32, i32* %x1435
+ %x1459 = add i32 %x1458, 1
+store i32 %x1459, i32* %x1435
+  br label %x1436
+x1442:
+%x1460 = getelementptr [5 x [5 x i32]], [5 x [5 x i32]]* %x1425, i32 0, i32 0
+%x1461 = getelementptr [5 x i32], [5 x i32]* %x1460, i32 0, i32 0
+%x1462 = call i32 @model([5 x i32]* %x1461)
+   %x1463 = icmp ne i32 %x1462, 0
+   br i1 %x1463,label %x1464, label %x1465
+x1464:
+call void @putch(i32 99)
+call void @putch(i32 97)
+call void @putch(i32 116)
+call void @putch(i32 10)
+br label %x1466
+x1465:
+call void @putch(i32 100)
+call void @putch(i32 111)
+call void @putch(i32 103)
+call void @putch(i32 10)
+br label %x1466
+x1466:
+%x1467 = load i32, i32* %x1423
+ %x1468 = sub i32 %x1467, 1
+store i32 %x1468, i32* %x1423
+  br label %x1428
+x1434:
   ret i32 0
 }
