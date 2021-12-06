@@ -1671,7 +1671,12 @@ public class Grammer {
                 if(!Main.tokens.get(p).name.equals("("))
                     System.exit(129803);
                 if(Main.tokens.get(p+1).name.equals(")")){
-                    writer.write("call i32 @"+x.token.name+"()\n");
+                    if(x.functiontype==0)
+                        writer.write("call void @"+x.token.name+"()\n");
+                    else{
+                        writer.write("%x"+r+"= call i32 @"+x.token.name+"()\n");
+                        r++;
+                    }
 
                     p=p+2;
                     if(!Main.tokens.get(p).name.equals(";"))
