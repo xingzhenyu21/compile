@@ -1952,8 +1952,8 @@ public class Grammer {
                             else{
                                 writer.write("%x"+r+" = getelementptr ["+temp.x+" x ["+temp.y+" x i32]], ["+temp.x+" x ["+temp.y+" x i32]]* "+temp.register+", i32 0, i32 "+0+'\n');
                                 r++;
-                                writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0, i32 0"+'\n');
-                                r++;
+//                                writer.write("%x"+r+" = getelementptr ["+temp.y+" x i32], ["+temp.y+" x i32]* %x"+(r-1)+", i32 0, i32 0"+'\n');
+//                                r++;
 //                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
 //                                r++;
                             }
