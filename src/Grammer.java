@@ -2015,7 +2015,7 @@ public class Grammer {
             }
         }
         p--;
-        System.out.print('\n');
+
 
         all.add(new Token("#",1));
         int k=0;
@@ -2044,7 +2044,7 @@ public class Grammer {
                 else if(y>2&&all.get(y-1).name.equals("-")&&all.get(y-2).type==1){
                     all.add(y-1,new Token("(",1));
                     all.add(y,new Token("0"));
-                    all.add(y+1,new Token(")",1));
+                    all.add(y+3,new Token(")",1));
                     y=y+3;
                 }
             }
