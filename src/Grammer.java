@@ -130,6 +130,7 @@ public class Grammer {
                 p++;
                 if(!Main.tokens.get(p).name.equals("{"))
                     System.exit(21321);
+                writer.write("{\n");
                 p++;
                 while (p<Main.tokens.size()&&!Main.tokens.get(p).name.equals("}")) {
                     BlockItem(0,0);
