@@ -897,7 +897,7 @@ public class Grammer {
         while(true){
             t=EqExp();
             if(qw!=null){
-                writer.write("%x"+r+" = mul i32 "+qw+", "+t+'\n');
+                writer.write("%x"+r+" = and i32 "+qw+", "+t+'\n');
                 r++;
                 qw="%x"+(r-1);
             }
