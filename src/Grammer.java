@@ -1513,7 +1513,7 @@ public class Grammer {
 
                         writer.write("br label %x"+label3+'\n');
                         writer.write("x"+label3+":\n");
-                        if(Main.tokens.get(p+1).name.equals("}")&&state==1){
+                        if(Main.tokens.get(p+1).name.equals("}")&&state==1&&labelx!=0){
 
                             writer.write("ret i32 0\n");
                         }
@@ -1522,7 +1522,7 @@ public class Grammer {
                         BlockItem(labelx,labely);
                         writer.write("br label %x"+label3+'\n');
                         writer.write("x"+label3+":\n");
-                        if(Main.tokens.get(p+1).name.equals("}")&&state==1){
+                        if(Main.tokens.get(p+1).name.equals("}")&&state==1&&labelx!=0){
                             writer.write("ret i32 0\n");}
                     }
                 }
@@ -1530,7 +1530,7 @@ public class Grammer {
                     p--;
                     writer.write("br label %x"+label2+'\n');
                     writer.write("x"+label2+":\n");
-                    if(Main.tokens.get(p+1).name.equals("}")&&state==1){
+                    if(Main.tokens.get(p+1).name.equals("}")&&state==1&&labelx!=0){
                         writer.write("ret i32 0\n");
                     }
                 }
@@ -1561,7 +1561,7 @@ public class Grammer {
                         writer.write("x"+label3+":\n");
 
                     }
-                    if(Main.tokens.get(p+1).name.equals("}")&&state==1){
+                    if(Main.tokens.get(p+1).name.equals("}")&&state==1&&labelx!=0){
                         writer.write("ret i32 0\n");
                     }
 
@@ -1570,7 +1570,7 @@ public class Grammer {
                     p--;
                     writer.write("br label %x"+label2+'\n');
                     writer.write("x"+label2+":\n");
-                    if(Main.tokens.get(p+1).name.equals("}")&&state==1){
+                    if(Main.tokens.get(p+1).name.equals("}")&&state==1&&labelx!=0){
                         writer.write("ret i32 0\n");
                     }
                 }
