@@ -2036,9 +2036,12 @@ public class Grammer {
                 }
             }
         }
+        for(int i=0;i<all.size();i++)
+            System.out.print(all.get(i).name);
+        System.out.println('\n');
         for(int y=0;y<all.size();y++){
             if(all.get(y).type==0){
-                if(y>2&&all.get(y-1).name.equals("+")&&all.get(y-2).type==1){
+                if(y>2&&all.get(y-1).name.equals("+")&&all.get(y-2).type==1&&!all.get(y-2).name.equals(")")&&!all.get(y-2).name.equals("(")){
                     all.remove(y-1);
                 }
                 else if(y>2&&all.get(y-1).name.equals("-")&&all.get(y-2).type==1){
@@ -2049,7 +2052,9 @@ public class Grammer {
                 }
             }
         }
-
+        for(int i=0;i<all.size();i++)
+            System.out.print(all.get(i).name);
+        System.out.println('\n');
         if(all.get(all.size()-2).type==1&&!all.get(all.size()-2).name.equals(")")){
 
             System.exit(7982);}
