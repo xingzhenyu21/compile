@@ -10,7 +10,8 @@ define dso_local i32 @relu_reg(i32 %x1){
  store i32 %x1, i32* %x2
 %x3 = load i32, i32* %x2
 %x4= icmp sgt i32 %x3, 127
-%x5= zext i1 %x4 to i32   %x6 = icmp ne i32 %x5, 0
+%x5= zext i1 %x4 to i32
+   %x6 = icmp ne i32 %x5, 0
    br i1 %x6,label %x7, label %x8
 x7:
   ret i32 127
@@ -1429,7 +1430,8 @@ store [5 x i32]* %x18, [5 x i32]* * %x19
  %x1415 = mul i32 %x1392, 46
  %x1416 = add i32 %x1414, %x1415
 %x1417= icmp sgt i32 %x1416, 0
-%x1418= zext i1 %x1417 to i32   %x1419 = icmp ne i32 %x1418, 0
+%x1418= zext i1 %x1417 to i32
+   %x1419 = icmp ne i32 %x1418, 0
    br i1 %x1419,label %x1420, label %x1421
 x1420:
   ret i32 1
@@ -1449,7 +1451,8 @@ br label %x1428
 x1428:
 %x1429 = load i32, i32* %x1423
 %x1430= icmp sgt i32 %x1429, 0
-%x1431= zext i1 %x1430 to i32   %x1432 = icmp ne i32 %x1431, 0
+%x1431= zext i1 %x1430 to i32
+   %x1432 = icmp ne i32 %x1431, 0
    br i1 %x1432,label %x1433, label %x1434
 x1433:
 %x1435 = alloca i32
@@ -1489,26 +1492,25 @@ store i32 %x1459, i32* %x1435
   br label %x1436
 x1442:
 %x1460 = getelementptr [5 x [5 x i32]], [5 x [5 x i32]]* %x1425, i32 0, i32 0
-%x1461 = getelementptr [5 x i32], [5 x i32]* %x1460, i32 0, i32 0
-%x1462 = call i32 @model([5 x i32]* %x1461)
-   %x1463 = icmp ne i32 %x1462, 0
-   br i1 %x1463,label %x1464, label %x1465
-x1464:
+%x1461 = call i32 @model([5 x i32]* %x1460)
+   %x1462 = icmp ne i32 %x1461, 0
+   br i1 %x1462,label %x1463, label %x1464
+x1463:
 call void @putch(i32 99)
 call void @putch(i32 97)
 call void @putch(i32 116)
 call void @putch(i32 10)
-br label %x1466
-x1465:
+br label %x1465
+x1464:
 call void @putch(i32 100)
 call void @putch(i32 111)
 call void @putch(i32 103)
 call void @putch(i32 10)
-br label %x1466
-x1466:
-%x1467 = load i32, i32* %x1423
- %x1468 = sub i32 %x1467, 1
-store i32 %x1468, i32* %x1423
+br label %x1465
+x1465:
+%x1466 = load i32, i32* %x1423
+ %x1467 = sub i32 %x1466, 1
+store i32 %x1467, i32* %x1423
   br label %x1428
 x1434:
   ret i32 0

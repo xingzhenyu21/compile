@@ -897,7 +897,7 @@ public class Grammer {
         while(true){
             t=EqExp();
             if(qw!=null){
-                writer.write("%x"+r+" = and i32 "+qw+", "+t+'\n');
+                writer.write("%x"+r+" = mul i32 "+qw+", "+t+'\n');
                 r++;
                 qw="%x"+(r-1);
             }
@@ -966,7 +966,7 @@ public class Grammer {
                 else if(x==2) {
                     writer.write("%x"+r+"= icmp sgt i32 "+qw+", "+t+'\n');
                     r++;
-                    writer.write("%x"+r+"= zext i1 %x"+(r-1)+" to i32");
+                    writer.write("%x"+r+"= zext i1 %x"+(r-1)+" to i32\n");
                     r++;
                 }
                 else if(x==3) {
