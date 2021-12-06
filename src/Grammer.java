@@ -109,6 +109,7 @@ public class Grammer {
     }
     void FuncDef() throws IOException {
         if(Main.tokens.get(p).name.equals("void")){
+
             writer.write("define dso_local void ");
             p++;
             Symbol symbol = new Symbol();
@@ -126,7 +127,16 @@ public class Grammer {
                 p++;
                 writer.write("()");
                 p++;
-                Block(0,0,0);
+                if(!Main.tokens.get(p).name.equals("{"))
+                    System.exit(21321);
+                p++;
+                while (p<Main.tokens.size()&&!Main.tokens.get(p).name.equals("}")) {
+                    BlockItem(0,0);
+                    p++;
+                }
+                if(!Main.tokens.get(p-2).name.equals("return"))
+                    writer.write("   ret void\n");
+                writer.write("}\n");
                 return;
             }
             writer.write("(");
@@ -202,7 +212,6 @@ public class Grammer {
                 else if(Main.tokens.get(p).name.equals(")"))
                     break;
                 else{
-
                     System.exit(80923);}
             }
             p++;
@@ -217,8 +226,8 @@ public class Grammer {
                 BlockItem(0,0);
                 p++;
             }
-            if(!Main.tokens.get(p-2).name.equals("return"))
-                writer.write("   ret void\n");
+
+
             writer.write("}\n");
             int nu = symbols.size()-index[current_block];
             while(nu>0){
