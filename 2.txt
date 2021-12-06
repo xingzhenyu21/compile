@@ -5,96 +5,794 @@ declare void @putch(i32)
 declare void @memset(i32*, i32, i32)
 declare i32 @getarray(i32*)
 declare void @putarray(i32, i32*)
-define dso_local i32 @exgcd(i32 %x1,i32 %x2,i32* %x3,i32* %x4){
-%x5 = alloca i32
- store i32 %x1, i32* %x5
-%x6 = alloca i32
- store i32 %x2, i32* %x6
-%x7 = alloca i32*
-store i32*  %x3, i32* * %x7
- %x8 = load i32* , i32* * %x7
-%x9 = alloca i32*
-store i32*  %x4, i32* * %x9
- %x10 = load i32* , i32* * %x9
-%x11 = load i32, i32* %x6
-%x12= icmp eq i32 %x11, 0
-%x13= zext i1 %x12 to i32
-   %x14 = icmp ne i32 %x13, 0
-   br i1 %x14,label %x15, label %x16
-x15:
-%x17 = getelementptr i32, i32* %x8, i32 0
- store i32 1, i32* %x17
-%x18 = getelementptr i32, i32* %x10, i32 0
- store i32 0, i32* %x18
-%x19 = load i32, i32* %x5
-  ret i32 %x19
-br label %x20
-x16:
-%x21 = alloca i32
-%x22 = load i32, i32* %x6
-%x23 = load i32, i32* %x5
-%x24 = load i32, i32* %x6
- %x25 = srem i32 %x23, %x24
-%x26 = getelementptr i32, i32* %x8, i32 0
-%x27 = getelementptr i32, i32* %x10, i32 0
-%x28 = call i32 @exgcd(i32 %x22,i32 %x25,i32* %x26,i32* %x27)
-store i32 %x28, i32* %x21
-%x29 = alloca i32
-%x30 = getelementptr i32, i32* %x8, i32 0
-%x31 = load i32, i32* %x30
-store i32 %x31, i32* %x29
-%x32 = getelementptr i32, i32* %x8, i32 0
-%x33 = getelementptr i32, i32* %x10, i32 0
-%x34 = load i32, i32* %x33
- store i32 %x34, i32* %x32
-%x35 = getelementptr i32, i32* %x10, i32 0
-%x36 = getelementptr i32, i32* %x10, i32 0
-%x37 = load i32, i32* %x36
-%x38 = load i32, i32* %x5
-%x39 = load i32, i32* %x6
- %x40 = sdiv i32 %x38, %x39
- %x41 = mul i32 %x40, %x37
-%x42 = load i32, i32* %x29
- %x43 = sub i32 %x42, %x41
- store i32 %x43, i32* %x35
-%x44 = load i32, i32* %x21
-  ret i32 %x44
-br label %x20
-x20:
-ret i32 0
+@ints = dso_local global [10000x i32] zeroinitializer 
+@intt = dso_local global i32 0
+@chas = dso_local global [10000x i32] zeroinitializer 
+@chat = dso_local global i32 0
+@i = dso_local global i32 0
+@ii = dso_local global i32 1
+@c = dso_local global i32 0
+@get = dso_local global [10000x i32] zeroinitializer 
+@get2 = dso_local global [10000x i32] zeroinitializer 
+define dso_local i32 @isdigit(i32 %x1){
+%x2 = alloca i32
+ store i32 %x1, i32* %x2
+%x3 = load i32, i32* %x2
+%x4= icmp sge i32 %x3, 48
+%x5= zext i1 %x4 to i32
+%x6 = load i32, i32* %x2
+%x7= icmp sle i32 %x6, 57
+%x8= zext i1 %x7 to i32
+%x9 = mul i32 %x5, %x8
+   %x10 = icmp ne i32 %x9, 0
+   br i1 %x10,label %x11, label %x12
+x11:
+  ret i32 1
+br label %x12
+x12:
+  ret i32 0
+}
+define dso_local i32 @power(i32 %x14,i32 %x15){
+%x16 = alloca i32
+ store i32 %x14, i32* %x16
+%x17 = alloca i32
+ store i32 %x15, i32* %x17
+%x18 = alloca i32
+store i32 1, i32* %x18
+br label %x19
+x19:
+%x20 = load i32, i32* %x17
+%x21= icmp ne i32 %x20, 0
+%x22= zext i1 %x21 to i32
+   %x23 = icmp ne i32 %x22, 0
+   br i1 %x23,label %x24, label %x25
+x24:
+%x26 = load i32, i32* %x18
+%x27 = load i32, i32* %x16
+ %x28 = mul i32 %x26, %x27
+store i32 %x28, i32* %x18
+%x29 = load i32, i32* %x17
+ %x30 = sub i32 %x29, 1
+store i32 %x30, i32* %x17
+  br label %x19
+x25:
+%x31 = load i32, i32* %x18
+  ret i32 %x31
+}
+define dso_local i32 @getstr(i32* %x32){
+%x33 = alloca i32*
+store i32*  %x32, i32* * %x33
+ %x34 = load i32* , i32* * %x33
+%x35 = alloca i32
+%x36 = call i32 @getch()
+store i32 %x36, i32* %x35
+%x37 = alloca i32
+store i32 0, i32* %x37
+br label %x38
+x38:
+%x39 = load i32, i32* %x35
+%x40= icmp ne i32 %x39, 13
+%x41= zext i1 %x40 to i32
+%x42 = load i32, i32* %x35
+%x43= icmp ne i32 %x42, 10
+%x44= zext i1 %x43 to i32
+%x45 = mul i32 %x41, %x44
+   %x46 = icmp ne i32 %x45, 0
+   br i1 %x46,label %x47, label %x48
+x47:
+%x49 = load i32, i32* %x37
+%x50 = getelementptr i32, i32* %x34, i32 %x49
+%x51 = load i32, i32* %x35
+ store i32 %x51, i32* %x50
+%x52 = load i32, i32* %x37
+ %x53 = add i32 %x52, 1
+store i32 %x53, i32* %x37
+%x54 = call i32 @getch()
+store i32 %x54, i32* %x35
+  br label %x38
+x48:
+%x55 = load i32, i32* %x37
+  ret i32 %x55
+}
+define dso_local void @intpush(i32 %x56){
+%x57 = alloca i32
+ store i32 %x56, i32* %x57
+%x58 = load i32, i32* @intt
+ %x59 = add i32 %x58, 1
+store i32 %x59, i32* @intt
+%x60 = load i32, i32* @intt
+%x61 = getelementptr [10000 x i32], [10000 x i32]* @ints, i32 0, i32 %x60
+%x62 = load i32, i32* %x57
+ store i32 %x62, i32* %x61
+ret void
+}
+define dso_local void @chapush(i32 %x63){
+%x64 = alloca i32
+ store i32 %x63, i32* %x64
+%x65 = load i32, i32* @chat
+ %x66 = add i32 %x65, 1
+store i32 %x66, i32* @chat
+%x67 = load i32, i32* @chat
+%x68 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x67
+%x69 = load i32, i32* %x64
+ store i32 %x69, i32* %x68
+ret void
+}
+define dso_local i32 @intpop(){
+%x70 = load i32, i32* @intt
+ %x71 = sub i32 %x70, 1
+store i32 %x71, i32* @intt
+%x72 = load i32, i32* @intt
+ %x73 = add i32 %x72, 1
+%x74 = getelementptr [10000 x i32], [10000 x i32]* @ints, i32 0, i32 %x73
+%x75 = load i32, i32* %x74
+  ret i32 %x75
+}
+define dso_local i32 @chapop(){
+%x76 = load i32, i32* @chat
+ %x77 = sub i32 %x76, 1
+store i32 %x77, i32* @chat
+%x78 = load i32, i32* @chat
+ %x79 = add i32 %x78, 1
+%x80 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x79
+%x81 = load i32, i32* %x80
+  ret i32 %x81
+}
+define dso_local void @intadd(i32 %x82){
+%x83 = alloca i32
+ store i32 %x82, i32* %x83
+%x84 = load i32, i32* @intt
+%x85 = getelementptr [10000 x i32], [10000 x i32]* @ints, i32 0, i32 %x84
+%x86 = load i32, i32* @intt
+%x87 = getelementptr [10000 x i32], [10000 x i32]* @ints, i32 0, i32 %x86
+%x88 = load i32, i32* %x87
+ %x89 = mul i32 %x88, 10
+ store i32 %x89, i32* %x85
+%x90 = load i32, i32* @intt
+%x91 = getelementptr [10000 x i32], [10000 x i32]* @ints, i32 0, i32 %x90
+%x92 = load i32, i32* @intt
+%x93 = getelementptr [10000 x i32], [10000 x i32]* @ints, i32 0, i32 %x92
+%x94 = load i32, i32* %x93
+%x95 = load i32, i32* %x83
+ %x96 = add i32 %x94, %x95
+ store i32 %x96, i32* %x91
+ret void
+}
+define dso_local i32 @find(){
+%x97 = call i32 @chapop()
+store i32 %x97, i32* @c
+%x98 = load i32, i32* @ii
+%x99 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x98
+ store i32 32, i32* %x99
+%x100 = load i32, i32* @ii
+ %x101 = add i32 %x100, 1
+%x102 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x101
+%x103 = load i32, i32* @c
+ store i32 %x103, i32* %x102
+%x104 = load i32, i32* @ii
+ %x105 = add i32 %x104, 2
+store i32 %x105, i32* @ii
+%x106 = load i32, i32* @chat
+%x107= icmp eq i32 %x106, 0
+%x108= zext i1 %x107 to i32
+   %x109 = icmp ne i32 %x108, 0
+   br i1 %x109,label %x110, label %x111
+x110:
+  ret i32 0
+br label %x111
+x111:
+  ret i32 1
 }
 define dso_local i32 @main(){
-%x45 = alloca i32
-store i32 7, i32* %x45
-%x46 = alloca i32
-store i32 15, i32* %x46
-%x47 = alloca [ 1 x i32]
-%x48 = getelementptr [1 x i32], [1 x i32]* %x47, i32 0, i32 0
-call void @memset(i32* %x48, i32 0, i32 4)
-%x49 = getelementptr [1 x i32], [1 x i32]* %x47, i32 0, i32 0
- store i32 1, i32* %x49
-%x50 = alloca [ 1 x i32]
-%x51 = getelementptr [1 x i32], [1 x i32]* %x50, i32 0, i32 0
-call void @memset(i32* %x51, i32 0, i32 4)
-%x52 = getelementptr [1 x i32], [1 x i32]* %x50, i32 0, i32 0
- store i32 1, i32* %x52
-%x53 = load i32, i32* %x45
-%x54 = load i32, i32* %x46
-%x55 = getelementptr [1 x i32], [1 x i32]* %x47, i32 0, i32 0
-%x56 = getelementptr [1 x i32], [1 x i32]* %x50, i32 0, i32 0
-call void @exgcd(i32 %x53,i32 %x54,i32* %x55,i32* %x56)
-%x57 = getelementptr [1 x i32], [1 x i32]* %x47, i32 0, i32 0
-%x58 = getelementptr [1 x i32], [1 x i32]* %x47, i32 0, i32 0
-%x59 = load i32, i32* %x58
-%x60 = load i32, i32* %x46
- %x61 = srem i32 %x59, %x60
-%x62 = load i32, i32* %x46
- %x63 = add i32 %x61, %x62
-%x64 = load i32, i32* %x46
- %x65 = srem i32 %x63, %x64
- store i32 %x65, i32* %x57
-%x66 = getelementptr [1 x i32], [1 x i32]* %x47, i32 0, i32 0
-%x67 = load i32, i32* %x66
-call void @putint(i32 %x67)
+store i32 0, i32* @intt
+store i32 0, i32* @chat
+%x113 = alloca i32
+%x114 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 0
+%x115 = call i32 @getstr(i32* %x114)
+store i32 %x115, i32* %x113
+br label %x116
+x116:
+%x117 = load i32, i32* @i
+%x118 = load i32, i32* %x113
+%x119= icmp slt i32 %x117, %x118
+%x120= zext i1 %x119 to i32
+   %x121 = icmp ne i32 %x120, 0
+   br i1 %x121,label %x122, label %x123
+x122:
+%x124 = load i32, i32* @i
+%x125 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x124
+%x126 = load i32, i32* %x125
+%x127 = call i32 @isdigit(i32 %x126)
+%x128= icmp eq i32 %x127, 1
+%x129= zext i1 %x128 to i32
+   %x130 = icmp ne i32 %x129, 0
+   br i1 %x130,label %x131, label %x132
+x131:
+%x133 = load i32, i32* @ii
+%x134 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x133
+%x135 = load i32, i32* @i
+%x136 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x135
+%x137 = load i32, i32* %x136
+ store i32 %x137, i32* %x134
+%x138 = load i32, i32* @ii
+ %x139 = add i32 %x138, 1
+store i32 %x139, i32* @ii
+br label %x140
+x132:
+%x141 = load i32, i32* @i
+%x142 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x141
+%x143 = load i32, i32* %x142
+%x144= icmp eq i32 %x143, 40
+%x145= zext i1 %x144 to i32
+   %x146 = icmp ne i32 %x145, 0
+   br i1 %x146,label %x147, label %x148
+x147:
+call void @chapush(i32 40)
+br label %x148
+x148:
+%x150 = load i32, i32* @i
+%x151 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x150
+%x152 = load i32, i32* %x151
+%x153= icmp eq i32 %x152, 94
+%x154= zext i1 %x153 to i32
+   %x155 = icmp ne i32 %x154, 0
+   br i1 %x155,label %x156, label %x157
+x156:
+call void @chapush(i32 94)
+br label %x157
+x157:
+%x159 = load i32, i32* @i
+%x160 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x159
+%x161 = load i32, i32* %x160
+%x162= icmp eq i32 %x161, 41
+%x163= zext i1 %x162 to i32
+   %x164 = icmp ne i32 %x163, 0
+   br i1 %x164,label %x165, label %x166
+x165:
+%x167 = call i32 @chapop()
+store i32 %x167, i32* @c
+br label %x168
+x168:
+%x169 = load i32, i32* @c
+%x170= icmp ne i32 %x169, 40
+%x171= zext i1 %x170 to i32
+   %x172 = icmp ne i32 %x171, 0
+   br i1 %x172,label %x173, label %x174
+x173:
+%x175 = load i32, i32* @ii
+%x176 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x175
+ store i32 32, i32* %x176
+%x177 = load i32, i32* @ii
+ %x178 = add i32 %x177, 1
+%x179 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x178
+%x180 = load i32, i32* @c
+ store i32 %x180, i32* %x179
+%x181 = load i32, i32* @ii
+ %x182 = add i32 %x181, 2
+store i32 %x182, i32* @ii
+%x183 = call i32 @chapop()
+store i32 %x183, i32* @c
+  br label %x168
+x174:
+br label %x166
+x166:
+%x185 = load i32, i32* @i
+%x186 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x185
+%x187 = load i32, i32* %x186
+%x188= icmp eq i32 %x187, 43
+%x189= zext i1 %x188 to i32
+   %x190 = icmp ne i32 %x189, 0
+   br i1 %x190,label %x191, label %x192
+x191:
+br label %x193
+x193:
+%x194 = load i32, i32* @chat
+%x195 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x194
+%x196 = load i32, i32* %x195
+%x197= icmp eq i32 %x196, 43
+%x198= zext i1 %x197 to i32
+%x199 = load i32, i32* @chat
+%x200 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x199
+%x201 = load i32, i32* %x200
+%x202= icmp eq i32 %x201, 45
+%x203= zext i1 %x202 to i32
+%x204 = or i32 %x198, %x203
+%x205 = load i32, i32* @chat
+%x206 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x205
+%x207 = load i32, i32* %x206
+%x208= icmp eq i32 %x207, 42
+%x209= zext i1 %x208 to i32
+%x210 = or i32 %x204, %x209
+%x211 = load i32, i32* @chat
+%x212 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x211
+%x213 = load i32, i32* %x212
+%x214= icmp eq i32 %x213, 47
+%x215= zext i1 %x214 to i32
+%x216 = or i32 %x210, %x215
+%x217 = load i32, i32* @chat
+%x218 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x217
+%x219 = load i32, i32* %x218
+%x220= icmp eq i32 %x219, 37
+%x221= zext i1 %x220 to i32
+%x222 = or i32 %x216, %x221
+%x223 = load i32, i32* @chat
+%x224 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x223
+%x225 = load i32, i32* %x224
+%x226= icmp eq i32 %x225, 94
+%x227= zext i1 %x226 to i32
+%x228 = or i32 %x222, %x227
+   %x229 = icmp ne i32 %x228, 0
+   br i1 %x229,label %x230, label %x231
+x230:
+%x232 = call i32 @find()
+%x233= icmp eq i32 %x232, 0
+%x234= zext i1 %x233 to i32
+   %x235 = icmp ne i32 %x234, 0
+   br i1 %x235,label %x236, label %x237
+x236:
+br label %x231
+br label %x237
+x237:
+ret i32 0
+  br label %x193
+x231:
+call void @chapush(i32 43)
+br label %x192
+x192:
+%x240 = load i32, i32* @i
+%x241 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x240
+%x242 = load i32, i32* %x241
+%x243= icmp eq i32 %x242, 45
+%x244= zext i1 %x243 to i32
+   %x245 = icmp ne i32 %x244, 0
+   br i1 %x245,label %x246, label %x247
+x246:
+br label %x248
+x248:
+%x249 = load i32, i32* @chat
+%x250 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x249
+%x251 = load i32, i32* %x250
+%x252= icmp eq i32 %x251, 43
+%x253= zext i1 %x252 to i32
+%x254 = load i32, i32* @chat
+%x255 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x254
+%x256 = load i32, i32* %x255
+%x257= icmp eq i32 %x256, 45
+%x258= zext i1 %x257 to i32
+%x259 = or i32 %x253, %x258
+%x260 = load i32, i32* @chat
+%x261 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x260
+%x262 = load i32, i32* %x261
+%x263= icmp eq i32 %x262, 42
+%x264= zext i1 %x263 to i32
+%x265 = or i32 %x259, %x264
+%x266 = load i32, i32* @chat
+%x267 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x266
+%x268 = load i32, i32* %x267
+%x269= icmp eq i32 %x268, 47
+%x270= zext i1 %x269 to i32
+%x271 = or i32 %x265, %x270
+%x272 = load i32, i32* @chat
+%x273 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x272
+%x274 = load i32, i32* %x273
+%x275= icmp eq i32 %x274, 37
+%x276= zext i1 %x275 to i32
+%x277 = or i32 %x271, %x276
+%x278 = load i32, i32* @chat
+%x279 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x278
+%x280 = load i32, i32* %x279
+%x281= icmp eq i32 %x280, 94
+%x282= zext i1 %x281 to i32
+%x283 = or i32 %x277, %x282
+   %x284 = icmp ne i32 %x283, 0
+   br i1 %x284,label %x285, label %x286
+x285:
+%x287 = call i32 @find()
+%x288= icmp eq i32 %x287, 0
+%x289= zext i1 %x288 to i32
+   %x290 = icmp ne i32 %x289, 0
+   br i1 %x290,label %x291, label %x292
+x291:
+br label %x286
+br label %x292
+x292:
+ret i32 0
+  br label %x248
+x286:
+call void @chapush(i32 45)
+br label %x247
+x247:
+%x295 = load i32, i32* @i
+%x296 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x295
+%x297 = load i32, i32* %x296
+%x298= icmp eq i32 %x297, 42
+%x299= zext i1 %x298 to i32
+   %x300 = icmp ne i32 %x299, 0
+   br i1 %x300,label %x301, label %x302
+x301:
+br label %x303
+x303:
+%x304 = load i32, i32* @chat
+%x305 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x304
+%x306 = load i32, i32* %x305
+%x307= icmp eq i32 %x306, 42
+%x308= zext i1 %x307 to i32
+%x309 = load i32, i32* @chat
+%x310 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x309
+%x311 = load i32, i32* %x310
+%x312= icmp eq i32 %x311, 47
+%x313= zext i1 %x312 to i32
+%x314 = or i32 %x308, %x313
+%x315 = load i32, i32* @chat
+%x316 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x315
+%x317 = load i32, i32* %x316
+%x318= icmp eq i32 %x317, 37
+%x319= zext i1 %x318 to i32
+%x320 = or i32 %x314, %x319
+%x321 = load i32, i32* @chat
+%x322 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x321
+%x323 = load i32, i32* %x322
+%x324= icmp eq i32 %x323, 94
+%x325= zext i1 %x324 to i32
+%x326 = or i32 %x320, %x325
+   %x327 = icmp ne i32 %x326, 0
+   br i1 %x327,label %x328, label %x329
+x328:
+%x330 = call i32 @find()
+%x331= icmp eq i32 %x330, 0
+%x332= zext i1 %x331 to i32
+   %x333 = icmp ne i32 %x332, 0
+   br i1 %x333,label %x334, label %x335
+x334:
+br label %x329
+br label %x335
+x335:
+ret i32 0
+  br label %x303
+x329:
+call void @chapush(i32 42)
+br label %x302
+x302:
+%x338 = load i32, i32* @i
+%x339 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x338
+%x340 = load i32, i32* %x339
+%x341= icmp eq i32 %x340, 47
+%x342= zext i1 %x341 to i32
+   %x343 = icmp ne i32 %x342, 0
+   br i1 %x343,label %x344, label %x345
+x344:
+br label %x346
+x346:
+%x347 = load i32, i32* @chat
+%x348 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x347
+%x349 = load i32, i32* %x348
+%x350= icmp eq i32 %x349, 42
+%x351= zext i1 %x350 to i32
+%x352 = load i32, i32* @chat
+%x353 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x352
+%x354 = load i32, i32* %x353
+%x355= icmp eq i32 %x354, 47
+%x356= zext i1 %x355 to i32
+%x357 = or i32 %x351, %x356
+%x358 = load i32, i32* @chat
+%x359 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x358
+%x360 = load i32, i32* %x359
+%x361= icmp eq i32 %x360, 37
+%x362= zext i1 %x361 to i32
+%x363 = or i32 %x357, %x362
+%x364 = load i32, i32* @chat
+%x365 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x364
+%x366 = load i32, i32* %x365
+%x367= icmp eq i32 %x366, 94
+%x368= zext i1 %x367 to i32
+%x369 = or i32 %x363, %x368
+   %x370 = icmp ne i32 %x369, 0
+   br i1 %x370,label %x371, label %x372
+x371:
+%x373 = call i32 @find()
+%x374= icmp eq i32 %x373, 0
+%x375= zext i1 %x374 to i32
+   %x376 = icmp ne i32 %x375, 0
+   br i1 %x376,label %x377, label %x378
+x377:
+br label %x372
+br label %x378
+x378:
+ret i32 0
+  br label %x346
+x372:
+call void @chapush(i32 47)
+br label %x345
+x345:
+%x381 = load i32, i32* @i
+%x382 = getelementptr [10000 x i32], [10000 x i32]* @get, i32 0, i32 %x381
+%x383 = load i32, i32* %x382
+%x384= icmp eq i32 %x383, 37
+%x385= zext i1 %x384 to i32
+   %x386 = icmp ne i32 %x385, 0
+   br i1 %x386,label %x387, label %x388
+x387:
+br label %x389
+x389:
+%x390 = load i32, i32* @chat
+%x391 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x390
+%x392 = load i32, i32* %x391
+%x393= icmp eq i32 %x392, 42
+%x394= zext i1 %x393 to i32
+%x395 = load i32, i32* @chat
+%x396 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x395
+%x397 = load i32, i32* %x396
+%x398= icmp eq i32 %x397, 47
+%x399= zext i1 %x398 to i32
+%x400 = or i32 %x394, %x399
+%x401 = load i32, i32* @chat
+%x402 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x401
+%x403 = load i32, i32* %x402
+%x404= icmp eq i32 %x403, 37
+%x405= zext i1 %x404 to i32
+%x406 = or i32 %x400, %x405
+%x407 = load i32, i32* @chat
+%x408 = getelementptr [10000 x i32], [10000 x i32]* @chas, i32 0, i32 %x407
+%x409 = load i32, i32* %x408
+%x410= icmp eq i32 %x409, 94
+%x411= zext i1 %x410 to i32
+%x412 = or i32 %x406, %x411
+   %x413 = icmp ne i32 %x412, 0
+   br i1 %x413,label %x414, label %x415
+x414:
+%x416 = call i32 @find()
+%x417= icmp eq i32 %x416, 0
+%x418= zext i1 %x417 to i32
+   %x419 = icmp ne i32 %x418, 0
+   br i1 %x419,label %x420, label %x421
+x420:
+br label %x415
+br label %x421
+x421:
+ret i32 0
+  br label %x389
+x415:
+call void @chapush(i32 37)
+br label %x388
+x388:
+%x424 = load i32, i32* @ii
+%x425 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x424
+ store i32 32, i32* %x425
+%x426 = load i32, i32* @ii
+ %x427 = add i32 %x426, 1
+store i32 %x427, i32* @ii
+br label %x140
+x140:
+%x428 = load i32, i32* @i
+ %x429 = add i32 %x428, 1
+store i32 %x429, i32* @i
+  br label %x116
+x123:
+br label %x430
+x430:
+%x431 = load i32, i32* @chat
+%x432= icmp sgt i32 %x431, 0
+%x433= zext i1 %x432 to i32   %x434 = icmp ne i32 %x433, 0
+   br i1 %x434,label %x435, label %x436
+x435:
+%x437 = alloca i32
+%x438 = call i32 @chapop()
+store i32 %x438, i32* %x437
+%x439 = load i32, i32* @ii
+%x440 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x439
+ store i32 32, i32* %x440
+%x441 = load i32, i32* @ii
+ %x442 = add i32 %x441, 1
+%x443 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x442
+%x444 = load i32, i32* %x437
+ store i32 %x444, i32* %x443
+%x445 = load i32, i32* @ii
+ %x446 = add i32 %x445, 2
+store i32 %x446, i32* @ii
+  br label %x430
+x436:
+%x447 = load i32, i32* @ii
+%x448 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x447
+ store i32 64, i32* %x448
+store i32 1, i32* @i
+br label %x449
+x449:
+%x450 = load i32, i32* @i
+%x451 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x450
+%x452 = load i32, i32* %x451
+%x453= icmp ne i32 %x452, 64
+%x454= zext i1 %x453 to i32
+   %x455 = icmp ne i32 %x454, 0
+   br i1 %x455,label %x456, label %x457
+x456:
+%x458 = load i32, i32* @i
+%x459 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x458
+%x460 = load i32, i32* %x459
+%x461= icmp eq i32 %x460, 43
+%x462= zext i1 %x461 to i32
+%x463 = load i32, i32* @i
+%x464 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x463
+%x465 = load i32, i32* %x464
+%x466= icmp eq i32 %x465, 45
+%x467= zext i1 %x466 to i32
+%x468 = or i32 %x462, %x467
+%x469 = load i32, i32* @i
+%x470 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x469
+%x471 = load i32, i32* %x470
+%x472= icmp eq i32 %x471, 42
+%x473= zext i1 %x472 to i32
+%x474 = or i32 %x468, %x473
+%x475 = load i32, i32* @i
+%x476 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x475
+%x477 = load i32, i32* %x476
+%x478= icmp eq i32 %x477, 47
+%x479= zext i1 %x478 to i32
+%x480 = or i32 %x474, %x479
+%x481 = load i32, i32* @i
+%x482 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x481
+%x483 = load i32, i32* %x482
+%x484= icmp eq i32 %x483, 37
+%x485= zext i1 %x484 to i32
+%x486 = or i32 %x480, %x485
+%x487 = load i32, i32* @i
+%x488 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x487
+%x489 = load i32, i32* %x488
+%x490= icmp eq i32 %x489, 94
+%x491= zext i1 %x490 to i32
+%x492 = or i32 %x486, %x491
+   %x493 = icmp ne i32 %x492, 0
+   br i1 %x493,label %x494, label %x495
+x494:
+%x496 = alloca i32
+%x497 = call i32 @intpop()
+store i32 %x497, i32* %x496
+%x498 = alloca i32
+%x499 = call i32 @intpop()
+store i32 %x499, i32* %x498
+%x500 = alloca i32
+%x501 = load i32, i32* @i
+%x502 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x501
+%x503 = load i32, i32* %x502
+%x504= icmp eq i32 %x503, 43
+%x505= zext i1 %x504 to i32
+   %x506 = icmp ne i32 %x505, 0
+   br i1 %x506,label %x507, label %x508
+x507:
+%x510 = load i32, i32* %x496
+%x511 = load i32, i32* %x498
+ %x512 = add i32 %x510, %x511
+store i32 %x512, i32* %x500
+br label %x508
+x508:
+%x513 = load i32, i32* @i
+%x514 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x513
+%x515 = load i32, i32* %x514
+%x516= icmp eq i32 %x515, 45
+%x517= zext i1 %x516 to i32
+   %x518 = icmp ne i32 %x517, 0
+   br i1 %x518,label %x519, label %x520
+x519:
+%x522 = load i32, i32* %x498
+%x523 = load i32, i32* %x496
+ %x524 = sub i32 %x522, %x523
+store i32 %x524, i32* %x500
+br label %x520
+x520:
+%x525 = load i32, i32* @i
+%x526 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x525
+%x527 = load i32, i32* %x526
+%x528= icmp eq i32 %x527, 42
+%x529= zext i1 %x528 to i32
+   %x530 = icmp ne i32 %x529, 0
+   br i1 %x530,label %x531, label %x532
+x531:
+%x534 = load i32, i32* %x496
+%x535 = load i32, i32* %x498
+ %x536 = mul i32 %x534, %x535
+store i32 %x536, i32* %x500
+br label %x532
+x532:
+%x537 = load i32, i32* @i
+%x538 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x537
+%x539 = load i32, i32* %x538
+%x540= icmp eq i32 %x539, 47
+%x541= zext i1 %x540 to i32
+   %x542 = icmp ne i32 %x541, 0
+   br i1 %x542,label %x543, label %x544
+x543:
+%x546 = load i32, i32* %x498
+%x547 = load i32, i32* %x496
+ %x548 = sdiv i32 %x546, %x547
+store i32 %x548, i32* %x500
+br label %x544
+x544:
+%x549 = load i32, i32* @i
+%x550 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x549
+%x551 = load i32, i32* %x550
+%x552= icmp eq i32 %x551, 37
+%x553= zext i1 %x552 to i32
+   %x554 = icmp ne i32 %x553, 0
+   br i1 %x554,label %x555, label %x556
+x555:
+%x558 = load i32, i32* %x498
+%x559 = load i32, i32* %x496
+ %x560 = srem i32 %x558, %x559
+store i32 %x560, i32* %x500
+br label %x556
+x556:
+%x561 = load i32, i32* @i
+%x562 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x561
+%x563 = load i32, i32* %x562
+%x564= icmp eq i32 %x563, 94
+%x565= zext i1 %x564 to i32
+   %x566 = icmp ne i32 %x565, 0
+   br i1 %x566,label %x567, label %x568
+x567:
+%x570 = load i32, i32* %x498
+%x571 = load i32, i32* %x496
+%x572 = call i32 @power(i32 %x570,i32 %x571)
+store i32 %x572, i32* %x500
+br label %x568
+x568:
+%x573 = load i32, i32* %x500
+call void @intpush(i32 %x573)
+br label %x574
+x495:
+%x575 = load i32, i32* @i
+%x576 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x575
+%x577 = load i32, i32* %x576
+%x578= icmp ne i32 %x577, 32
+%x579= zext i1 %x578 to i32
+   %x580 = icmp ne i32 %x579, 0
+   br i1 %x580,label %x581, label %x582
+x581:
+%x583 = load i32, i32* @i
+%x584 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x583
+%x585 = load i32, i32* %x584
+ %x586 = sub i32 %x585, 48
+call void @intpush(i32 %x586)
+store i32 1, i32* @ii
+br label %x587
+x587:
+%x588 = load i32, i32* @i
+%x589 = load i32, i32* @ii
+ %x590 = add i32 %x588, %x589
+%x591 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x590
+%x592 = load i32, i32* %x591
+%x593= icmp ne i32 %x592, 32
+%x594= zext i1 %x593 to i32
+   %x595 = icmp ne i32 %x594, 0
+   br i1 %x595,label %x596, label %x597
+x596:
+%x598 = load i32, i32* @i
+%x599 = load i32, i32* @ii
+ %x600 = add i32 %x598, %x599
+%x601 = getelementptr [10000 x i32], [10000 x i32]* @get2, i32 0, i32 %x600
+%x602 = load i32, i32* %x601
+ %x603 = sub i32 %x602, 48
+call void @intadd(i32 %x603)
+%x604 = load i32, i32* @ii
+ %x605 = add i32 %x604, 1
+store i32 %x605, i32* @ii
+  br label %x587
+x597:
+%x606 = load i32, i32* @i
+%x607 = load i32, i32* @ii
+ %x608 = add i32 %x606, %x607
+ %x609 = sub i32 %x608, 1
+store i32 %x609, i32* @i
+br label %x582
+x582:
+ret i32 0
+br label %x574
+x574:
+%x611 = load i32, i32* @i
+ %x612 = add i32 %x611, 1
+store i32 %x612, i32* @i
+  br label %x449
+x457:
+%x613 = getelementptr [10000 x i32], [10000 x i32]* @ints, i32 0, i32 1
+%x614 = load i32, i32* %x613
+call void @putint(i32 %x614)
   ret i32 0
 }

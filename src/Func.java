@@ -72,14 +72,16 @@ public class Func {
         {
 
             while ((ch= reader.read())!=-1){
-                if(!((char)ch<='9'&&(char)ch>='0')&&(char)ch!='x'&&(char)ch!='a'&&(char)ch!='b'&&(char)ch!='c'&&(char)ch!='d'&&(char)ch!='e'&&(char)ch!='f')
+                if(!((char)ch<='9'&&(char)ch>='0')&&(char)ch!='x'&&(char)ch!='a'&&(char)ch!='b'&&(char)ch!='c'&&(char)ch!='d'&&(char)ch!='e'&&(char)ch!='f'&&(char)ch!='F')
                     break;
                 s = s + (char)ch;
 
             }
 
-            if(s.startsWith("0x"))
+            if(s.startsWith("0x")){
                 s=String.valueOf(Integer.parseInt(s.replaceAll("^0[x|X]", ""), 16));
+            System.out.println(s);
+            }
         }
         else{
 

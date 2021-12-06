@@ -227,8 +227,8 @@ public class Grammer {
                 BlockItem(0,0);
                 p++;
             }
-
-
+            if(!Main.tokens.get(p-2).name.equals("return"))
+                writer.write("ret void\n");
             writer.write("}\n");
             int nu = symbols.size()-index[current_block];
             while(nu>0){
