@@ -869,18 +869,18 @@ public class Grammer {
         else
             System.exit(19);
     }
-    public String LOrExp() throws IOException {
+    public void LOrExp(int label1,int label2) throws IOException {
         String qw=null;
         String t;
+
         while(true){
-            t=LAndExp();
-            if(qw!=null){
-            writer.write("%x"+r+" = or i32 "+qw+", "+t+'\n');
+            int temp=r;
             r++;
-            qw="%x"+(r-1);
-            }
-            else
-                qw=t;
+
+            LAndExp(temp);
+
+            writer.write("br label %x"+label1+'\n');
+            writer.write("x"+temp+":\n");
             p++;
 
             if(!Main.tokens.get(p).name.equals("||")) {
@@ -889,20 +889,18 @@ public class Grammer {
             }
             p++;
         }
-        return qw;
+        writer.write("br label %x"+label2+'\n');
     }
-    public String LAndExp() throws IOException {
+    public void LAndExp(int x) throws IOException {
         String qw=null;
         String t;
         while(true){
             t=EqExp();
-            if(qw!=null){
-                writer.write("%x"+r+" = mul i32 "+qw+", "+t+'\n');
-                r++;
-                qw="%x"+(r-1);
-            }
-            else
-                qw=t;
+            writer.write("   %x"+r+" = icmp ne i32 "+t+", 0"+'\n');
+            r++;
+            writer.write("   br i1 %x"+(r-1)+",label %x"+r+", label %x"+x+'\n');
+            writer.write("x"+r+":\n");
+            r=r+1;
             p++;
             if(!Main.tokens.get(p).name.equals("&&")) {
                 p--;
@@ -910,7 +908,7 @@ public class Grammer {
             }
             p++;
         }
-        return qw;
+
     }
     public String EqExp() throws IOException {
         String qw=null;
@@ -1009,9 +1007,9 @@ public class Grammer {
     public String AddExp() throws IOException {
         return Exp();
     }
-    public String cond() throws IOException {
+    public void cond(int label1,int label2) throws IOException {
 
-        return LOrExp();
+         LOrExp(label1,label2);
     }
     public boolean isDefined(String s){
         for(int i=symbols.size()-1;i>=index[current_block];i--){
@@ -1457,13 +1455,10 @@ public class Grammer {
                 System.exit(124);
             }
             p++;
-            String cond = cond();
-            writer.write("   %x"+r+" = icmp ne i32 "+cond+", 0"+'\n');
-            r++;
-            int label1 = r;
-            int label2 = 1+r;
-            writer.write("   br i1 %x"+(r-1)+",label %x"+r+", label %x"+(r+1)+'\n');
+            int label1=r;
+            int label2=r+1;
             r=r+2;
+            cond(label1,label2);
             p++;
             if(!Main.tokens.get(p).name.equals(")")){
 
@@ -1482,18 +1477,17 @@ public class Grammer {
                 System.exit(124);
             }
             p++;
-            String cond = cond();
-            writer.write("   %x"+r+" = icmp ne i32 "+cond+", 0"+'\n');
-            r++;
-            int label1 = r;
-            int label2 = 1+r;
-            writer.write("   br i1 %x"+(r-1)+",label %x"+r+", label %x"+(r+1)+'\n');
+            int label1=r;
+            int label2=r+1;
             r=r+2;
+            cond(label1,label2);
+
             p++;
 
             if(!Main.tokens.get(p).name.equals(")")){
-
-                System.exit(124);
+                //System.out.println(Main.tokens.get(p).name);
+                writer.close();
+                System.exit(125);
             }
             p++;
 
@@ -1988,8 +1982,9 @@ public class Grammer {
                         String x=Exp();
                         arguments.add(x);
                         p++;
-                        if(temp.token.name.equals("foo"))
-                        System.out.println(eip);
+
+
+
                         if(temp.arguments.get(arguments.size()-1).equals("i32*")&&eip!=1)
                             System.exit(77777777);
                         if(Main.tokens.get(p).name.equals(",")){
@@ -2036,9 +2031,7 @@ public class Grammer {
                 }
             }
         }
-        for(int i=0;i<all.size();i++)
-            System.out.print(all.get(i).name);
-        System.out.println('\n');
+
         for(int y=0;y<all.size();y++){
             if(all.get(y).type==0){
                 if(y>2&&all.get(y-1).name.equals("+")&&all.get(y-2).type==1&&!all.get(y-2).name.equals(")")&&!all.get(y-2).name.equals("(")){
@@ -2052,9 +2045,7 @@ public class Grammer {
                 }
             }
         }
-        for(int i=0;i<all.size();i++)
-            System.out.print(all.get(i).name);
-        System.out.println('\n');
+
         if(all.get(all.size()-2).type==1&&!all.get(all.size()-2).name.equals(")")){
 
             System.exit(7982);}
@@ -2093,7 +2084,7 @@ public class Grammer {
                                         }
                                     }
                                     if(er==null)
-                                        System.exit(3);
+                                        System.exit(31);
                                     writer.write("%x"+r+" = load i32, i32* "+er.register+'\n');
                                     r++;
                                     writer.write(" %x"+r+" = add i32 0, %x"+(r-1)+'\n');
