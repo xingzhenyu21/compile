@@ -1,49 +1,25 @@
 int array[110];
 int n;
-void init(int n) {
-  int i = 1;
-  while (i <= n * n + 1) {
-    array[i] = -1;
-    i = i + 1;
-  }
-}
-
-int findfa(int a) {
-  if (array[a] == a)
-    return a;
-  else {
-    array[a] = findfa(array[a]);
-    return array[a];
-  }
-}
-void mmerge(int a, int b) {
-  int m = findfa(a);
-  int n = findfa(b);
-  if (m != n) array[m] = n;
-}
 int main() {
   int t, m;
   int a, b;
   t = 1;
-
-  int k = 3;
-
-      a = getint();
-      b = getint();
-        int loc = n * (a - 1) + b;
+  int loc = 3;
         if (b < n && array[loc + 1] != -1) {
-          mmerge(loc, loc + 1);
+            t = 3;
+            a = t + loc;
+        }
+        if (b > 1 && array[loc - 1] != -1) {
+
+        }
+        if (a < n && array[loc + n] != -1) {
+
+        }
+        if (a > 1 && array[loc - n] != -1) {
+
         }
         if (array[0] != -1 && array[k] != -1 && findfa(0) == findfa(k)) {
-          int tmp = b + 1;
-          putint(tmp);
-          putch(10);
+
         }
-        if (!a) {
-              putint(-1);
-              putch(10);
-            }
-
-
-  return 0;
-}
+        return 0 ;
+  }

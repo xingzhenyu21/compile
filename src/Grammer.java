@@ -892,7 +892,7 @@ public class Grammer {
         writer.write("br label %x"+label2+'\n');
     }
     public void LAndExp(int x) throws IOException {
-        String qw=null;
+
         String t;
         while(true){
             t=EqExp();
@@ -1480,6 +1480,7 @@ public class Grammer {
             int label1=r;
             int label2=r+1;
             r=r+2;
+
             cond(label1,label2);
 
             p++;
