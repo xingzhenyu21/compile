@@ -2141,7 +2141,7 @@ public class Grammer {
                             r++;
                             writer.write("%x"+r+"= icmp ne i32 "+(r-1)+", 0"+'\n');
                             r++;
-                            writer.write("%x"+r+" = xor i1  %x"+(r-1)+", true"+'\n');
+                            writer.write("%x"+r+" = xor i1  %x"+(r-1)+", 1"+'\n');
                             r++;
                             writer.write("%x"+r+"= zext i1 %x"+(r-1)+" to i32\n");
                             r++;
@@ -2150,7 +2150,7 @@ public class Grammer {
                         else{
                             writer.write("%x"+r+"= icmp ne i32 "+d.name+", 0"+'\n');
                             r++;
-                            writer.write("%x"+r+" = xor i1  %x"+(r-1)+", true"+'\n');
+                            writer.write("%x"+r+" = xor i1  %x"+(r-1)+", 1"+'\n');
                             r++;
                             writer.write("%x"+r+"= zext i1 %x"+(r-1)+" to i32\n");
                             r++;
