@@ -34,6 +34,7 @@ public class Main {
                 w.write((char) ch);
                 ch= z.read();
             }
+            w.close();
             return;
         }
         Grammer grammer = new Grammer(args[1]);
