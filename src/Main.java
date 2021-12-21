@@ -29,9 +29,7 @@ public class Main {
 //        }
 //////        if(tokens.size()!=9)
 //////            System.exit(1);
-
         Grammer grammer = new Grammer(args[1]);
-
         grammer.CompUnit();
         grammer.writer.close();
 
