@@ -26,10 +26,7 @@ public class Main {
 //        }
 //////        if(tokens.size()!=9)
 //////            System.exit(1);
-        if(tokens.get(1).name.equals("array")){
 
-            return;
-        }
         Grammer grammer = new Grammer(args[1]);
         grammer.CompUnit();
         grammer.writer.close();
