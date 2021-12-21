@@ -26,17 +26,17 @@ public class Main {
 //        }
 //////        if(tokens.size()!=9)
 //////            System.exit(1);
-        if(tokens.get(1).name.equals("array")){
-            PushbackReader z = new PushbackReader(new FileReader("2.txt"),2048);
-            ch=z.read();
-            FileWriter w= new FileWriter(args[1]);
-            while (ch!=-1) {
-                w.write((char) ch);
-                ch= z.read();
-            }
-            w.close();
-            return;
-        }
+//        if(tokens.get(1).name.equals("array")){
+//            PushbackReader z = new PushbackReader(new FileReader("2.txt"),2048);
+//            ch=z.read();
+//            FileWriter w= new FileWriter(args[1]);
+//            while (ch!=-1) {
+//                w.write((char) ch);
+//                ch= z.read();
+//            }
+//            w.close();
+//            return;
+//        }
         Grammer grammer = new Grammer(args[1]);
         grammer.CompUnit();
         grammer.writer.close();

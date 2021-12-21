@@ -1424,7 +1424,7 @@ public class Grammer {
                 System.exit(17);
             p++;
             String csv=Exp();
-            writer.write("call void @"+name+"(i32 "+csv+")\n");
+            //writer.write("call void @"+name+"(i32 "+csv+")\n");
             p++;
             if(!Main.tokens.get(p).name.equals(")"))
                 System.exit(57);
