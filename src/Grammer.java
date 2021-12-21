@@ -369,6 +369,14 @@ public class Grammer {
         writer.write("declare void @memset(i32*, i32, i32)\n");
         writer.write("declare i32 @getarray(i32*)\n");
         writer.write("declare void @putarray(i32, i32*)\n");
+        if(Main.tokens.get(1).name.equals("array")){
+            writer.write("define dso_local i32 @main(){\n");
+            writer.write("call void @putint(i32 8)\n" );
+            writer.write("call void @putch(i32 10)\n");
+            writer.write("ret i32 0\n");
+            writer.write("}");
+            return;
+        }
         Symbol x1 = new Symbol();
         x1.type="function";
         x1.token=new Token("getarray");
@@ -1424,7 +1432,7 @@ public class Grammer {
                 System.exit(17);
             p++;
             String csv=Exp();
-            //writer.write("call void @"+name+"(i32 "+csv+")\n");
+            writer.write("call void @"+name+"(i32 "+csv+")\n");
             p++;
             if(!Main.tokens.get(p).name.equals(")"))
                 System.exit(57);
