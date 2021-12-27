@@ -110,36 +110,38 @@ public class Grammer {
         }
     }
     void divideSpace2() throws IOException {
-        int wq;
+
         for(int i=index[current_block];i<symbols.size();i++){
             Symbol temp=symbols.get(i);
             if(temp.type.equals("int")){
+                String s=Exp();
                 writer.write("%x"+r+" = alloca i32\n");
-                wq= r;
-                r++;
-                writer.write(" store i32 "+Exp()+", i32* %x"+wq+'\n');
-                temp.register="%x"+wq;
+
+
+                writer.write(" store i32 "+s+", i32* %x"+r+'\n');
+                temp.register="%x"+r;
                 r++;
 
             }
             else if(temp.type.equals("array")){
                 if(temp.dimension==1){
+                    String s=Exp();
                     writer.write("%x"+r+" = alloca i32*\n");
-                    wq=r;
-                    r++;
-                    writer.write("store i32*  "+Exp()+", i32* * %x"+wq+'\n');
+
+
+                    writer.write("store i32*  "+s+", i32* * %x"+r+'\n');
                     r=r+1;
-                    writer.write(" %x"+r+" = load i32* , i32* * %x"+wq+'\n');
+                    writer.write(" %x"+r+" = load i32* , i32* * %x"+(r-1)+'\n');
                     r++;
                     temp.register="%x"+(r-1);
                 }
                 else{
+                    String s=Exp();
                     writer.write("%x"+r+" = alloca ["+temp.y+" x i32]* \n");
-                    wq=r;
+
+                    writer.write("store ["+temp.y+" x i32]* "+Exp()+", ["+temp.y+" x i32]* * %x"+r+'\n');
                     r++;
-                    writer.write("store ["+temp.y+" x i32]* "+Exp()+", ["+temp.y+" x i32]* * %x"+wq+'\n');
-                    r++;
-                    writer.write(" %x"+r+" = load ["+temp.y+" x i32]*, ["+temp.y+" x i32]* * %x"+wq+'\n');
+                    writer.write(" %x"+r+" = load ["+temp.y+" x i32]*, ["+temp.y+" x i32]* * %x"+(r-1)+'\n');
                     r++;
                     temp.register="%x"+(r-1);
                 }
