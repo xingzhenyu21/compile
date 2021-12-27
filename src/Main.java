@@ -7,6 +7,7 @@ public class Main {
     public  static  ArrayList<Token> tokens = new ArrayList<Token>();
     public static void main(String[] args) throws IOException {
         ArrayList<String> arrayList = new ArrayList<>();
+        System.exit(2213);
         try {
             FileReader fr = new FileReader(args[0]);
             BufferedReader bf = new BufferedReader(fr);
