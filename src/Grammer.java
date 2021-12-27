@@ -507,7 +507,8 @@ public class Grammer {
             else
                 break;
         }
-
+        for(Symbol df:symbols)
+            System.out.println(df.token.name+" "+df.type+" "+df.register);
         if(!Main.tokens.get(p).name.equals("int")){
 
             System.exit(19373367);}
@@ -922,7 +923,8 @@ public class Grammer {
                             r++;
                             writer.write("store i32 %x" + (r - 1) + ", i32* " + symbol.register + '\n');
 
-                        } else {
+                        }
+                        else {
                             String cv = Exp();
                             writer.write("store i32 " + cv + ", i32* " + symbol.register + '\n');
                         }
@@ -1720,6 +1722,7 @@ public class Grammer {
             p++;
             if(x.type.equals("array")){
                 if(x.dimension==1){
+
                     if(!Main.tokens.get(p).name.equals("["))
                         System.exit(453512);
                     p++;
@@ -2083,7 +2086,7 @@ public class Grammer {
                 else if(isIdent(Main.tokens.get(p).name)&&isArray(Main.tokens.get(p).name)){
                     Symbol temp=null;
                     for(int k=symbols.size()-1;k>=0;k--){
-                        if(symbols.get(k).token.name.equals(Main.tokens.get(p).name)){
+                        if(symbols.get(k).token.name.equals(Main.tokens.get(p).name)&&symbols.get(k).register!=null){
                             temp=symbols.get(k);
                         break;
                         }
@@ -2171,11 +2174,11 @@ public class Grammer {
 
                         if(temp.dimension==1){
                             eip=1;
+                            System.out.println(temp.token.name+"   "+temp.type+"  "+temp.register);
                             if(temp.flag==0){
                                 writer.write("%x"+r+" = getelementptr i32, i32* "+temp.register+", i32 "+0+"\n");
                                 r++;
-//                                writer.write("%x"+r+" = load i32, i32* %x"+(r-1)+'\n');
-//                                r++;
+//
                             }
                             else{
                                 writer.write("%x"+r+" = getelementptr ["+temp.x+" x i32], ["+temp.x+" x i32]* "+temp.register+", i32 0, i32 "+0+'\n');

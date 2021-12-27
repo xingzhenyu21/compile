@@ -23,13 +23,7 @@ public class Main {
 
             ch= reader.read();
         }
-//////       System.out.println(tokens.size());
-//        for(Token t:tokens){
-//
-//            System.out.println(t.name);
-//        }
-//////        if(tokens.size()!=9)
-//////            System.exit(1);
+
 
         Grammer grammer = new Grammer(args[1]);
 
