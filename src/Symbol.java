@@ -11,6 +11,8 @@ public class Symbol {
     int[] array;
     int flag=1;
     int functiontype;
+    boolean inline = false;
+    int start;
     ArrayList<String> arguments;
     public void f(){
         array = new int[1000];
