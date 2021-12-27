@@ -56,6 +56,8 @@ public class Func {
             return null;
         String s="";
         s = s + (char)ch;
+        if((char)ch==';')
+            return new Token(s);
         if((char)ch=='{'||(char)ch=='('||(char)ch=='-'||(char)ch=='+'||(char)ch=='*'||(char)ch=='/'||(char)ch==')'||(char)ch=='}'||(char)ch=='%'||(char)ch==','||(char)ch=='['||(char)ch==']')
             return new Token(s,1);
         if(((char)ch=='<'||(char)ch=='>'||(char)ch=='='||(char)ch=='!')){
@@ -87,6 +89,8 @@ public class Func {
 
             while ((ch= reader.read())!=-1){
                 if(sch(ch))
+                    break;
+                if(s.equals("||"))
                     break;
                 s = s + (char)ch;
 

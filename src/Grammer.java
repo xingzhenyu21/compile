@@ -110,29 +110,36 @@ public class Grammer {
         }
     }
     void divideSpace2() throws IOException {
+        int wq;
         for(int i=index[current_block];i<symbols.size();i++){
             Symbol temp=symbols.get(i);
             if(temp.type.equals("int")){
                 writer.write("%x"+r+" = alloca i32\n");
-                writer.write(" store i32 "+Exp()+", i32* %x"+r+'\n');
-                temp.register="%x"+r;
+                wq= r;
+                r++;
+                writer.write(" store i32 "+Exp()+", i32* %x"+wq+'\n');
+                temp.register="%x"+wq;
                 r++;
 
             }
             else if(temp.type.equals("array")){
                 if(temp.dimension==1){
                     writer.write("%x"+r+" = alloca i32*\n");
-                    writer.write("store i32*  "+Exp()+", i32* * %x"+r+'\n');
+                    wq=r;
+                    r++;
+                    writer.write("store i32*  "+Exp()+", i32* * %x"+wq+'\n');
                     r=r+1;
-                    writer.write(" %x"+r+" = load i32* , i32* * %x"+(r-1)+'\n');
+                    writer.write(" %x"+r+" = load i32* , i32* * %x"+wq+'\n');
                     r++;
                     temp.register="%x"+(r-1);
                 }
                 else{
                     writer.write("%x"+r+" = alloca ["+temp.y+" x i32]* \n");
-                    writer.write("store ["+temp.y+" x i32]* "+Exp()+", ["+temp.y+" x i32]* * %x"+r+'\n');
+                    wq=r;
                     r++;
-                    writer.write(" %x"+r+" = load ["+temp.y+" x i32]*, ["+temp.y+" x i32]* * %x"+(r-1)+'\n');
+                    writer.write("store ["+temp.y+" x i32]* "+Exp()+", ["+temp.y+" x i32]* * %x"+wq+'\n');
+                    r++;
+                    writer.write(" %x"+r+" = load ["+temp.y+" x i32]*, ["+temp.y+" x i32]* * %x"+wq+'\n');
                     r++;
                     temp.register="%x"+(r-1);
                 }
@@ -519,7 +526,7 @@ public class Grammer {
     public void Block(int z,int labelx,int labely) throws IOException {
         index[++current_block]=symbols.size();
         if(!Main.tokens.get(p).name.equals("{")){
-            writer.close();
+
 
             System.exit(132);}
         if(z==0)
@@ -899,8 +906,7 @@ public class Grammer {
                 switch (Main.tokens.get(p).name) {
                     case "=" -> {
                         p++;
-                        if(x.name.equals("a"))
-                            System.out.println("dsfdg");
+
                         if (Main.tokens.get(p).name.equals("getint") || Main.tokens.get(p).name.equals("getch")) {
                             String s;
                             s = Main.tokens.get(p).name;
@@ -943,8 +949,10 @@ public class Grammer {
                     break;
                 p++;
             }
-            if(!Main.tokens.get(p).name.equals(";"))
-                System.exit(13342);
+            if(!Main.tokens.get(p).name.equals(";")){
+                writer.close();
+                System.out.println(Main.tokens.get(p-1).name+" "+Main.tokens.get(p).name);
+                System.exit(13342);}
         }
         else
             System.exit(19);
@@ -1501,7 +1509,7 @@ public class Grammer {
             System.exit(19);
     }
     public void Stmt(int labelx,int labely) throws IOException {
-        System.out.println(Main.tokens.get(p).name);
+
         if(Main.tokens.get(p).name.equals("return")){
             if(yyds==1){
                 p++;
@@ -1566,7 +1574,7 @@ public class Grammer {
             writer.write("x"+label+":\n");
             p++;
             if(!Main.tokens.get(p).name.equals("(")){
-                System.exit(124);
+                System.exit(12004);
             }
             p++;
             String cond = cond();
@@ -1578,8 +1586,9 @@ public class Grammer {
             r=r+2;
             p++;
             if(!Main.tokens.get(p).name.equals(")")){
+                writer.close();
 
-                System.exit(124);
+                System.exit(1204);
             }
             p++;
             writer.write("x"+label1+":\n");
@@ -2990,7 +2999,7 @@ public class Grammer {
             }
         }
         p--;
-        System.out.print('\n');
+
         all.add(new Token("#",1));
         int k=0;
 
