@@ -482,13 +482,7 @@ public class Grammer {
         x2.arguments.add("i32");
         x2.arguments.add("i32*");
         symbols.add(x2);
-        if(Main.tokens.get(1).name.equals("ints")){
-            writer.write("define dso_local i32 @main(){\n");
-            writer.write("call void @putint(i32 2)\n");
-            writer.write("ret i32 0\n");
-            writer.write("}");
-            return;
-        }
+
         while(true){
             if(Main.tokens.get(p).name.equals("const")){
                 p++;
